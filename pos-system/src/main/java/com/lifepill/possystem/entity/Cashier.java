@@ -33,7 +33,6 @@ public class Cashier {
     private double cashierSalary;
     @Column(name = "cashier_nic", nullable = false, length = 12)
     private String cashierNic;
-
     @Column(name = "is_active", columnDefinition = "TINYINT default 0")
     private boolean isActive;
 
