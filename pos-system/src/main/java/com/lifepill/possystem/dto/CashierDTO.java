@@ -1,16 +1,16 @@
 package com.lifepill.possystem.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Getter
+@Setter
 public class CashierDTO {
     private int cashierId;
     private String cashierName;
-    private String cashierPassword;
+   // private String cashierPassword;
     private String cashierEmail;
     private String cashierPhone;
     private String cashierAddress;

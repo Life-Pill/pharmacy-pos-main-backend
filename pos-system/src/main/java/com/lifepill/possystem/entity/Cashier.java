@@ -4,16 +4,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Getter
+@Setter
 @Table(name = "cashier")
 public class Cashier {
     @Id
@@ -21,11 +20,11 @@ public class Cashier {
     private int cashierId;
     @Column(name = "cashier_name", nullable = false, length = 50)
     private String cashierName;
-    @Column(name =  "cashier_password", nullable = false, length = 50)
-    private String cashierPassword;
+   /* @Column(name =  "cashier_password", nullable = false, length = 50)
+    private String cashierPassword;*/
     @Column(name = "cashier_email", length = 50, unique = true)
     private String cashierEmail;
-    @Column(name = "cashier_phone", nullable = false, length = 50)
+    @Column(name = "cashier_phone", length = 12)
     private String cashierPhone;
     @Column(name = "cashier_address", length = 100)
     private String cashierAddress;
