@@ -51,5 +51,39 @@ public class CashierServiceIMPL implements CashierService {
 
     }
 
+    @Override
+    public CashierDTO getCashierById(int cashierId) {
+        if (cashierRepo.existsById(cashierId)){
+            Cashier cashier = cashierRepo.getReferenceById(cashierId);
+
+            // can use mappers to easily below that task
+            CashierDTO cashierDTO = new CashierDTO(
+                    cashier.getCashierId(),
+                    cashier.getCashierName(),
+                    cashier.getCashierEmail(),
+                    cashier.getCashierPhone(),
+                    cashier.getCashierAddress(),
+                    cashier.getCashierSalary(),
+                    cashier.getCashierNic(),
+                    cashier.isActive()
+            );
+            return cashierDTO;
+        }else {
+           throw  new RuntimeException("No cashier found for that id");
+        }
+
+    }
+
+    @Override
+    public String deleteCashier(int cashierId) {
+        if (cashierRepo.existsById(cashierId)){
+            cashierRepo.deleteById(cashierId);
+
+            return "deleted succesfully : "+ cashierId;
+        }else {
+            throw new RuntimeException("No cashier found for that id");
+        }
+    }
+
 
 }

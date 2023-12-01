@@ -19,10 +19,21 @@ public class CashierController {
         cashierService.saveCashier(cashierDTO);
         return "saved";
     }
-
     @PutMapping("/update")
     public String updateCustomer(@RequestBody CashierUpdateDTO cashierUpdateDTO){
         String message = cashierService.updateCashier(cashierUpdateDTO);
         return message;
+    }
+
+    @GetMapping(path = "/get-by-id",params = "id")
+    public CashierDTO getCashierById(@RequestParam(value = "id") int cashierId) {
+        CashierDTO cashierDTO = cashierService.getCashierById(cashierId);
+        return cashierDTO;
+    }
+
+    @DeleteMapping(path = "/delete-cashier/{id}")
+    public String deleteCashier(@PathVariable(value = "id") int cashierId){
+        String deleted = cashierService.deleteCashier(cashierId);
+        return deleted;
     }
 }
