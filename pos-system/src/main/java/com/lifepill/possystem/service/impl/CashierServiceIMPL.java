@@ -8,6 +8,9 @@ import com.lifepill.possystem.service.CashierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CashierServiceIMPL implements CashierService {
 
@@ -24,7 +27,7 @@ public class CashierServiceIMPL implements CashierService {
                 cashierDTO.getCashierAddress(),
                 cashierDTO.getCashierSalary(),
                 cashierDTO.getCashierNic(),
-                cashierDTO.isActive()
+                cashierDTO.isActiveStatus()
                 );
         cashierRepo.save(cashier);
         return "Saved";
@@ -65,7 +68,7 @@ public class CashierServiceIMPL implements CashierService {
                     cashier.getCashierAddress(),
                     cashier.getCashierSalary(),
                     cashier.getCashierNic(),
-                    cashier.isActive()
+                    cashier.isActiveStatus()
             );
             return cashierDTO;
         }else {
@@ -83,6 +86,56 @@ public class CashierServiceIMPL implements CashierService {
         }else {
             throw new RuntimeException("No cashier found for that id");
         }
+    }
+
+    @Override
+    public List<CashierDTO> getAllCashiers() {
+        List<Cashier> getAllCashiers = cashierRepo.findAll();
+
+        if (getAllCashiers.size() > 0){
+            List<CashierDTO> cashierDTOList = new ArrayList<>();
+            for (Cashier cashier: getAllCashiers){
+                CashierDTO cashierDTO = new CashierDTO(
+                        cashier.getCashierId(),
+                        cashier.getCashierName(),
+                        cashier.getCashierEmail(),
+                        cashier.getCashierPhone(),
+                        cashier.getCashierAddress(),
+                        cashier.getCashierSalary(),
+                        cashier.getCashierNic(),
+                        cashier.isActiveStatus()
+                );
+                cashierDTOList.add(cashierDTO);
+            }
+            return cashierDTOList;
+        }else {
+            throw new RuntimeException("No Cashier Found");
+        }
+    }
+
+    @Override
+    public List<CashierDTO> getAllCashiersByActiveState(boolean activeState) {
+        List<Cashier> getAllCashiers = cashierRepo.findByIsActiveStatusEquals(activeState);
+        if (getAllCashiers.size() > 0){
+            List<CashierDTO> cashierDTOList = new ArrayList<>();
+            for (Cashier cashier: getAllCashiers){
+                CashierDTO cashierDTO = new CashierDTO(
+                        cashier.getCashierId(),
+                        cashier.getCashierName(),
+                        cashier.getCashierEmail(),
+                        cashier.getCashierPhone(),
+                        cashier.getCashierAddress(),
+                        cashier.getCashierSalary(),
+                        cashier.getCashierNic(),
+                        cashier.isActiveStatus()
+                );
+                cashierDTOList.add(cashierDTO);
+            }
+            return cashierDTOList;
+        }else {
+            throw new RuntimeException("No Cashier Found");
+        }
+        
     }
 
 

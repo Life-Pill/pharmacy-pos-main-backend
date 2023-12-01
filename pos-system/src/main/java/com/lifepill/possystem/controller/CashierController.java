@@ -6,6 +6,9 @@ import com.lifepill.possystem.service.CashierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
+import java.util.List;
+
 @RestController
 @RequestMapping("lifepill/v1/cashier")
 @CrossOrigin
@@ -36,4 +39,17 @@ public class CashierController {
         String deleted = cashierService.deleteCashier(cashierId);
         return deleted;
     }
+
+    @GetMapping(path="/get-all-cashiers")
+    public List<CashierDTO> getAllCashiers(){
+        List<CashierDTO> allCashiers = cashierService.getAllCashiers();
+        return allCashiers;
+    }
+
+    @GetMapping(path = "/get-all-cashiers-by-active-state/{status}")
+    public List<CashierDTO> getAllCashiersByActiveState(@PathVariable(value = "status") boolean activeState) {
+        List<CashierDTO> allCashiers = cashierService.getAllCashiersByActiveState(activeState);
+        return allCashiers;
+    }
+
 }

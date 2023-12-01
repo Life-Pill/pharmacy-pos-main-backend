@@ -16,5 +16,5 @@ public class CashierDTO {
     private String cashierAddress;
     private double cashierSalary;
     private String cashierNic;
-    private boolean isActive;
+    private boolean isActiveStatus;
 }
