@@ -38,5 +38,4 @@ public class Cashier {
 //    @Column(name = "is_active", columnDefinition = "BOOLEAN default false")
 //    private boolean isActive;
 
-
 }
