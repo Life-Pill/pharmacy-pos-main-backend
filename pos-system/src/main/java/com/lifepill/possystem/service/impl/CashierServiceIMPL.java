@@ -135,7 +135,7 @@ public class CashierServiceIMPL implements CashierService {
         }else {
             throw new RuntimeException("No Cashier Found");
         }
-        
+
     }
 
 
