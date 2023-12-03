@@ -12,8 +12,6 @@ public interface CashierService {
     String updateCashier(CashierUpdateDTO cashierUpdateDTO);
     CashierDTO getCashierById(int cashierId);
     String deleteCashier(int cashierId);
-
     List<CashierDTO> getAllCashiers();
-
     List<CashierDTO> getAllCashiersByActiveState(boolean activeState);
 }

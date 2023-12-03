@@ -3,7 +3,11 @@ package com.lifepill.possystem.controller;
 import com.lifepill.possystem.dto.CashierDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdateDTO;
 import com.lifepill.possystem.service.CashierService;
+import com.lifepill.possystem.util.StandardResponse;
+import org.aspectj.bridge.IMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.Path;
@@ -40,11 +44,20 @@ public class CashierController {
         return deleted;
     }
 
+/*
     @GetMapping(path="/get-all-cashiers")
     public List<CashierDTO> getAllCashiers(){
         List<CashierDTO> allCashiers = cashierService.getAllCashiers();
         return allCashiers;
     }
+    */
+@GetMapping(path="/get-all-cashiers")
+public ResponseEntity<StandardResponse> getAllCashiers(){
+    List<CashierDTO> allCashiers = cashierService.getAllCashiers();
+    return new ResponseEntity<StandardResponse>(
+            new StandardResponse(201,"SUCCESS", allCashiers), HttpStatus.OK
+    );
+}
 
     @GetMapping(path = "/get-all-cashiers-by-active-state/{status}")
     public List<CashierDTO> getAllCashiersByActiveState(@PathVariable(value = "status") boolean activeState) {
