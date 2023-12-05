@@ -55,7 +55,8 @@ public class CashierController {
 public ResponseEntity<StandardResponse> getAllCashiers(){
     List<CashierDTO> allCashiers = cashierService.getAllCashiers();
     return new ResponseEntity<StandardResponse>(
-            new StandardResponse(201,"SUCCESS", allCashiers), HttpStatus.OK
+            new StandardResponse(201,"SUCCESS", allCashiers),
+            HttpStatus.OK
     );
 }
 

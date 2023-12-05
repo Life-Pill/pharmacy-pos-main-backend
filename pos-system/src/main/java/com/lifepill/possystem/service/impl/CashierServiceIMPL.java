@@ -3,6 +3,7 @@ package com.lifepill.possystem.service.impl;
 import com.lifepill.possystem.dto.CashierDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdateDTO;
 import com.lifepill.possystem.entity.Cashier;
+import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.CashierRepo;
 import com.lifepill.possystem.service.CashierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,10 +134,8 @@ public class CashierServiceIMPL implements CashierService {
             }
             return cashierDTOList;
         }else {
-            throw new RuntimeException("No Cashier Found");
+           // throw new RuntimeException("No Cashier Found");
+            throw new NotFoundException("No Cashier Found");
         }
-
     }
-
-
 }
