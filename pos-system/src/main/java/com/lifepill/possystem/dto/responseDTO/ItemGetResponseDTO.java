@@ -1,15 +1,20 @@
-package com.lifepill.possystem.dto.requestDTO;
+package com.lifepill.possystem.dto.responseDTO;
 
 import com.lifepill.possystem.entity.enums.MeasuringUnitType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ItemSaveRequestDTO {
+public class ItemGetResponseDTO {
 
+    private int itemId;
     private String itemName;
-    private MeasuringUnitType measuringUnitType;
+  //  private MeasuringUnitType measuringUnitType;
     private double balanceQuantity;
     private double stock;
     private double supplierPrice;
