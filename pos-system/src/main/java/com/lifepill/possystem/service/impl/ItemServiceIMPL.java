@@ -82,6 +82,17 @@ public class ItemServiceIMPL implements ItemService {
     }
 
     @Override
+    public String deleteItem(int itemId) {
+        if (itemRepo.existsById(itemId)){
+            itemRepo.deleteById(itemId);
+
+            return "deleted succesfully: "+ itemId;
+        }else {
+            throw new RuntimeException("No item found for that id");
+        }
+    }
+
+    @Override
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
         return null;
     }

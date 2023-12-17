@@ -64,4 +64,10 @@ public class ItemController {
         return message;
     }
 
+    @DeleteMapping("/delete-item/{id}")
+    public String deleteItem(@PathVariable(value = "id") int itemId){
+        String delete = itemService.deleteItem(itemId);
+        return delete;
+    }
+
 }

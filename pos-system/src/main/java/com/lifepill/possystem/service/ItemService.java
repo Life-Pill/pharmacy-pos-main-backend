@@ -12,6 +12,6 @@ public interface ItemService {
     List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
     List<ItemGetResponseDTO> getItemByNameAndStatus(String itemName);
     List<ItemGetResponseDTO> getItemByActiveStatus(boolean activeStatus);
-
     String updateItem(ItemUpdateDTO itemUpdateDTO);
+    String deleteItem(int itemId);
 }
