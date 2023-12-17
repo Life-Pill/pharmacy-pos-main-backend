@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
+import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.entity.Item;
 import com.lifepill.possystem.repo.ItemRepo;
@@ -46,8 +47,51 @@ public class ItemServiceIMPL implements ItemService {
     }
     @Override
     public List<ItemGetResponseDTO> getItemByActiveStatus(boolean activeStatus) {
-        return null;
+        List<Item> item = itemRepo.findAllByActiveStatusEquals(activeStatus);
+        if(!item.isEmpty()){
+            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+                    item,
+                    new TypeToken<List<ItemGetResponseDTO>>(){}.getType()
+            );
+            return itemGetResponseDTOS;
+        }else{
+            throw new RuntimeException("No any Stock");
+        }
     }
+
+    @Override
+    public String updateItem(ItemUpdateDTO itemUpdateDTO) {
+        if(itemRepo.existsById(itemUpdateDTO.getItemId())){
+            Item item = itemRepo.getReferenceById(itemUpdateDTO.getItemId());
+            item.setItemName(itemUpdateDTO.getItemName());
+            item.setMeasuringUnitType(itemUpdateDTO.getMeasuringUnitType());
+            item.setBalanceQuantity(itemUpdateDTO.getBalanceQuantity());
+            item.setStock(itemUpdateDTO.getStock());
+            item.setSupplierPrice(itemUpdateDTO.getSupplierPrice());
+            item.setSellingPrice(itemUpdateDTO.getSellingPrice());
+            item.setActiveStatus(itemUpdateDTO.isActiveStatus());
+
+            itemRepo.save(item);
+
+            System.out.println(item);
+
+            return "UPDATED ITEMS";
+        }else {
+            throw new RuntimeException("no Item found in that date");
+        }
+    }
+
+    @Override
+    public String deleteItem(int itemId) {
+        if (itemRepo.existsById(itemId)){
+            itemRepo.deleteById(itemId);
+
+            return "deleted succesfully: "+ itemId;
+        }else {
+            throw new RuntimeException("No item found for that id");
+        }
+    }
+
     @Override
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
         return null;
