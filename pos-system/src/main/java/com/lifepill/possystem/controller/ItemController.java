@@ -1,6 +1,9 @@
 package com.lifepill.possystem.controller;
 
+import com.lifepill.possystem.dto.ItemDTO;
+import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
+import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.service.ItemService;
@@ -29,13 +32,32 @@ public class ItemController {
                 HttpStatus.CREATED);
     }
 
+//    @GetMapping(path = "/get-all-item")
+//    public  ResponseEntity<StandardResponse> getAllItemsResponse(){
+//        List<ItemGetAllResponseDTO> allItems = itemService.getAllItems();
+//        return new ResponseEntity<StandardResponse>(
+//                new StandardResponse(201,"SUCCESS",allItems),
+//                HttpStatus.OK
+//        );
+//    }
+
+    @GetMapping(path = "get-all-items")
+    public ResponseEntity<StandardResponse> getAllItems(){
+        List<ItemGetAllResponseDTO> allItems = itemService.getAllItems();
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(201,"SUCCESS",allItems),
+                HttpStatus.OK
+        );
+    }
+
+
     @GetMapping(path = "/get-by-name", params = "name")
     public List<ItemGetResponseDTO> getItemByNameAndStatus(@RequestParam(value = "name") String itemName) {
         List<ItemGetResponseDTO> itemDTOS = itemService.getItemByNameAndStatus(itemName);
         return itemDTOS;
     }
 
-    // not fully implement (not work)
+    // Not fully implement (not work)
     @GetMapping(path = "/get-by-name-with-mapstruct", params = "name")
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(@RequestParam(value = "name") String itemName) {
         List<ItemGetResponseDTO> itemDTOS = itemService.getItemByNameAndStatusBymapstruct(itemName);
@@ -65,9 +87,27 @@ public class ItemController {
     }
 
     @DeleteMapping("/delete-item/{id}")
-    public String deleteItem(@PathVariable(value = "id") int itemId){
+    public String deleteItem(@PathVariable(value = "id") int itemId) {
         String delete = itemService.deleteItem(itemId);
         return delete;
     }
 
+    @GetMapping(
+            path = "/get-all-item-by-status-lazy-initailized",
+            params = {"activeStatus","page","size"}
+    )
+    public ResponseEntity<StandardResponse> getItemByActiveStatusLazy(
+            @RequestParam(value = "activeStatus") boolean activeStatus,
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size
+            // @RequestParam(value = "size") @Max(50)int size
+            ){
+       // size = 10; // only load 10 data
+        //List<ItemGetResponseDTO> itemDTOS = itemService.getItemByActiveStatusLazy(activeStatus);
+        PaginatedResponseItemDTO paginatedResponseItemDTO = itemService.getItemByActiveStatusWithPaginateed(activeStatus,page,size);
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(200,"Success",paginatedResponseItemDTO),
+                HttpStatus.OK
+        );
+    }
 }

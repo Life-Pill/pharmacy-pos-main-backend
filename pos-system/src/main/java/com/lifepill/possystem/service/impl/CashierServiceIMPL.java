@@ -50,9 +50,8 @@ public class CashierServiceIMPL implements CashierService {
 
             return "UPDATED CUSTOMER";
         }else {
-            throw new RuntimeException("no data found for that id");
+            throw new NotFoundException("No data found for that id");
         }
-
     }
 
     @Override
@@ -73,7 +72,7 @@ public class CashierServiceIMPL implements CashierService {
             );
             return cashierDTO;
         }else {
-           throw  new RuntimeException("No cashier found for that id");
+           throw  new NotFoundException("No cashier found for that id");
         }
 
     }
@@ -85,7 +84,7 @@ public class CashierServiceIMPL implements CashierService {
 
             return "deleted succesfully : "+ cashierId;
         }else {
-            throw new RuntimeException("No cashier found for that id");
+            throw new NotFoundException("No cashier found for that id");
         }
     }
 
@@ -110,7 +109,7 @@ public class CashierServiceIMPL implements CashierService {
             }
             return cashierDTOList;
         }else {
-            throw new RuntimeException("No Cashier Found");
+            throw new NotFoundException("No Cashier Found");
         }
     }
 

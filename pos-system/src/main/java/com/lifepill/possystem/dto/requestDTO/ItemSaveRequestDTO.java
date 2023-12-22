@@ -7,7 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class ItemSaveRequestDTO {
-
     private String itemName;
     private MeasuringUnitType measuringUnitType;
     private double balanceQuantity;

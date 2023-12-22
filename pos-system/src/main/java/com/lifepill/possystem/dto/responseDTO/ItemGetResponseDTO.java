@@ -14,7 +14,7 @@ public class ItemGetResponseDTO {
 
     private int itemId;
     private String itemName;
-  //  private MeasuringUnitType measuringUnitType;
+    // private MeasuringUnitType measuringUnitType;
     private double balanceQuantity;
     private double stock;
     private double supplierPrice;

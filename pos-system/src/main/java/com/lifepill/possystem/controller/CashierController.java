@@ -43,7 +43,6 @@ public class CashierController {
         String deleted = cashierService.deleteCashier(cashierId);
         return deleted;
     }
-
 /*
     @GetMapping(path="/get-all-cashiers")
     public List<CashierDTO> getAllCashiers(){
@@ -59,11 +58,9 @@ public ResponseEntity<StandardResponse> getAllCashiers(){
             HttpStatus.OK
     );
 }
-
     @GetMapping(path = "/get-all-cashiers-by-active-state/{status}")
     public List<CashierDTO> getAllCashiersByActiveState(@PathVariable(value = "status") boolean activeState) {
         List<CashierDTO> allCashiers = cashierService.getAllCashiersByActiveState(activeState);
         return allCashiers;
     }
-
 }
