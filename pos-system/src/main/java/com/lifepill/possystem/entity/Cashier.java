@@ -22,8 +22,8 @@ public class Cashier {
     private int cashierId;
     @Column(name = "cashier_name", nullable = false, length = 50)
     private String cashierName;
-   /* @Column(name =  "cashier_password", nullable = false, length = 50)
-    private String cashierPassword;*/
+    /* @Column(name =  "cashier_password", nullable = false, length = 50)
+     private String cashierPassword;*/
     @Column(name = "cashier_email", length = 50, unique = true)
     private String cashierEmail;
     @Column(name = "cashier_phone", length = 12)

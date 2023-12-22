@@ -32,7 +32,7 @@ public class Item {
     // change to out of stock or not
     @Column(name = "active_status", columnDefinition = "BOOLEAN default false")
     private boolean activeStatus;
-    @Column(name = "unit_price",nullable = false)
-    private double unitPrice;
+//    @Column(name = "unit_price",nullable = false)
+//    private double unitPrice;
 
 }

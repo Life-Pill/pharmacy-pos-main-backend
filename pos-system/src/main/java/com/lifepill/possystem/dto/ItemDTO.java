@@ -10,7 +10,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 public class ItemDTO {
-
     private int itemId;
     private String itemName;
     private MeasuringUnitType measuringUnitType;
@@ -19,5 +18,4 @@ public class ItemDTO {
     private double supplierPrice;
     private double sellingPrice;
     private boolean activeStatus;
-
 }
