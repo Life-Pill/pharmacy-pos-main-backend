@@ -1,5 +1,6 @@
 package com.lifepill.possystem.dto;
 
+import com.lifepill.possystem.entity.Order;
 import lombok.*;
 
 @NoArgsConstructor
@@ -17,4 +18,5 @@ public class CashierDTO {
     private double cashierSalary;
     private String cashierNic;
     private boolean isActiveStatus;
+    private Order order;
 }
