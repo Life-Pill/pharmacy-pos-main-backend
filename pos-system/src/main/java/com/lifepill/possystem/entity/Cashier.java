@@ -3,10 +3,8 @@ package com.lifepill.possystem.entity;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -36,6 +34,10 @@ public class Cashier {
     private String cashierNic;
     @Column(name = "is_active", columnDefinition = "TINYINT default 0")
     private boolean isActiveStatus;
+
+    @OneToMany(mappedBy = "cashiers")
+    private Set<Order> orders;
+
 
 
     //    @Column(name = "is_active", columnDefinition = "BOOLEAN default false")

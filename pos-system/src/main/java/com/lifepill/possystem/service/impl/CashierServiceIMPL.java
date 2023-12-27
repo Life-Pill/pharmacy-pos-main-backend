@@ -3,6 +3,7 @@ package com.lifepill.possystem.service.impl;
 import com.lifepill.possystem.dto.CashierDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdateDTO;
 import com.lifepill.possystem.entity.Cashier;
+import com.lifepill.possystem.entity.Order;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.CashierRepo;
 import com.lifepill.possystem.service.CashierService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CashierServiceIMPL implements CashierService {
@@ -28,8 +30,11 @@ public class CashierServiceIMPL implements CashierService {
                 cashierDTO.getCashierAddress(),
                 cashierDTO.getCashierSalary(),
                 cashierDTO.getCashierNic(),
-                cashierDTO.isActiveStatus()
-                );
+                cashierDTO.isActiveStatus(),
+                (Set<Order>) cashierDTO.getOrder()
+
+        );
+
         cashierRepo.save(cashier);
         return "Saved";
     }
@@ -68,7 +73,8 @@ public class CashierServiceIMPL implements CashierService {
                     cashier.getCashierAddress(),
                     cashier.getCashierSalary(),
                     cashier.getCashierNic(),
-                    cashier.isActiveStatus()
+                    cashier.isActiveStatus(),
+                   (Order) cashier.getOrders()
             );
             return cashierDTO;
         }else {
@@ -103,7 +109,8 @@ public class CashierServiceIMPL implements CashierService {
                         cashier.getCashierAddress(),
                         cashier.getCashierSalary(),
                         cashier.getCashierNic(),
-                        cashier.isActiveStatus()
+                        cashier.isActiveStatus(),
+                        (Order) cashier.getOrders()
                 );
                 cashierDTOList.add(cashierDTO);
             }
@@ -127,7 +134,8 @@ public class CashierServiceIMPL implements CashierService {
                         cashier.getCashierAddress(),
                         cashier.getCashierSalary(),
                         cashier.getCashierNic(),
-                        cashier.isActiveStatus()
+                        cashier.isActiveStatus(),
+                        (Order) cashier.getOrders()
                 );
                 cashierDTOList.add(cashierDTO);
             }

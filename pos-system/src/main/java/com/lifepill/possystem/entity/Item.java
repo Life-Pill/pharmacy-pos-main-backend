@@ -4,6 +4,7 @@ import com.lifepill.possystem.entity.enums.MeasuringUnitType;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,5 +35,9 @@ public class Item {
     private boolean activeStatus;
 //    @Column(name = "unit_price",nullable = false)
 //    private double unitPrice;
+
+    @OneToMany(mappedBy = "items")
+    private Set<OrderDetails> orderDetails;
+
 
 }
