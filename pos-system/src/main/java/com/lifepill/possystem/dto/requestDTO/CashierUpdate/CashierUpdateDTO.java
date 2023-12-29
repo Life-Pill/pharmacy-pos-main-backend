@@ -1,4 +1,4 @@
-package com.lifepill.possystem.dto;
+package com.lifepill.possystem.dto.requestDTO.CashierUpdate;
 
 import com.lifepill.possystem.entity.Order;
 import com.lifepill.possystem.entity.enums.Gender;
@@ -10,21 +10,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CashierDTO {
+public class CashierUpdateDTO {
     private int cashierId;
     private String cashierNicName;
-    private String cashierFirstName;
-    private String cashierLastName;
-    private String cashierPassword;
     private String cashierEmail;
-    private String cashierPhone;
-    private String cashierAddress;
-    private double cashierSalary;
     private String cashierNic;
-    private boolean isActiveStatus;
-    private Gender gender;
-    private Date dateOfBirth;
+    private String cashierPhone;
+    private double cashierSalary;
     private Role role;
-    private int pin;
-    //private Order order;
+
 }
