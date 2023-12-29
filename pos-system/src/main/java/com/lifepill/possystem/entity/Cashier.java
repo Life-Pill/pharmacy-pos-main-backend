@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cashier")
+@Builder
 public class Cashier {
     @Id
     @Column(name = "cashier_id")
