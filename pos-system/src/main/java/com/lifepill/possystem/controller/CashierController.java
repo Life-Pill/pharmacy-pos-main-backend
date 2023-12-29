@@ -1,16 +1,17 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.CashierDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdateDTO;
+import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierPasswordResetDTO;
+import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierRecentPinUpdateDTO;
+import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierUpdateAccountDetailsDTO;
+import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierUpdateDTO;
 import com.lifepill.possystem.service.CashierService;
 import com.lifepill.possystem.util.StandardResponse;
-import org.aspectj.bridge.IMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -21,14 +22,30 @@ public class CashierController {
     @Autowired
     private CashierService cashierService;
     @PostMapping("/save")
-    public String saveCustomer(@RequestBody CashierDTO cashierDTO){
-
+    public String saveCashier(@RequestBody CashierDTO cashierDTO){
         cashierService.saveCashier(cashierDTO);
         return "saved";
     }
     @PutMapping("/update")
-    public String updateCustomer(@RequestBody CashierUpdateDTO cashierUpdateDTO){
+    public String updateCashier(@RequestBody CashierUpdateDTO cashierUpdateDTO){
         String message = cashierService.updateCashier(cashierUpdateDTO);
+        return message;
+    }
+    @PutMapping("/updateAccountDetails")
+    public String updateCashierAccountDetails(@RequestBody CashierUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO){
+        String message = cashierService.updateCashierAccountDetails(cashierUpdateAccountDetailsDTO);
+        return message;
+    }
+
+    @PutMapping("/updatePassword")
+    public String updateCashierPassword(@RequestBody CashierPasswordResetDTO cashierPasswordResetDTO){
+        String message = cashierService.updateCashierPassword(cashierPasswordResetDTO);
+        return message;
+    }
+
+    @PutMapping("/updateRecentPin")
+    public String updateRecentPin(@RequestBody CashierRecentPinUpdateDTO cashierRecentPinUpdateDTO){
+        String message = cashierService.updateRecentPin(cashierRecentPinUpdateDTO);
         return message;
     }
 

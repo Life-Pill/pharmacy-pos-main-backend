@@ -32,15 +32,11 @@ public class Order {
     @JoinColumn(name = "cashier_id",nullable = false)
     private Cashier cashiers;
 
-//    @Column(name = "order_date", columnDefinition = "TIMESTAMP")
-//    private Date orderDate;
-    @Column(name = "order_date", columnDefinition = "DATETIME")
+    @Column(name = "order_date", columnDefinition = "TIMESTAMP")
     private Date orderDate;
-
 
     @Column(name = "total",nullable = false)
     private Double total;
-
 
     @OneToMany(mappedBy = "orders")
     private Set<OrderDetails> orderDetails;
