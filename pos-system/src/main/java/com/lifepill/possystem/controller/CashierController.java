@@ -1,10 +1,7 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.CashierDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierPasswordResetDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierRecentPinUpdateDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierUpdateAccountDetailsDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierUpdateDTO;
+import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
 import com.lifepill.possystem.service.CashierService;
 import com.lifepill.possystem.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,11 @@ public class CashierController {
     @PutMapping("/updateAccountDetails")
     public String updateCashierAccountDetails(@RequestBody CashierUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO){
         String message = cashierService.updateCashierAccountDetails(cashierUpdateAccountDetailsDTO);
+        return message;
+    }
+    @PutMapping("/updateBankAccountDetails")
+    public String updateCashierBankAccountDetails(@RequestBody CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO){
+        String message = cashierService.updateCashierBankAccountDetails(cashierUpdateBankAccountDTO);
         return message;
     }
 

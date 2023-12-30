@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cashier")
+@Builder
 public class Cashier {
     @Id
     @Column(name = "cashier_id")
@@ -53,6 +54,10 @@ public class Cashier {
     private Role role;
     @OneToMany(mappedBy = "cashiers")
     private Set<Order> orders;
+
+    @OneToOne(mappedBy = "cashier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private CashierBankDetails cashierBankDetails;
+
 
     public Cashier(int cashierId, String cashierNicName, String cashierFirstName, String cashierLastName, String cashierPassword, String cashierEmail, String cashierPhone, String cashierAddress, double cashierSalary, String cashierNic, boolean isActiveStatus, int pin, Gender gender, Date dateOfBirth, Role role) {
         this.cashierId = cashierId;
