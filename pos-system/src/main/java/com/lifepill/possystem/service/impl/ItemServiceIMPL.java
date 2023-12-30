@@ -7,6 +7,7 @@ import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.entity.Item;
+import com.lifepill.possystem.entity.enums.MeasuringUnitType;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.ItemRepo;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -42,13 +44,56 @@ public class ItemServiceIMPL implements ItemService {
             itemRepo.save(item);
             return item.getItemName() + " Saved Successfull";
         }else{
-            throw new EntityDuplicationException("Already added this ID");
+            throw new EntityDuplicationException("Already added this Id item");
         }
     }
 
     @Override
-    public List<ItemGetResponseDTO> getItemByNameAndStatus(String itemName) {
-        List<Item> items = itemRepo.findAllByItemNameEqualsAndActiveStatusEquals(itemName,true);
+    public List<ItemGetAllResponseDTO> getAllItems() {
+        List<Item> getAllItems = itemRepo.findAll();
+
+        if(!getAllItems.isEmpty()){
+            List<ItemGetAllResponseDTO> itemGetAllResponseDTOSList = new ArrayList<>();
+            for (Item item:getAllItems){
+                ItemGetAllResponseDTO itemGetAllResponseDTO = new ItemGetAllResponseDTO(
+
+                        item.getItemId(),
+                        item.getItemName(),
+                        item.getSellingPrice(),
+                        item.getItemBarCode(),
+                        item.getSupplyDate(),
+                        item.getSupplierPrice(),
+                        item.isFreeIssued(),
+                        item.isDiscounted(),
+                        item.getItemManufacture(),
+                        item.getItemQuantity(),
+                        item.getItemCategory(),
+                        item.isStock(),
+                        item.getMeasuringUnitType(),
+                        item.getManufactureDate(),
+                        item.getExpireDate(),
+                        item.getPurchaseDate(),
+                        item.getWarrantyPeriod(),
+                        item.getRackNumber(),
+                        item.getDiscountedPrice(),
+                        item.getDiscountedPercentage(),
+                        item.getWarehouseName(),
+                        item.isSpecialCondition(),
+                        item.getItemImage(),
+                        item.getItemDescription()
+                );
+                itemGetAllResponseDTOSList.add(itemGetAllResponseDTO);
+            }
+            return itemGetAllResponseDTOSList;
+        }else {
+            throw new NotFoundException("No Item Find or OUT of Stock");
+        }
+    }
+
+
+    @Override
+    public List<ItemGetResponseDTO> getItemByNameAndStock(String itemName) {
+        List<Item> items = itemRepo.findAllByItemNameEqualsAndStockEquals(itemName,true);
         if (!items.isEmpty()){
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     items,
@@ -61,8 +106,8 @@ public class ItemServiceIMPL implements ItemService {
     }
 
     @Override
-    public List<ItemGetResponseDTO> getItemByActiveStatus(boolean activeStatus) {
-        List<Item> item = itemRepo.findAllByActiveStatusEquals(activeStatus);
+    public List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus) {
+        List<Item> item = itemRepo.findAllByStockEquals(activeStatus);
         if(!item.isEmpty()){
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     item,
@@ -80,12 +125,26 @@ public class ItemServiceIMPL implements ItemService {
         if(itemRepo.existsById(itemUpdateDTO.getItemId())){
             Item item = itemRepo.getReferenceById(itemUpdateDTO.getItemId());
             item.setItemName(itemUpdateDTO.getItemName());
+            item.setItemBarCode(itemUpdateDTO.getItemBarCode());
+            item.setSupplyDate(itemUpdateDTO.getSupplyDate());
+            item.setFreeIssued(itemUpdateDTO.isFreeIssued());
+            item.setDiscounted(itemUpdateDTO.isDiscounted());
+            item.setItemManufacture(itemUpdateDTO.getItemManufacture());
+            item.setItemQuantity(itemUpdateDTO.getItemQuantity());
+            item.setItemCategory(itemUpdateDTO.getItemCategory());
+            item.setStock(itemUpdateDTO.isStock());
             item.setMeasuringUnitType(itemUpdateDTO.getMeasuringUnitType());
-            item.setBalanceQuantity(itemUpdateDTO.getBalanceQuantity());
-            item.setStock(itemUpdateDTO.getStock());
-            item.setSupplierPrice(itemUpdateDTO.getSupplierPrice());
-            item.setSellingPrice(itemUpdateDTO.getSellingPrice());
-            item.setActiveStatus(itemUpdateDTO.isActiveStatus());
+            item.setManufactureDate(itemUpdateDTO.getManufactureDate());
+            item.setExpireDate(itemUpdateDTO.getExpireDate());
+            item.setPurchaseDate(itemUpdateDTO.getPurchaseDate());
+            item.setWarrantyPeriod(itemUpdateDTO.getWarrantyPeriod());
+            item.setRackNumber(itemUpdateDTO.getRackNumber());
+            item.setDiscountedPrice(itemUpdateDTO.getDiscountedPrice());
+            item.setDiscountedPercentage(itemUpdateDTO.getDiscountedPercentage());
+            item.setWarehouseName(itemUpdateDTO.getWarehouseName());
+            item.setSpecialCondition(itemUpdateDTO.isSpecialCondition());
+            item.setItemImage(itemUpdateDTO.getItemImage());
+            item.setItemDescription(itemUpdateDTO.getItemDescription());
 
             itemRepo.save(item);
 
@@ -108,29 +167,58 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-    @Override
-    public List<ItemGetAllResponseDTO> getAllItems() {
-        List<Item> getAllItems = itemRepo.findAll();
 
-        if(!getAllItems.isEmpty()){
-            List<ItemGetAllResponseDTO> itemGetAllResponseDTOSList = new ArrayList<>();
-            for (Item item:getAllItems){
-                ItemGetAllResponseDTO itemGetAllResponseDTO = new ItemGetAllResponseDTO(
-                        item.getItemId(),
-                        item.getItemName(),
-                        item.getBalanceQuantity(),
-                        item.getStock(),
-                        item.getSupplierPrice(),
-                        item.getSellingPrice(),
-                        item.isActiveStatus()
-                );
-                itemGetAllResponseDTOSList.add(itemGetAllResponseDTO);
-            }
-            return itemGetAllResponseDTOSList;
+
+
+// paginated 7/2:27
+    @Override
+    public PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size) {
+        Page<Item> items = itemRepo.findAllByStockEquals(activeStatus, PageRequest.of(page, size));
+
+        if (items.getSize()<1){
+            throw new NotFoundException("No Data");
         }else {
-            throw new NotFoundException("No Item Find or OUT of Stock");
+            PaginatedResponseItemDTO paginatedResponseItemDTO = new PaginatedResponseItemDTO(
+                itemMapper.ListDTOToPage(items),
+                itemRepo.countAllByStockEquals(activeStatus)
+            );
+            return paginatedResponseItemDTO;
         }
     }
+
+    @Override
+    public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
+        List<Item> items = itemRepo.findAllByItemNameEqualsAndStockEquals(itemName,true);
+        if (!items.isEmpty()){
+            List<ItemGetResponseDTO> itemGetResponseDTOS = itemMapper.entityListToDTOList(items);
+
+            return itemGetResponseDTOS;
+        }else {
+            throw new NotFoundException("Not found");
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  /*   @Override
     public List<ItemGetResponseDTO> getItemByActiveStatusLazy(boolean activeStatus) {
@@ -143,32 +231,3 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("Not found");
         }
     }*/
-// paginated 7/2:27
-    @Override
-    public PaginatedResponseItemDTO getItemByActiveStatusWithPaginateed(boolean activeStatus, int page, int size) {
-        Page<Item> items = itemRepo.findAllByActiveStatusEquals(activeStatus, PageRequest.of(page, size));
-
-        if (items.getSize()<1){
-            throw new NotFoundException("No Data");
-        }else {
-            PaginatedResponseItemDTO paginatedResponseItemDTO = new PaginatedResponseItemDTO(
-                itemMapper.ListDTOToPage(items),
-                itemRepo.countAllByActiveStatusEquals(activeStatus)
-            );
-            return paginatedResponseItemDTO;
-        }
-    }
-
-    @Override
-    public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
-        List<Item> items = itemRepo.findAllByItemNameEqualsAndActiveStatusEquals(itemName,true);
-        if (!items.isEmpty()){
-            List<ItemGetResponseDTO> itemGetResponseDTOS = itemMapper.entityListToDTOList(items);
-
-            return itemGetResponseDTOS;
-        }else {
-            throw new NotFoundException("Not found");
-        }
-    }
-
-}

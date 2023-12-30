@@ -51,8 +51,8 @@ public class ItemController {
     }
 
     @GetMapping(path = "/get-by-name", params = "name")
-    public List<ItemGetResponseDTO> getItemByNameAndStatus(@RequestParam(value = "name") String itemName) {
-        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByNameAndStatus(itemName);
+    public List<ItemGetResponseDTO> getItemByNameAndStock(@RequestParam(value = "name") String itemName) {
+        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByNameAndStock(itemName);
         return itemDTOS;
     }
 
@@ -66,7 +66,7 @@ public class ItemController {
     @GetMapping(path = "/get-all-item-by-status", params = "activeStatus")
     public ResponseEntity<StandardResponse> getAllItemByActiveStatus(
             @RequestParam(value = "activeStatus") boolean activeStatus) {
-        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByActiveStatus(activeStatus);
+        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByStockStatus(activeStatus);
 
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(200,
@@ -95,7 +95,7 @@ public class ItemController {
             path = "/get-all-item-by-status-lazy-initailized",
             params = {"activeStatus","page","size"}
     )
-    public ResponseEntity<StandardResponse> getItemByActiveStatusLazy(
+    public ResponseEntity<StandardResponse> getItemByStockStatusLazy(
             @RequestParam(value = "activeStatus") boolean activeStatus,
             @RequestParam(value = "page") int page,
             @RequestParam(value = "size") int size
@@ -103,7 +103,7 @@ public class ItemController {
             ){
        // size = 10; // only load 10 data
         //List<ItemGetResponseDTO> itemDTOS = itemService.getItemByActiveStatusLazy(activeStatus);
-        PaginatedResponseItemDTO paginatedResponseItemDTO = itemService.getItemByActiveStatusWithPaginateed(activeStatus,page,size);
+        PaginatedResponseItemDTO paginatedResponseItemDTO = itemService.getItemByStockStatusWithPaginateed(activeStatus,page,size);
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(200,"Success",paginatedResponseItemDTO),
                 HttpStatus.OK
