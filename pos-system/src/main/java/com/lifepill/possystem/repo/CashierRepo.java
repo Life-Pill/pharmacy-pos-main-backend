@@ -13,4 +13,5 @@ public interface CashierRepo extends JpaRepository<Cashier, Integer> {
 
     List<Cashier> findByIsActiveStatusEquals(boolean activeState);
 
+    boolean existsAllByCashierEmail(String cashierEmail);
 }

@@ -7,6 +7,7 @@ import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.entity.Item;
+import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.ItemRepo;
 import com.lifepill.possystem.service.ItemService;
@@ -41,7 +42,7 @@ public class ItemServiceIMPL implements ItemService {
             itemRepo.save(item);
             return item.getItemName() + " Saved Successfull";
         }else{
-            throw new DuplicateKeyException("Already added this ID");
+            throw new EntityDuplicationException("Already added this ID");
         }
     }
 
@@ -55,7 +56,7 @@ public class ItemServiceIMPL implements ItemService {
             );
             return itemGetResponseDTOS;
         }else {
-            throw new RuntimeException("Not found");
+            throw new NotFoundException("Not found");
         }
     }
 
@@ -69,7 +70,7 @@ public class ItemServiceIMPL implements ItemService {
             );
             return itemGetResponseDTOS;
         }else{
-            throw new RuntimeException("out of Stock");
+            throw new NotFoundException("out of Stock");
         }
     }
 
@@ -92,7 +93,7 @@ public class ItemServiceIMPL implements ItemService {
 
             return "UPDATED ITEMS";
         }else {
-            throw new RuntimeException("no Item found in that date");
+            throw new NotFoundException("no Item found in that date");
         }
     }
 
@@ -103,7 +104,7 @@ public class ItemServiceIMPL implements ItemService {
 
             return "deleted succesfully: "+ itemId;
         }else {
-            throw new RuntimeException("No item found for that id");
+            throw new NotFoundException("No item found for that id");
         }
     }
 
@@ -127,7 +128,7 @@ public class ItemServiceIMPL implements ItemService {
             }
             return itemGetAllResponseDTOSList;
         }else {
-            throw new RuntimeException("No Item Find or OUT of Stock");
+            throw new NotFoundException("No Item Find or OUT of Stock");
         }
     }
 
@@ -166,7 +167,7 @@ public class ItemServiceIMPL implements ItemService {
 
             return itemGetResponseDTOS;
         }else {
-            throw new RuntimeException("Not found");
+            throw new NotFoundException("Not found");
         }
     }
 

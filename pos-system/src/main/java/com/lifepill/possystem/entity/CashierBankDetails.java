@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -19,10 +16,17 @@ public class CashierBankDetails
     @Id
     @Column(name = "cashier_id")
     private int cashierId;
-    @Column(name = "bank_name",nullable = true)
+    @Column(name = "bank_name")
     private String bankName;
-    @Column(name = "bank_account_number",nullable = true)
+    @Column(name = "bank_branch_name",nullable = true)
+    private String bankBranchName;
+    @Column(name = "bank_account_number")
     private String bankAccountNumber;
-    @Column(name = "cashier_description",nullable = true)
+    @Column(name = "cashier_description")
     private String cashierDescription;
+
+    @OneToOne
+    @JoinColumn(name = "cashier_id")
+    private Cashier cashier;
+
 }

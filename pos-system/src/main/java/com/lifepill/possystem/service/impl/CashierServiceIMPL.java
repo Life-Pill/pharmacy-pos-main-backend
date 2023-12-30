@@ -1,15 +1,16 @@
 package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.CashierDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierPasswordResetDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierRecentPinUpdateDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierUpdateAccountDetailsDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierUpdateDTO;
+import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
 import com.lifepill.possystem.entity.Cashier;
+import com.lifepill.possystem.entity.CashierBankDetails;
+import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.repo.CashierBankDetailsRepo;
 import com.lifepill.possystem.repo.CashierRepo;
 import com.lifepill.possystem.service.CashierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,29 +22,40 @@ public class CashierServiceIMPL implements CashierService {
     @Autowired
     private CashierRepo  cashierRepo;
 
+    @Autowired
+    private CashierBankDetailsRepo cashierBankDetailsRepo;
+
     @Override
     public String saveCashier(CashierDTO cashierDTO){
-        Cashier cashier = new Cashier(
-                cashierDTO.getCashierId(),
-                cashierDTO.getCashierNicName(),
-                cashierDTO.getCashierFirstName(),
-                cashierDTO.getCashierLastName(),
-                cashierDTO.getCashierPassword(),
-                cashierDTO.getCashierEmail(),
-                cashierDTO.getCashierPhone(),
-                cashierDTO.getCashierAddress(),
-                cashierDTO.getCashierSalary(),
-                cashierDTO.getCashierNic(),
-                cashierDTO.isActiveStatus(),
-                cashierDTO.getPin(),
-                cashierDTO.getGender(),
-                cashierDTO.getDateOfBirth(),
-                cashierDTO.getRole()
-              //  (Set<Order>) cashierDTO.getOrder()
-        );
+        // check if the cashier already exists email or id
+        if (cashierRepo.existsById(cashierDTO.getCashierId()) || cashierRepo.existsAllByCashierEmail(cashierDTO.getCashierEmail())) {
+            throw new EntityDuplicationException("Cashier already exists");
+        } else {
 
-        cashierRepo.save(cashier);
-        return "Saved";
+        Cashier cashier = new Cashier(
+                    cashierDTO.getCashierId(),
+                    cashierDTO.getCashierNicName(),
+                    cashierDTO.getCashierFirstName(),
+                    cashierDTO.getCashierLastName(),
+                    cashierDTO.getCashierPassword(),
+                    cashierDTO.getCashierEmail(),
+                    cashierDTO.getCashierPhone(),
+                    cashierDTO.getCashierAddress(),
+                    cashierDTO.getCashierSalary(),
+                    cashierDTO.getCashierNic(),
+                    cashierDTO.isActiveStatus(),
+                    cashierDTO.getPin(),
+                    cashierDTO.getGender(),
+                    cashierDTO.getDateOfBirth(),
+                    cashierDTO.getRole()
+                    //  (Set<Order>) cashierDTO.getOrder()
+            );
+
+            cashierRepo.save(cashier);
+            return "Saved";
+        }
+
+
     }
 
     @Override
@@ -120,6 +132,44 @@ public class CashierServiceIMPL implements CashierService {
             throw new NotFoundException("No data found for that id");
         }
     }
+
+    @Override
+    public String updateCashierBankAccountDetails(CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
+        int cashierId = cashierUpdateBankAccountDTO.getCashierId();
+
+        if (cashierRepo.existsById(cashierId)) {
+            Cashier cashier = cashierRepo.getReferenceById(cashierId);
+
+            // Check if the cashier already has bank details
+            CashierBankDetails existingBankDetails = cashierBankDetailsRepo.findById(cashierId).orElse(null);
+
+            if (existingBankDetails != null) {
+                // Update existing bank details
+                existingBankDetails.setBankName(cashierUpdateBankAccountDTO.getBankName());
+                existingBankDetails.setBankBranchName(cashierUpdateBankAccountDTO.getBankBranchName());
+                existingBankDetails.setBankAccountNumber(cashierUpdateBankAccountDTO.getBankAccountNumber());
+                existingBankDetails.setCashierDescription(cashierUpdateBankAccountDTO.getCashierDescription());
+
+                cashierBankDetailsRepo.save(existingBankDetails);
+            } else {
+                // Create new bank details if not present
+                CashierBankDetails newBankDetails = new CashierBankDetails();
+                newBankDetails.setCashierId(cashierId);
+                newBankDetails.setBankName(cashierUpdateBankAccountDTO.getBankName());
+                newBankDetails.setBankBranchName(cashierUpdateBankAccountDTO.getBankBranchName());
+                newBankDetails.setBankAccountNumber(cashierUpdateBankAccountDTO.getBankAccountNumber());
+                newBankDetails.setCashierDescription(cashierUpdateBankAccountDTO.getCashierDescription());
+
+                cashierBankDetailsRepo.save(newBankDetails);
+            }
+
+            return "Successfully updated cashier bank account details";
+        } else {
+            throw new NotFoundException("No data found for that id");
+        }
+    }
+
+
 
     @Override
     public CashierDTO getCashierById(int cashierId) {

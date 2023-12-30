@@ -2,10 +2,7 @@ package com.lifepill.possystem.service;
 
 
 import com.lifepill.possystem.dto.CashierDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierPasswordResetDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierRecentPinUpdateDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierUpdateAccountDetailsDTO;
-import com.lifepill.possystem.dto.requestDTO.CashierUpdate.CashierUpdateDTO;
+import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
 
 import java.util.List;
 
@@ -23,4 +20,6 @@ public interface CashierService {
     String updateCashierPassword(CashierPasswordResetDTO cashierPasswordResetDTO);
 
     String updateRecentPin(CashierRecentPinUpdateDTO cashierRecentPinUpdateDTO);
+
+    String updateCashierBankAccountDetails(CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO);
 }
