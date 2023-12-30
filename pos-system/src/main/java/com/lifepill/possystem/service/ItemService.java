@@ -22,5 +22,7 @@ public interface ItemService {
 
     //List<ItemGetResponseDTO> getItemByActiveStatusLazy(boolean activeStatus);
     PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size);
+
+    List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode);
 //    List<ItemGetResponseDTO> getAllItems();
 }

@@ -15,4 +15,5 @@ public interface ItemRepo extends JpaRepository<Item,Integer> {
     List<Item> findAllByStockEquals(boolean activeStatus);
     Page<Item> findAllByStockEquals(boolean activeStatus, Pageable pageable);
     int countAllByStockEquals(boolean activeStatus);
+    List<Item> findAllByItemBarCodeEquals(String itemBarCode);
 }

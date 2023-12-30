@@ -119,6 +119,20 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    @Override
+    public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
+        List<Item> item = itemRepo.findAllByItemBarCodeEquals(itemBarCode);
+        if(!item.isEmpty()){
+            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+                    item,
+                    new TypeToken<List<ItemGetResponseDTO>>(){}.getType()
+            );
+            return itemGetResponseDTOS;
+        }else{
+            throw new NotFoundException("No any item found for that barcode");
+        }
+    }
+
 
     @Override
     public String updateItem(ItemUpdateDTO itemUpdateDTO) {
@@ -169,7 +183,6 @@ public class ItemServiceIMPL implements ItemService {
 
 
 
-
 // paginated 7/2:27
     @Override
     public PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size) {
@@ -198,27 +211,6 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
  /*   @Override
     public List<ItemGetResponseDTO> getItemByActiveStatusLazy(boolean activeStatus) {
@@ -231,3 +223,4 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("Not found");
         }
     }*/
+}

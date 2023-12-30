@@ -56,6 +56,12 @@ public class ItemController {
         return itemDTOS;
     }
 
+    @GetMapping(path = "/get-by-barcode", params = "barcode")
+    public List<ItemGetResponseDTO> getItemByBarCode(@RequestParam(value = "barcode") String itemBarCode) {
+        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByBarCode(itemBarCode);
+        return itemDTOS;
+    }
+
     // Not fully implement (not work)
     @GetMapping(path = "/get-by-name-with-mapstruct", params = "name")
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(@RequestParam(value = "name") String itemName) {
