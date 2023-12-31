@@ -13,15 +13,16 @@ import java.util.List;
 public interface ItemService {
     String saveItems(ItemSaveRequestDTO itemSaveRequestDTO);
     List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
-    List<ItemGetResponseDTO> getItemByNameAndStatus(String itemName);
-    List<ItemGetResponseDTO> getItemByActiveStatus(boolean activeStatus);
+    List<ItemGetResponseDTO> getItemByNameAndStock(String itemName);
+    List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
     String updateItem(ItemUpdateDTO itemUpdateDTO);
     String deleteItem(int itemId);
 
     List<ItemGetAllResponseDTO> getAllItems();
 
     //List<ItemGetResponseDTO> getItemByActiveStatusLazy(boolean activeStatus);
+    PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size);
 
-    PaginatedResponseItemDTO getItemByActiveStatusWithPaginateed(boolean activeStatus, int page, int size);
+    List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode);
 //    List<ItemGetResponseDTO> getAllItems();
 }

@@ -3,15 +3,34 @@ package com.lifepill.possystem.dto.requestDTO;
 import com.lifepill.possystem.entity.enums.MeasuringUnitType;
 import lombok.*;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class ItemSaveRequestDTO {
+    private int itemId;
     private String itemName;
-    private MeasuringUnitType measuringUnitType;
-    private double balanceQuantity;
-    private double stock;
-    private double supplierPrice;
     private double sellingPrice;
-    private boolean activeStatus;
+    private String itemBarCode;
+    private Date supplyDate;
+    private double supplierPrice;
+    private boolean isFreeIssued;
+    private boolean isDiscounted;
+    private String itemManufacture;
+    private double itemQuantity;
+    private String itemCategory;
+    private boolean isStock;
+    private MeasuringUnitType measuringUnitType;
+    private Date manufactureDate;
+    private Date expireDate;
+    private Date purchaseDate;
+    private String warrantyPeriod;
+    private String rackNumber;
+    private double discountedPrice;
+    private double discountedPercentage;
+    private String warehouseName;
+    private boolean isSpecialCondition;
+    private String itemImage;
+    private String itemDescription;
 }
