@@ -41,7 +41,6 @@ public class Branch {
     @Column(name = "branch_created_by")
     private String branchCreatedBy;
 
-
     //branch manager
     //employee count
     //branch monthly sales
