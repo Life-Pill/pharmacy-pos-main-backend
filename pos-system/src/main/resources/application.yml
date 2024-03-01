@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: all-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: Prami@3990
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+  security:
+    user:
+      name: lifepill
+      password: 12345
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+server:
+  port: 8081
+
+
+#spring.datasource.url=jdbc:postgresql://pos-db.ckyqqihpirwg.us-east-1.rds.amazonaws.com:5432/posDB
+#spring.datasource.password=prami3990
+
+

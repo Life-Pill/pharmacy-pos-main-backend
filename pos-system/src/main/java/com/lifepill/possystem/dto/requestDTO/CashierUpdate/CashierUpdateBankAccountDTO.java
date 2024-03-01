@@ -13,4 +13,6 @@ public class CashierUpdateBankAccountDTO {
     private String bankBranchName;
     private String bankAccountNumber;
     private String cashierDescription;
+    private double monthlyPayment;
+    private boolean monthlyPaymentStatus;
 }

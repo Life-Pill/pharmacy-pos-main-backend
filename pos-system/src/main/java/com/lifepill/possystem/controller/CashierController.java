@@ -2,6 +2,7 @@ package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.CashierDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
+import com.lifepill.possystem.entity.CashierBankDetails;
 import com.lifepill.possystem.service.CashierService;
 import com.lifepill.possystem.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,4 +83,13 @@ public ResponseEntity<StandardResponse> getAllCashiers(){
         List<CashierDTO> allCashiers = cashierService.getAllCashiersByActiveState(activeState);
         return allCashiers;
     }
+
+@GetMapping(path = "/get-all-cashiers-bank-details")
+public ResponseEntity<StandardResponse> getAllCashiersBankDetails() {
+    List<CashierUpdateBankAccountDTO> allCashiersBankDetails = cashierService.getAllCashiersBankDetails();
+    return new ResponseEntity<StandardResponse>(
+            new StandardResponse(201, "SUCCESS", allCashiersBankDetails),
+            HttpStatus.OK
+    );
+}
 }

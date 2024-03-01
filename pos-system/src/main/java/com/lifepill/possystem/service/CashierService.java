@@ -22,4 +22,6 @@ public interface CashierService {
     String updateRecentPin(CashierRecentPinUpdateDTO cashierRecentPinUpdateDTO);
 
     String updateCashierBankAccountDetails(CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO);
+
+    List<CashierUpdateBankAccountDTO> getAllCashiersBankDetails();
 }
