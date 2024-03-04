@@ -24,7 +24,10 @@ public class CashierBankDetails
     private String bankAccountNumber;
     @Column(name = "cashier_description")
     private String cashierDescription;
-
+    @Column(name = "cashier_monthly_payment")
+    private double monthlyPayment;
+    @Column(name = "payment_status",nullable = true)
+    private Boolean monthlyPaymentStatus;
     @OneToOne
     @JoinColumn(name = "cashier_id")
     private Cashier cashier;

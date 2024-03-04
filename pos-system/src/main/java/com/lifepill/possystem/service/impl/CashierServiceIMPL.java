@@ -149,6 +149,8 @@ public class CashierServiceIMPL implements CashierService {
                 existingBankDetails.setBankBranchName(cashierUpdateBankAccountDTO.getBankBranchName());
                 existingBankDetails.setBankAccountNumber(cashierUpdateBankAccountDTO.getBankAccountNumber());
                 existingBankDetails.setCashierDescription(cashierUpdateBankAccountDTO.getCashierDescription());
+                existingBankDetails.setMonthlyPayment(cashierUpdateBankAccountDTO.getMonthlyPayment());
+                existingBankDetails.setMonthlyPaymentStatus(cashierUpdateBankAccountDTO.isMonthlyPaymentStatus());
 
                 cashierBankDetailsRepo.save(existingBankDetails);
             } else {
@@ -159,6 +161,8 @@ public class CashierServiceIMPL implements CashierService {
                 newBankDetails.setBankBranchName(cashierUpdateBankAccountDTO.getBankBranchName());
                 newBankDetails.setBankAccountNumber(cashierUpdateBankAccountDTO.getBankAccountNumber());
                 newBankDetails.setCashierDescription(cashierUpdateBankAccountDTO.getCashierDescription());
+                newBankDetails.setMonthlyPayment(cashierUpdateBankAccountDTO.getMonthlyPayment());
+                newBankDetails.setMonthlyPaymentStatus(cashierUpdateBankAccountDTO.isMonthlyPaymentStatus());
 
                 cashierBankDetailsRepo.save(newBankDetails);
             }
@@ -168,7 +172,6 @@ public class CashierServiceIMPL implements CashierService {
             throw new NotFoundException("No data found for that id");
         }
     }
-
 
 
     @Override
@@ -212,7 +215,29 @@ public class CashierServiceIMPL implements CashierService {
             throw new NotFoundException("No cashier found for that id");
         }
     }
+    @Override
+    public List<CashierUpdateBankAccountDTO> getAllCashiersBankDetails() {
+        List<CashierBankDetails> getAllCashiersBankDetails = cashierBankDetailsRepo.findAll();
 
+        if (getAllCashiersBankDetails.size()>0){
+            List<CashierUpdateBankAccountDTO> cashierUpdateBankAccountDTOList = new ArrayList<>();
+            for (CashierBankDetails cashierBankDetails: getAllCashiersBankDetails){
+                CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO = new CashierUpdateBankAccountDTO(
+                        cashierBankDetails.getCashierId(),
+                        cashierBankDetails.getBankName(),
+                        cashierBankDetails.getBankBranchName(),
+                        cashierBankDetails.getBankAccountNumber(),
+                        cashierBankDetails.getCashierDescription(),
+                        cashierBankDetails.getMonthlyPayment(),
+                        cashierBankDetails.getMonthlyPaymentStatus()
+                );
+                cashierUpdateBankAccountDTOList.add(cashierUpdateBankAccountDTO);
+            }
+            return cashierUpdateBankAccountDTOList;
+        }else {
+            throw new NotFoundException("No Cashier Bank Details Found");
+        }
+    }
     @Override
     public List<CashierDTO> getAllCashiers() {
         List<Cashier> getAllCashiers = cashierRepo.findAll();
@@ -245,6 +270,7 @@ public class CashierServiceIMPL implements CashierService {
             throw new NotFoundException("No Cashier Found");
         }
     }
+
 
     @Override
     public List<CashierDTO> getAllCashiersByActiveState(boolean activeState) {
