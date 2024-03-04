@@ -1,4 +1,4 @@
-package com.lifepill.possystem.repo;
+package com.lifepill.possystem.repo.itemRepo;
 import com.lifepill.possystem.entity.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

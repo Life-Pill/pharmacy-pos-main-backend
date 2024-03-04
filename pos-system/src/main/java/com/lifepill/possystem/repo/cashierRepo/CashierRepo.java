@@ -1,4 +1,4 @@
-package com.lifepill.possystem.repo;
+package com.lifepill.possystem.repo.cashierRepo;
 
 import com.lifepill.possystem.entity.Cashier;
 import org.springframework.data.jpa.repository.JpaRepository;
