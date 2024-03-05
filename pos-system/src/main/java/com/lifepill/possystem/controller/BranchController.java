@@ -1,6 +1,7 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.BranchDTO;
+import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
 import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,11 @@ public class BranchController {
     public String deleteBranch(@PathVariable(value = "id") int branchId) {
         String deleted = branchService.deleteBranch(branchId);
         return deleted;
+    }
+
+    @PutMapping("/update")
+    public String updateBranch(@RequestBody BranchUpdateDTO branchUpdateDTO){
+        String message = branchService.updateBranch(branchUpdateDTO);
+        return message;
     }
 }
