@@ -6,11 +6,10 @@ import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.entity.CashierBankDetails;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
-import com.lifepill.possystem.repo.CashierBankDetailsRepo;
-import com.lifepill.possystem.repo.CashierRepo;
+import com.lifepill.possystem.repo.cashierRepo.CashierBankDetailsRepo;
+import com.lifepill.possystem.repo.cashierRepo.CashierRepo;
 import com.lifepill.possystem.service.CashierService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

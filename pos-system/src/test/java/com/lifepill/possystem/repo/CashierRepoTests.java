@@ -2,6 +2,7 @@ package com.lifepill.possystem.repo;
 
 import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.entity.enums.Role;
+import com.lifepill.possystem.repo.cashierRepo.CashierRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
