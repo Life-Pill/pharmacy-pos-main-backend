@@ -3,6 +3,7 @@ package com.lifepill.possystem.service.impl;
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.CashierDTO;
 import com.lifepill.possystem.entity.Branch;
+import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepo.BranchRepo;
@@ -68,6 +69,44 @@ public class BranchServiceIMPL implements BranchService {
             return branchDTOList;
         }else {
             throw new NotFoundException("No Branch Found");
+        }
+    }
+
+    @Override
+    public BranchDTO getBranchById(int branchId) {
+        if (branchRepo.existsById(branchId)){
+            Branch branch = branchRepo.getReferenceById(branchId);
+
+            // can use mappers to easily below that task
+            BranchDTO branchDTO  = new BranchDTO(
+                   branch.getBranchId(),
+                    branch.getBranchName(),
+                    branch.getBranchAddress(),
+                    branch.getBranchContact(),
+                    branch.getBranchFax(),
+                    branch.getBranchEmail(),
+                    branch.getBranchDescription(),
+                    branch.getBranchImage(),
+                    branch.isBranchStatus(),
+                    branch.getBranchLocation(),
+                    branch.getBranchCreatedOn(),
+                    branch.getBranchCreatedBy()
+            );
+            return branchDTO;
+        }else {
+            throw  new NotFoundException("No Branch found for that id");
+        }
+
+    }
+
+    @Override
+    public String deleteBranch(int branchId) {
+        if (branchRepo.existsById(branchId)){
+            branchRepo.deleteById(branchId);
+
+            return "deleted succesfully : "+ branchId;
+        }else {
+            throw new NotFoundException("No Branch found for that id");
         }
     }
 
