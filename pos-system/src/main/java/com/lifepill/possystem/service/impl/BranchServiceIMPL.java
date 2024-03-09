@@ -5,13 +5,18 @@ import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.helper.SaveImageHelper;
 import com.lifepill.possystem.repo.branchRepo.BranchRepo;
 import com.lifepill.possystem.service.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BranchServiceIMPL implements BranchService {
@@ -20,10 +25,11 @@ public class BranchServiceIMPL implements BranchService {
     private BranchRepo branchRepo;
 
     @Override
-    public void saveBranch(BranchDTO branchDTO) {
+    public void saveBranch(BranchDTO branchDTO, MultipartFile image) {
         if (branchRepo.existsById(branchDTO.getBranchId()) || branchRepo.existsByBranchEmail(branchDTO.getBranchEmail())) {
             throw new EntityDuplicationException("Branch already exists");
         } else {
+            byte[] imageBytes = SaveImageHelper.saveImage(image);
             Branch branch = new Branch(
                     branchDTO.getBranchId(),
                     branchDTO.getBranchName(),
@@ -32,7 +38,7 @@ public class BranchServiceIMPL implements BranchService {
                     branchDTO.getBranchFax(),
                     branchDTO.getBranchEmail(),
                     branchDTO.getBranchDescription(),
-                    branchDTO.getBranchImage(),
+                    imageBytes,
                     branchDTO.isBranchStatus(),
                     branchDTO.getBranchLocation(),
                     branchDTO.getBranchCreatedOn(),
@@ -41,6 +47,15 @@ public class BranchServiceIMPL implements BranchService {
             branchRepo.save(branch);
         }
     }
+
+
+    @Override
+    public byte[] getImageData(int branchId) {
+        Optional<Branch> branchOptional = branchRepo.findById(branchId);
+        return branchOptional.map(Branch::getBranchImage).orElse(null);
+    }
+
+
 
     @Override
     public List<BranchDTO> getAllBranches() {
@@ -108,29 +123,30 @@ public class BranchServiceIMPL implements BranchService {
         }
     }
 
-    @Override
-    public String updateBranch(BranchUpdateDTO branchUpdateDTO) {
-        if (branchRepo.existsById(branchUpdateDTO.getBranchId())){
-            Branch branch = branchRepo.getReferenceById(branchUpdateDTO.getBranchId());
-            branch.setBranchName(branchUpdateDTO.getBranchName());
-            branch.setBranchAddress(branchUpdateDTO.getBranchAddress());
-            branch.setBranchContact(branchUpdateDTO.getBranchContact());
-            branch.setBranchFax(branchUpdateDTO.getBranchFax());
-            branch.setBranchEmail(branchUpdateDTO.getBranchEmail());
-            branch.setBranchDescription(branchUpdateDTO.getBranchDescription());
-            branch.setBranchImage(branchUpdateDTO.getBranchImage());
-            branch.setBranchStatus(branchUpdateDTO.isBranchStatus());
-            branch.setBranchLocation(branchUpdateDTO.getBranchLocation());
-            branch.setBranchCreatedOn(branchUpdateDTO.getBranchCreatedOn());
-            branch.setBranchCreatedBy(branchUpdateDTO.getBranchCreatedBy());
+    public String updateBranch(int branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image) {
+        if (!branchRepo.existsById(branchId)) {
+            throw new EntityNotFoundException("Branch not found");
+        }
+
+        Optional<Branch> branchOptional = branchRepo.findById(branchId);
+        if (branchOptional.isPresent()) {
+            Branch branch = branchOptional.get();
+
+            if (branchUpdateDTO.getBranchName() != null) {
+                branch.setBranchName(branchUpdateDTO.getBranchName());
+            }
+
+            // Repeat the same pattern for other fields
+
+            if (image != null && !image.isEmpty()) {
+                byte[] imageBytes = SaveImageHelper.saveImage(image);
+                branch.setBranchImage(imageBytes);
+            }
 
             branchRepo.save(branch);
-
-            System.out.println(branch);
-
-            return "UPDATED BRANCH";
-        }else {
-            throw new NotFoundException("No Branch data found for that id");
+            return "updated";
+        } else {
+            throw new NotFoundException("No Branch found for that id");
         }
     }
 
