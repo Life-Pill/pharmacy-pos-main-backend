@@ -30,8 +30,9 @@ public class Branch {
     private String branchEmail;
     @Column(name = "branch_description", length = 100)
     private String branchDescription;
+    @Lob
     @Column(name = "branch_image")
-    private String branchImage;
+    private byte[] branchImage;
     @Column(name = "branch_status", columnDefinition = "BOOLEAN default false")
     private boolean branchStatus;
     @Column(name = "branch_location", length = 20)
@@ -40,6 +41,7 @@ public class Branch {
     private String branchCreatedOn;
     @Column(name = "branch_created_by")
     private String branchCreatedBy;
+
 
     //branch manager
     //employee count

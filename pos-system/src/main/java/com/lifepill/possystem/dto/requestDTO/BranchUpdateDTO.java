@@ -15,7 +15,7 @@ public class BranchUpdateDTO {
     private String branchFax;
     private String branchEmail;
     private String branchDescription;
-    private String branchImage;
+    private byte[] branchImage;
     private boolean branchStatus;
     private String branchLocation;
     private String branchCreatedOn;
