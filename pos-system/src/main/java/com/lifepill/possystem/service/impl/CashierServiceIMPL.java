@@ -2,6 +2,7 @@ package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.CashierDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
+import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.entity.CashierBankDetails;
 import com.lifepill.possystem.exception.EntityDuplicationException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CashierServiceIMPL implements CashierService {
@@ -36,6 +38,7 @@ public class CashierServiceIMPL implements CashierService {
                     cashierDTO.getCashierNicName(),
                     cashierDTO.getCashierFirstName(),
                     cashierDTO.getCashierLastName(),
+                    cashierDTO.getProfileImage(),
                     cashierDTO.getCashierPassword(),
                     cashierDTO.getCashierEmail(),
                     cashierDTO.getCashierPhone(),
@@ -193,7 +196,8 @@ public class CashierServiceIMPL implements CashierService {
                     cashier.getGender(),
                     cashier.getDateOfBirth(),
                     cashier.getRole(),
-                    cashier.getPin()
+                    cashier.getPin(),
+                    cashier.getProfileImage()
                     //(Order) cashier.getOrders()
             );
             return cashierDTO;
@@ -201,6 +205,43 @@ public class CashierServiceIMPL implements CashierService {
            throw  new NotFoundException("No cashier found for that id");
         }
 
+    }
+
+    @Override
+    public CashierDTO getCashierByIdWithImage(int cashierId) {
+        if (cashierRepo.existsById(cashierId)){
+            Cashier cashier = cashierRepo.getReferenceById(cashierId);
+
+            // can use mappers to easily below that task
+            CashierDTO cashierDTO = new CashierDTO(
+                    cashier.getCashierId(),
+                    cashier.getCashierNicName(),
+                    cashier.getCashierFirstName(),
+                    cashier.getCashierLastName(),
+                    cashier.getCashierPassword(),
+                    cashier.getCashierEmail(),
+                    cashier.getCashierPhone(),
+                    cashier.getCashierAddress(),
+                    cashier.getCashierSalary(),
+                    cashier.getCashierNic(),
+                    cashier.isActiveStatus(),
+                    cashier.getGender(),
+                    cashier.getDateOfBirth(),
+                    cashier.getRole(),
+                    cashier.getPin(),
+                    cashier.getProfileImage()
+                    //(Order) cashier.getOrders()
+            );
+            return cashierDTO;
+        }else {
+            throw  new NotFoundException("No cashier found for that id");
+        }
+    }
+
+    @Override
+    public byte[] getImageData(int cashierId) {
+        Optional<Cashier> branchOptional = cashierRepo.findById(cashierId);
+        return branchOptional.map(Cashier::getProfileImage).orElse(null);
     }
 
     @Override
@@ -236,6 +277,9 @@ public class CashierServiceIMPL implements CashierService {
             throw new NotFoundException("No Cashier Bank Details Found");
         }
     }
+
+
+
     @Override
     public List<CashierDTO> getAllCashiers() {
         List<Cashier> getAllCashiers = cashierRepo.findAll();
@@ -258,7 +302,8 @@ public class CashierServiceIMPL implements CashierService {
                         cashier.getGender(),
                         cashier.getDateOfBirth(),
                         cashier.getRole(),
-                        cashier.getPin()
+                        cashier.getPin(),
+                        cashier.getProfileImage()
                       // (Order) cashier.getOrders()
                 );
                 cashierDTOList.add(cashierDTO);
@@ -291,7 +336,8 @@ public class CashierServiceIMPL implements CashierService {
                         cashier.getGender(),
                         cashier.getDateOfBirth(),
                         cashier.getRole(),
-                        cashier.getPin()
+                        cashier.getPin(),
+                        cashier.getProfileImage()
                       //  (Order) cashier.getOrders()
                 );
                 cashierDTOList.add(cashierDTO);

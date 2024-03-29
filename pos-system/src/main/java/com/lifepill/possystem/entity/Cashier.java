@@ -26,6 +26,9 @@ public class Cashier {
     private String cashierFirstName;
     @Column(name = "cashier_last_name", length = 50)
     private String cashierLastName;
+    @Lob
+    @Column(name = "profile_image")
+    private byte[] profileImage;
     @Column(name = "cashier_password", nullable = false, length = 50)
     private String cashierPassword;
     @Column(name = "cashier_email", length = 50, unique = true)
@@ -58,12 +61,12 @@ public class Cashier {
     @OneToOne(mappedBy = "cashier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CashierBankDetails cashierBankDetails;
 
-
-    public Cashier(int cashierId, String cashierNicName, String cashierFirstName, String cashierLastName, String cashierPassword, String cashierEmail, String cashierPhone, String cashierAddress, double cashierSalary, String cashierNic, boolean isActiveStatus, int pin, Gender gender, Date dateOfBirth, Role role) {
+    public Cashier(int cashierId, String cashierNicName, String cashierFirstName, String cashierLastName, byte[] profileImage, String cashierPassword, String cashierEmail, String cashierPhone, String cashierAddress, double cashierSalary, String cashierNic, boolean isActiveStatus, int pin, Gender gender, Date dateOfBirth, Role role) {
         this.cashierId = cashierId;
         this.cashierNicName = cashierNicName;
         this.cashierFirstName = cashierFirstName;
         this.cashierLastName = cashierLastName;
+        this.profileImage = profileImage;
         this.cashierPassword = cashierPassword;
         this.cashierEmail = cashierEmail;
         this.cashierPhone = cashierPhone;

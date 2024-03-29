@@ -24,4 +24,8 @@ public interface CashierService {
     String updateCashierBankAccountDetails(CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO);
 
     List<CashierUpdateBankAccountDTO> getAllCashiersBankDetails();
+
+    CashierDTO getCashierByIdWithImage(int cashierId);
+
+    byte[] getImageData(int cashierId);
 }

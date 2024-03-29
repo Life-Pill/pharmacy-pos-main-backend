@@ -3,9 +3,10 @@ spring:
     name: all-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/pos-monolithic
     username: postgres
     password: Prami@3990
+
 
   jpa:
     hibernate:
@@ -26,6 +27,7 @@ spring:
 
 server:
   port: 8081
+
 
 
 #spring.datasource.url=jdbc:postgresql://pos-db.ckyqqihpirwg.us-east-1.rds.amazonaws.com:5432/posDB
