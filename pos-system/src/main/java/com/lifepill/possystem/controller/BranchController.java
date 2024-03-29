@@ -29,7 +29,7 @@ public class BranchController {
     private BranchService branchService;
 
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveBranch(@RequestParam("image") MultipartFile image, @ModelAttribute BranchDTO branchDTO) {
+    public String saveBranch(@RequestParam("image") MultipartFile image,@ModelAttribute BranchDTO branchDTO) {
         branchService.saveBranch(branchDTO, image);
         return "saved";
     }

@@ -26,5 +26,6 @@ public class CashierDTO {
     private Date dateOfBirth;
     private Role role;
     private int pin;
+    private byte[] profileImage;
     //private Order order;
 }
