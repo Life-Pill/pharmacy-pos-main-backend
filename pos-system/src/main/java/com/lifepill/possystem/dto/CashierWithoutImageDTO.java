@@ -1,16 +1,17 @@
 package com.lifepill.possystem.dto;
 
-import com.lifepill.possystem.entity.Order;
 import com.lifepill.possystem.entity.enums.Gender;
 import com.lifepill.possystem.entity.enums.Role;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CashierDTO {
+public class CashierWithoutImageDTO {
     private long cashierId;
     private String cashierNicName;
     private String cashierFirstName;
@@ -26,6 +27,5 @@ public class CashierDTO {
     private Date dateOfBirth;
     private Role role;
     private int pin;
-    private byte[] profileImage;
     //private Order order;
 }

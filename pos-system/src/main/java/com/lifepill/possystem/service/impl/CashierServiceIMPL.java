@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.CashierDTO;
+import com.lifepill.possystem.dto.CashierWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Cashier;
@@ -57,6 +58,37 @@ public class CashierServiceIMPL implements CashierService {
             return "Saved";
         }
 
+    }
+
+    @Override
+    public String saveCashierWithoutImage(CashierWithoutImageDTO cashierWithoutImageDTO) {
+        // check if the cashier already exists email or id
+        if (cashierRepo.existsById(cashierWithoutImageDTO.getCashierId()) || cashierRepo.existsAllByCashierEmail(cashierWithoutImageDTO.getCashierEmail())) {
+            throw new EntityDuplicationException("Cashier already exists");
+        } else {
+
+            Cashier cashier = new Cashier(
+                    cashierWithoutImageDTO.getCashierId(),
+                    cashierWithoutImageDTO.getCashierNicName(),
+                    cashierWithoutImageDTO.getCashierFirstName(),
+                    cashierWithoutImageDTO.getCashierLastName(),
+                    cashierWithoutImageDTO.getCashierPassword(),
+                    cashierWithoutImageDTO.getCashierEmail(),
+                    cashierWithoutImageDTO.getCashierPhone(),
+                    cashierWithoutImageDTO.getCashierAddress(),
+                    cashierWithoutImageDTO.getCashierSalary(),
+                    cashierWithoutImageDTO.getCashierNic(),
+                    cashierWithoutImageDTO.isActiveStatus(),
+                    cashierWithoutImageDTO.getPin(),
+                    cashierWithoutImageDTO.getGender(),
+                    cashierWithoutImageDTO.getDateOfBirth(),
+                    cashierWithoutImageDTO.getRole()
+                    //  (Set<Order>) cashierDTO.getOrder()
+            );
+
+            cashierRepo.save(cashier);
+            return "Saved";
+        }
     }
 
     @Override
@@ -136,7 +168,7 @@ public class CashierServiceIMPL implements CashierService {
 
     @Override
     public String updateCashierBankAccountDetails(CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
-        int cashierId = cashierUpdateBankAccountDTO.getCashierId();
+        long cashierId = cashierUpdateBankAccountDTO.getCashierId();
 
         if (cashierRepo.existsById(cashierId)) {
             Cashier cashier = cashierRepo.getReferenceById(cashierId);
@@ -176,7 +208,7 @@ public class CashierServiceIMPL implements CashierService {
 
 
     @Override
-    public CashierDTO getCashierById(int cashierId) {
+    public CashierDTO getCashierById(long cashierId) {
         if (cashierRepo.existsById(cashierId)){
             Cashier cashier = cashierRepo.getReferenceById(cashierId);
 
@@ -208,7 +240,7 @@ public class CashierServiceIMPL implements CashierService {
     }
 
     @Override
-    public CashierDTO getCashierByIdWithImage(int cashierId) {
+    public CashierDTO getCashierByIdWithImage(long cashierId) {
         if (cashierRepo.existsById(cashierId)){
             Cashier cashier = cashierRepo.getReferenceById(cashierId);
 
@@ -239,13 +271,13 @@ public class CashierServiceIMPL implements CashierService {
     }
 
     @Override
-    public byte[] getImageData(int cashierId) {
+    public byte[] getImageData(long cashierId) {
         Optional<Cashier> branchOptional = cashierRepo.findById(cashierId);
         return branchOptional.map(Cashier::getProfileImage).orElse(null);
     }
 
     @Override
-    public String deleteCashier(int cashierId) {
+    public String deleteCashier(long cashierId) {
         if (cashierRepo.existsById(cashierId)){
             cashierRepo.deleteById(cashierId);
 

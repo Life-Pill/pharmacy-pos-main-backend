@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class CashierUpdateAccountDetailsDTO {
-    private int cashierId;
+    private long cashierId;
     private String cashierFirstName;
     private String cashierLastName;
     private Gender gender;

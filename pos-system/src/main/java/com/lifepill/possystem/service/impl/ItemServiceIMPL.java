@@ -1,13 +1,17 @@
 package com.lifepill.possystem.service.impl;
 
+import com.lifepill.possystem.dto.ItemCategoryDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
+import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.entity.Item;
+import com.lifepill.possystem.entity.ItemCategory;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.repo.itemRepo.ItemCategoryRepository;
 import com.lifepill.possystem.repo.itemRepo.ItemRepo;
 import com.lifepill.possystem.service.ItemService;
 import com.lifepill.possystem.util.mappers.ItemMapper;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceIMPL implements ItemService {
@@ -31,6 +36,9 @@ public class ItemServiceIMPL implements ItemService {
 
     @Autowired
     private ItemMapper itemMapper;
+
+    @Autowired
+    private ItemCategoryRepository itemCategoryRepository;
 
     @Override
     public String saveItems(ItemSaveRequestDTO itemSaveRequestDTO) {
@@ -62,7 +70,6 @@ public class ItemServiceIMPL implements ItemService {
                         item.isDiscounted(),
                         item.getItemManufacture(),
                         item.getItemQuantity(),
-                        item.getItemCategory(),
                         item.isStock(),
                         item.getMeasuringUnitType(),
                         item.getManufactureDate(),
@@ -76,6 +83,7 @@ public class ItemServiceIMPL implements ItemService {
                         item.isSpecialCondition(),
                         item.getItemImage(),
                         item.getItemDescription()
+
                 );
                 itemGetAllResponseDTOSList.add(itemGetAllResponseDTO);
             }
@@ -140,7 +148,7 @@ public class ItemServiceIMPL implements ItemService {
             item.setDiscounted(itemUpdateDTO.isDiscounted());
             item.setItemManufacture(itemUpdateDTO.getItemManufacture());
             item.setItemQuantity(itemUpdateDTO.getItemQuantity());
-            item.setItemCategory(itemUpdateDTO.getItemCategory());
+//            item.setItemCategory(itemUpdateDTO.getItemCategory());
             item.setStock(itemUpdateDTO.isStock());
             item.setMeasuringUnitType(itemUpdateDTO.getMeasuringUnitType());
             item.setManufactureDate(itemUpdateDTO.getManufactureDate());
@@ -166,7 +174,7 @@ public class ItemServiceIMPL implements ItemService {
     }
 
     @Override
-    public String deleteItem(int itemId) {
+    public String deleteItem(long itemId) {
         if (itemRepo.existsById(itemId)){
             itemRepo.deleteById(itemId);
 
@@ -218,4 +226,47 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("Not found");
         }
     }*/
+
+
+    @Override
+    public String saveCategory(ItemCategoryDTO categoryDTO) {
+        // Convert DTO to entity and save the category
+        ItemCategory category = modelMapper.map(categoryDTO, ItemCategory.class);
+        itemCategoryRepository.save(category);
+        return "Category saved successfully";
+    }
+
+    @Override
+    public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
+        // Check if category exists
+        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
+                .orElseGet(() -> {
+                    // If category doesn't exist, create a new one
+                    ItemCategory newCategory = new ItemCategory();
+                   // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
+                  //  newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
+                    // Save the new category
+                    itemCategoryRepository.save(newCategory);
+                    return newCategory;
+                });
+
+        // Now, associate the item with the category
+        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
+        item.setItemCategory(category);
+        itemRepo.save(item);
+        return "Item saved successfully with category";
+    }
+
+    @Override
+    public List<ItemCategoryDTO> getAllCategories() {
+        List<ItemCategory> categories = itemCategoryRepository.findAll();
+        if (!categories.isEmpty()) {
+            return categories.stream()
+                    .map(category -> modelMapper.map(category, ItemCategoryDTO.class))
+                    .collect(Collectors.toList());
+        } else {
+            throw new NotFoundException("No categories found");
+        }
+    }
+
 }

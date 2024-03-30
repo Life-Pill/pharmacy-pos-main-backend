@@ -15,7 +15,7 @@ public class CashierBankDetails
 {
     @Id
     @Column(name = "cashier_id")
-    private int cashierId;
+    private long cashierId;
     @Column(name = "bank_name")
     private String bankName;
     @Column(name = "bank_branch_name",nullable = true)

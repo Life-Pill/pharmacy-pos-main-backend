@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CashierPasswordResetDTO {
-    private int cashierId;
+    private long cashierId;
     private String cashierPassword;
 }

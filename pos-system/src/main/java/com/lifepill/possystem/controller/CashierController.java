@@ -1,6 +1,7 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.CashierDTO;
+import com.lifepill.possystem.dto.CashierWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
 import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.entity.CashierBankDetails;
@@ -31,9 +32,9 @@ public class CashierController {
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
-    @PostMapping("/save")
-    public String saveCashier(@RequestBody CashierDTO cashierDTO) {
-        cashierService.saveCashier(cashierDTO);
+    @PostMapping("/save-without-image")
+    public String saveCashierWithoutImage(@RequestBody CashierWithoutImageDTO cashierWithoutImageDTO) {
+        cashierService.saveCashierWithoutImage(cashierWithoutImageDTO);
         return "saved";
     }
 

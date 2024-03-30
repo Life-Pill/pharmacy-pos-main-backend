@@ -1,8 +1,10 @@
 package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.CashierDTO;
+import com.lifepill.possystem.dto.ItemCategoryDTO;
 import com.lifepill.possystem.dto.ItemDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
+import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
@@ -16,7 +18,7 @@ public interface ItemService {
     List<ItemGetResponseDTO> getItemByNameAndStock(String itemName);
     List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
     String updateItem(ItemUpdateDTO itemUpdateDTO);
-    String deleteItem(int itemId);
+    String deleteItem(long itemId);
 
     List<ItemGetAllResponseDTO> getAllItems();
 
@@ -25,4 +27,9 @@ public interface ItemService {
 
     List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode);
 //    List<ItemGetResponseDTO> getAllItems();
+    String saveCategory(ItemCategoryDTO categoryDTO);
+
+    String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSAveRequestCategoryDTO);
+
+    List<ItemCategoryDTO> getAllCategories();
 }

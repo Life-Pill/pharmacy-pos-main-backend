@@ -2,6 +2,8 @@ package com.lifepill.possystem.entity;
 
 import com.lifepill.possystem.entity.enums.MeasuringUnitType;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,7 +19,7 @@ public class Item {
     @Id
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int itemId;
+    private long itemId;
 
     @Column(name = "item_name", length = 100, nullable = false)
     private String itemName;
@@ -46,8 +48,8 @@ public class Item {
     @Column(name = "item_quantity", nullable = false)
     private double itemQuantity;
 
-    @Column(name = "item_category", length = 100, nullable = false)
-    private String itemCategory;
+    /*@Column(name = "item_category", length = 100, nullable = false)
+    private String itemCategory;*/
 
     @Column(name = "is_stock", columnDefinition = "BOOLEAN default false")
     private boolean stock;;
@@ -89,6 +91,14 @@ public class Item {
     @Column(name = "item_description", length = 100)
     private String itemDescription;
 
+    @Column(name="date_created")
+    @CreationTimestamp
+    private Date dateCreated;
+
+    @Column(name="last_updated_date")
+    @UpdateTimestamp
+    private Date lastUpdatedDate;
+
 
 //    // change to out of stock or not
 //    @Column(name = "active_status", columnDefinition = "BOOLEAN default false")
@@ -97,6 +107,10 @@ public class Item {
 
     @OneToMany(mappedBy = "items")
     private Set<OrderDetails> orderDetails;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private ItemCategory itemCategory;
 
 
 }
