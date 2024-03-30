@@ -42,6 +42,19 @@ public class ItemCategoryController {
                 HttpStatus.OK);
     }
 
+    @PutMapping("/category/update/{categoryId}")
+    public ResponseEntity<StandardResponse> updateCategoryDetails(@PathVariable long categoryId, @RequestBody ItemCategoryDTO categoryDTO) {
+        String message = itemService.updateCategoryDetails(categoryId, categoryDTO);
+        return new ResponseEntity<>(
+                new StandardResponse(200, "Success", message),
+                HttpStatus.OK);
+    }
 
-
+    @DeleteMapping("/category/delete/{categoryId}")
+    public ResponseEntity<StandardResponse> deleteCategory(@PathVariable long categoryId) {
+        String message = itemService.deleteCategory(categoryId);
+        return new ResponseEntity<>(
+                new StandardResponse(200, "Success", message),
+                HttpStatus.OK);
+    }
 }

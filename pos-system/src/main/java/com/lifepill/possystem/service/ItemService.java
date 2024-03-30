@@ -32,4 +32,9 @@ public interface ItemService {
     String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSAveRequestCategoryDTO);
 
     List<ItemCategoryDTO> getAllCategories();
+
+    String updateCategoryDetails(long categoryId, ItemCategoryDTO categoryDTO);
+
+    String deleteCategory(long categoryId);
+
 }
