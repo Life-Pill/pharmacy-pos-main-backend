@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CashierUpdateBankAccountDTO {
-    private long cashierId;
+    private long cashierBankDetailsId;
     private String bankName;
     private String bankBranchName;
     private String bankAccountNumber;
     private String cashierDescription;
     private double monthlyPayment;
     private boolean monthlyPaymentStatus;
+    private long cashierId;
 }

@@ -30,4 +30,7 @@ public interface CashierService {
     CashierDTO getCashierByIdWithImage(long cashierId);
 
     byte[] getImageData(long cashierId);
+
+    String updateCashierBankAccountDetailsByCashierId(long cashierId, CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO);
+
 }

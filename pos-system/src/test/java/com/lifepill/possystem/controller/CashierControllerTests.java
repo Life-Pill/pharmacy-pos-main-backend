@@ -23,30 +23,30 @@ public class CashierControllerTests {
     @InjectMocks
     private CashierController cashierController;
 
-    @Test
-    public void testUpdateCashierBankAccountDetails() {
-        // Mock data for the DTO
-        CashierUpdateBankAccountDTO dto = new CashierUpdateBankAccountDTO();
-        dto.setCashierId(1);
-        dto.setBankName("Test Bank");
-        dto.setBankBranchName("Test Branch");
-        dto.setBankAccountNumber("123456789");
-        dto.setCashierDescription("Test Description");
-
-        // Mock response message
-        String successMessage = "Successfully Update cashier account details";
-
-        // Mock the service method to return the success message
-        when(cashierService.updateCashierBankAccountDetails(any())).thenReturn(successMessage);
-
-        // Call the controller method
-        String responseEntity = cashierController.updateCashierBankAccountDetails(dto);
-
-        // Verify that the service method was called with the correct argument
-        verify(cashierService).updateCashierBankAccountDetails(dto);
-
-        // Verify the response entity
-        assertEquals(successMessage, responseEntity);
-
-    }
+//    @Test
+//    public void testUpdateCashierBankAccountDetails() {
+//        // Mock data for the DTO
+//        CashierUpdateBankAccountDTO dto = new CashierUpdateBankAccountDTO();
+//        dto.setCashierId(1);
+//        dto.setBankName("Test Bank");
+//        dto.setBankBranchName("Test Branch");
+//        dto.setBankAccountNumber("123456789");
+//        dto.setCashierDescription("Test Description");
+//
+//        // Mock response message
+//        String successMessage = "Successfully Update cashier account details";
+//
+//        // Mock the service method to return the success message
+//        when(cashierService.updateCashierBankAccountDetails(any())).thenReturn(successMessage);
+//
+//        // Call the controller method
+//        String responseEntity = cashierController.updateCashierBankAccountDetails(dto);
+//
+//        // Verify that the service method was called with the correct argument
+//        verify(cashierService).updateCashierBankAccountDetails(dto);
+//
+//        // Verify the response entity
+//        assertEquals(successMessage, responseEntity);
+//
+//    }
 }

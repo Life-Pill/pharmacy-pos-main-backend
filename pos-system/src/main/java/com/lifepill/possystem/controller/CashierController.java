@@ -103,12 +103,20 @@ public class CashierController {
         return message;
     }
 
-    @PutMapping("/updateBankAccountDetails")
+/*    @PutMapping("/updateBankAccountDetails")
     @Transactional
     public String updateCashierBankAccountDetails(@RequestBody CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
         String message = cashierService.updateCashierBankAccountDetails(cashierUpdateBankAccountDTO);
         return message;
+    }*/
+
+    @PutMapping("/updateBankAccountDetails/{cashierId}")
+    @Transactional
+    public String updateCashierBankAccountDetails(@PathVariable long cashierId, @RequestBody CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
+        String message = cashierService.updateCashierBankAccountDetailsByCashierId(cashierId, cashierUpdateBankAccountDTO);
+        return message;
     }
+
 
     @PutMapping("/updatePassword")
     @Transactional

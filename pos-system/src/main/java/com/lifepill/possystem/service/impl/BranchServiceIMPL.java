@@ -134,6 +134,17 @@ public class BranchServiceIMPL implements BranchService {
 
             if (branchUpdateDTO.getBranchName() != null) {
                 branch.setBranchName(branchUpdateDTO.getBranchName());
+                branch.setBranchName(branchUpdateDTO.getBranchName());
+                branch.setBranchAddress(branchUpdateDTO.getBranchAddress());
+                branch.setBranchContact(branchUpdateDTO.getBranchContact());
+                branch.setBranchFax(branchUpdateDTO.getBranchFax());
+                branch.setBranchEmail(branchUpdateDTO.getBranchEmail());
+                branch.setBranchDescription(branchUpdateDTO.getBranchDescription());
+                branch.setBranchImage(branchUpdateDTO.getBranchImage());
+                branch.setBranchStatus(branchUpdateDTO.isBranchStatus());
+                branch.setBranchLocation(branchUpdateDTO.getBranchLocation());
+                branch.setBranchCreatedOn(branchUpdateDTO.getBranchCreatedOn());
+                branch.setBranchCreatedBy(branchUpdateDTO.getBranchCreatedBy());
             }
 
             // Repeat the same pattern for other fields

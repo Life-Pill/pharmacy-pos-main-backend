@@ -58,7 +58,12 @@ public class Cashier {
     @OneToMany(mappedBy = "cashiers")
     private Set<Order> orders;
 
-    @OneToOne(mappedBy = "cashier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToOne(mappedBy = "cashier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private CashierBankDetails cashierBankDetails;
+
+
+    @ManyToOne
+    @JoinColumn(name = "cashier_bank_details_id", nullable = true)
     private CashierBankDetails cashierBankDetails;
 
     public Cashier(long cashierId, String cashierNicName, String cashierFirstName, String cashierLastName, byte[] profileImage, String cashierPassword, String cashierEmail, String cashierPhone, String cashierAddress, double cashierSalary, String cashierNic, boolean isActiveStatus, int pin, Gender gender, Date dateOfBirth, Role role) {

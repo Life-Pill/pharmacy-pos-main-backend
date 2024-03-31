@@ -27,6 +27,7 @@ public class CashierServiceIMPL implements CashierService {
     @Autowired
     private CashierBankDetailsRepo cashierBankDetailsRepo;
 
+
     @Override
     public String saveCashier(CashierDTO cashierDTO){
         // check if the cashier already exists email or id
@@ -189,7 +190,7 @@ public class CashierServiceIMPL implements CashierService {
             } else {
                 // Create new bank details if not present
                 CashierBankDetails newBankDetails = new CashierBankDetails();
-                newBankDetails.setCashierId(cashierId);
+               // newBankDetails.setCashierId(cashierId);
                 newBankDetails.setBankName(cashierUpdateBankAccountDTO.getBankName());
                 newBankDetails.setBankBranchName(cashierUpdateBankAccountDTO.getBankBranchName());
                 newBankDetails.setBankAccountNumber(cashierUpdateBankAccountDTO.getBankAccountNumber());
@@ -294,13 +295,14 @@ public class CashierServiceIMPL implements CashierService {
             List<CashierUpdateBankAccountDTO> cashierUpdateBankAccountDTOList = new ArrayList<>();
             for (CashierBankDetails cashierBankDetails: getAllCashiersBankDetails){
                 CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO = new CashierUpdateBankAccountDTO(
-                        cashierBankDetails.getCashierId(),
+                        cashierBankDetails.getCashierBankDetailsId(),
                         cashierBankDetails.getBankName(),
                         cashierBankDetails.getBankBranchName(),
                         cashierBankDetails.getBankAccountNumber(),
                         cashierBankDetails.getCashierDescription(),
                         cashierBankDetails.getMonthlyPayment(),
-                        cashierBankDetails.getMonthlyPaymentStatus()
+                        cashierBankDetails.getMonthlyPaymentStatus(),
+                        cashierBankDetails.getCashierId()
                 );
                 cashierUpdateBankAccountDTOList.add(cashierUpdateBankAccountDTO);
             }
@@ -380,6 +382,36 @@ public class CashierServiceIMPL implements CashierService {
             throw new NotFoundException("No Cashier Found");
         }
     }
+
+    @Override
+    public String updateCashierBankAccountDetailsByCashierId(long cashierId, CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
+        // Fetch the Cashier entity by cashierId
+        Cashier cashier = cashierRepo.findById(cashierId).orElse(null);
+
+        // Check if the Cashier entity exists
+        if (cashier != null) {
+            // Create a new CashierBankDetails entity
+            CashierBankDetails newBankDetails = new CashierBankDetails();
+
+            // Set attributes with data from cashierUpdateBankAccountDTO
+            newBankDetails.setBankName(cashierUpdateBankAccountDTO.getBankName());
+            newBankDetails.setBankBranchName(cashierUpdateBankAccountDTO.getBankBranchName());
+            newBankDetails.setBankAccountNumber(cashierUpdateBankAccountDTO.getBankAccountNumber());
+            newBankDetails.setCashierDescription(cashierUpdateBankAccountDTO.getCashierDescription());
+            newBankDetails.setMonthlyPayment(cashierUpdateBankAccountDTO.getMonthlyPayment());
+            newBankDetails.setMonthlyPaymentStatus(cashierUpdateBankAccountDTO.isMonthlyPaymentStatus());
+            newBankDetails.setCashierId(cashierId);
+
+            // Save the new CashierBankDetails entity
+            cashierBankDetailsRepo.save(newBankDetails);
+
+            return "Cashier bank account details created successfully.";
+        } else {
+            return "Cashier not found.";
+        }
+    }
+
+
 
 
 }
