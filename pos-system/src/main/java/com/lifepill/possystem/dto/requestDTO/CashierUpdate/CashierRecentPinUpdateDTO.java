@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CashierRecentPinUpdateDTO {
-    private int cashierId;
+    private long cashierId;
     private int pin;
 }

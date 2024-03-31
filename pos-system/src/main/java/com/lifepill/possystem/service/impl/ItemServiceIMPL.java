@@ -1,13 +1,17 @@
 package com.lifepill.possystem.service.impl;
 
+import com.lifepill.possystem.dto.ItemCategoryDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
+import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.entity.Item;
+import com.lifepill.possystem.entity.ItemCategory;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.repo.itemRepo.ItemCategoryRepository;
 import com.lifepill.possystem.repo.itemRepo.ItemRepo;
 import com.lifepill.possystem.service.ItemService;
 import com.lifepill.possystem.util.mappers.ItemMapper;
@@ -20,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceIMPL implements ItemService {
@@ -32,13 +38,16 @@ public class ItemServiceIMPL implements ItemService {
     @Autowired
     private ItemMapper itemMapper;
 
+    @Autowired
+    private ItemCategoryRepository itemCategoryRepository;
+
     @Override
     public String saveItems(ItemSaveRequestDTO itemSaveRequestDTO) {
         Item item = modelMapper.map(itemSaveRequestDTO, Item.class);
-        if (!itemRepo.existsById(item.getItemId())){
+        if (!itemRepo.existsById(item.getItemId())) {
             itemRepo.save(item);
             return item.getItemName() + " Saved Successfull";
-        }else{
+        } else {
             throw new EntityDuplicationException("Already added this Id item");
         }
     }
@@ -47,9 +56,9 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetAllResponseDTO> getAllItems() {
         List<Item> getAllItems = itemRepo.findAll();
 
-        if(!getAllItems.isEmpty()){
+        if (!getAllItems.isEmpty()) {
             List<ItemGetAllResponseDTO> itemGetAllResponseDTOSList = new ArrayList<>();
-            for (Item item:getAllItems){
+            for (Item item : getAllItems) {
                 ItemGetAllResponseDTO itemGetAllResponseDTO = new ItemGetAllResponseDTO(
 
                         item.getItemId(),
@@ -62,7 +71,6 @@ public class ItemServiceIMPL implements ItemService {
                         item.isDiscounted(),
                         item.getItemManufacture(),
                         item.getItemQuantity(),
-                        item.getItemCategory(),
                         item.isStock(),
                         item.getMeasuringUnitType(),
                         item.getManufactureDate(),
@@ -76,11 +84,12 @@ public class ItemServiceIMPL implements ItemService {
                         item.isSpecialCondition(),
                         item.getItemImage(),
                         item.getItemDescription()
+
                 );
                 itemGetAllResponseDTOSList.add(itemGetAllResponseDTO);
             }
             return itemGetAllResponseDTOSList;
-        }else {
+        } else {
             throw new NotFoundException("No Item Find or OUT of Stock");
         }
     }
@@ -88,14 +97,15 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public List<ItemGetResponseDTO> getItemByNameAndStock(String itemName) {
-        List<Item> items = itemRepo.findAllByItemNameEqualsAndStockEquals(itemName,true);
-        if (!items.isEmpty()){
+        List<Item> items = itemRepo.findAllByItemNameEqualsAndStockEquals(itemName, true);
+        if (!items.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     items,
-                    new TypeToken<List<ItemGetResponseDTO>>(){}.getType()
+                    new TypeToken<List<ItemGetResponseDTO>>() {
+                    }.getType()
             );
             return itemGetResponseDTOS;
-        }else {
+        } else {
             throw new NotFoundException("Not found");
         }
     }
@@ -103,13 +113,14 @@ public class ItemServiceIMPL implements ItemService {
     @Override
     public List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus) {
         List<Item> item = itemRepo.findAllByStockEquals(activeStatus);
-        if(!item.isEmpty()){
+        if (!item.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     item,
-                    new TypeToken<List<ItemGetResponseDTO>>(){}.getType()
+                    new TypeToken<List<ItemGetResponseDTO>>() {
+                    }.getType()
             );
             return itemGetResponseDTOS;
-        }else{
+        } else {
             throw new NotFoundException("out of Stock");
         }
     }
@@ -117,13 +128,14 @@ public class ItemServiceIMPL implements ItemService {
     @Override
     public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
         List<Item> item = itemRepo.findAllByItemBarCodeEquals(itemBarCode);
-        if(!item.isEmpty()){
+        if (!item.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     item,
-                    new TypeToken<List<ItemGetResponseDTO>>(){}.getType()
+                    new TypeToken<List<ItemGetResponseDTO>>() {
+                    }.getType()
             );
             return itemGetResponseDTOS;
-        }else{
+        } else {
             throw new NotFoundException("No any item found for that barcode");
         }
     }
@@ -131,7 +143,7 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public String updateItem(ItemUpdateDTO itemUpdateDTO) {
-        if(itemRepo.existsById(itemUpdateDTO.getItemId())){
+        if (itemRepo.existsById(itemUpdateDTO.getItemId())) {
             Item item = itemRepo.getReferenceById(itemUpdateDTO.getItemId());
             item.setItemName(itemUpdateDTO.getItemName());
             item.setItemBarCode(itemUpdateDTO.getItemBarCode());
@@ -140,7 +152,7 @@ public class ItemServiceIMPL implements ItemService {
             item.setDiscounted(itemUpdateDTO.isDiscounted());
             item.setItemManufacture(itemUpdateDTO.getItemManufacture());
             item.setItemQuantity(itemUpdateDTO.getItemQuantity());
-            item.setItemCategory(itemUpdateDTO.getItemCategory());
+//            item.setItemCategory(itemUpdateDTO.getItemCategory());
             item.setStock(itemUpdateDTO.isStock());
             item.setMeasuringUnitType(itemUpdateDTO.getMeasuringUnitType());
             item.setManufactureDate(itemUpdateDTO.getManufactureDate());
@@ -160,35 +172,34 @@ public class ItemServiceIMPL implements ItemService {
             System.out.println(item);
 
             return "UPDATED ITEMS";
-        }else {
+        } else {
             throw new NotFoundException("no Item found in that date");
         }
     }
 
     @Override
-    public String deleteItem(int itemId) {
-        if (itemRepo.existsById(itemId)){
+    public String deleteItem(long itemId) {
+        if (itemRepo.existsById(itemId)) {
             itemRepo.deleteById(itemId);
 
-            return "deleted succesfully: "+ itemId;
-        }else {
+            return "deleted succesfully: " + itemId;
+        } else {
             throw new NotFoundException("No item found for that id");
         }
     }
 
 
-
-// paginated 7/2:27
+    // paginated 7/2:27
     @Override
     public PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size) {
         Page<Item> items = itemRepo.findAllByStockEquals(activeStatus, PageRequest.of(page, size));
 
-        if (items.getSize()<1){
+        if (items.getSize() < 1) {
             throw new NotFoundException("No Data");
-        }else {
+        } else {
             PaginatedResponseItemDTO paginatedResponseItemDTO = new PaginatedResponseItemDTO(
-                itemMapper.ListDTOToPage(items),
-                itemRepo.countAllByStockEquals(activeStatus)
+                    itemMapper.ListDTOToPage(items),
+                    itemRepo.countAllByStockEquals(activeStatus)
             );
             return paginatedResponseItemDTO;
         }
@@ -196,12 +207,12 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
-        List<Item> items = itemRepo.findAllByItemNameEqualsAndStockEquals(itemName,true);
-        if (!items.isEmpty()){
+        List<Item> items = itemRepo.findAllByItemNameEqualsAndStockEquals(itemName, true);
+        if (!items.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = itemMapper.entityListToDTOList(items);
 
             return itemGetResponseDTOS;
-        }else {
+        } else {
             throw new NotFoundException("Not found");
         }
     }
@@ -218,4 +229,91 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("Not found");
         }
     }*/
+
+
+    @Override
+    public String saveCategory(ItemCategoryDTO categoryDTO) {
+        // Convert DTO to entity and save the category
+        ItemCategory category = modelMapper.map(categoryDTO, ItemCategory.class);
+        itemCategoryRepository.save(category);
+        return "Category saved successfully";
+    }
+
+    @Override
+    public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
+        // Check if category exists
+        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
+                .orElseGet(() -> {
+                    // If category doesn't exist, create a new one
+                    ItemCategory newCategory = new ItemCategory();
+                    // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
+                    //  newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
+                    // Save the new category
+                    itemCategoryRepository.save(newCategory);
+                    return newCategory;
+                });
+
+        // Now, associate the item with the category
+        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
+        item.setItemCategory(category);
+        itemRepo.save(item);
+        return "Item saved successfully with category";
+    }
+
+    @Override
+    public List<ItemCategoryDTO> getAllCategories() {
+        List<ItemCategory> categories = itemCategoryRepository.findAll();
+        if (!categories.isEmpty()) {
+            return categories.stream()
+                    .map(category -> modelMapper.map(category, ItemCategoryDTO.class))
+                    .collect(Collectors.toList());
+        } else {
+            throw new NotFoundException("No categories found");
+        }
+    }
+
+
+    @Override
+    public String updateCategoryDetails(long categoryId, ItemCategoryDTO categoryDTO) {
+        // Check if the category exists
+        Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
+        if (optionalCategory.isPresent()) {
+            ItemCategory category = optionalCategory.get();
+
+            // Update category details
+            category.setCategoryName(categoryDTO.getCategoryName());
+            category.setCategoryDescription(categoryDTO.getCategoryDescription());
+            category.setCategoryImage(categoryDTO.getCategoryImage());
+
+            // Save the updated category
+            itemCategoryRepository.save(category);
+
+            return "Category details updated successfully";
+        } else {
+            throw new NotFoundException("Category not found");
+        }
+    }
+
+    @Override
+    public String deleteCategory(long categoryId) {
+        // Check if the category exists
+        Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
+        if (optionalCategory.isPresent()) {
+            ItemCategory category = optionalCategory.get();
+
+            // Check if there are any items associated with this category
+            if (!category.getItems().isEmpty()) {
+                throw new IllegalStateException("Cannot delete category with associated items");
+            }
+
+            // Delete the category
+            itemCategoryRepository.delete(category);
+
+            return "Category deleted successfully";
+        } else {
+            throw new NotFoundException("Category not found");
+        }
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.ItemDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
+import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
@@ -22,6 +23,15 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
+
+    @PostMapping(path = "/save-with-category")
+    public ResponseEntity<StandardResponse> saveItemWithCategory(@RequestBody ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
+        String message = itemService.saveItemWithCategory(itemSaveRequestCategoryDTO);
+        return new ResponseEntity<>(
+                new StandardResponse(201, "Success", message),
+                HttpStatus.CREATED);
+    }
+
 
     @PostMapping(path = "/save")
     public ResponseEntity<StandardResponse> saveItem(@RequestBody ItemSaveRequestDTO itemSaveRequestDTO) {

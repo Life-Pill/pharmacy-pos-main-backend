@@ -2,6 +2,7 @@ package com.lifepill.possystem.service;
 
 
 import com.lifepill.possystem.dto.CashierDTO;
+import com.lifepill.possystem.dto.CashierWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
 
 import java.util.List;
@@ -9,9 +10,11 @@ import java.util.List;
 public interface CashierService {
 
     public String saveCashier(CashierDTO cashierDTO);
-    String updateCashier(CashierUpdateDTO cashierUpdateDTO);
-    CashierDTO getCashierById(int cashierId);
-    String deleteCashier(int cashierId);
+    public String saveCashierWithoutImage(CashierWithoutImageDTO cashierWithoutImageDTO);
+//    String updateCashier(CashierUpdateDTO cashierUpdateDTO);
+    String updateCashier(Long cashierId, CashierAllDetailsUpdateDTO cashierAllDetailsUpdateDTO);
+    CashierDTO getCashierById(long cashierId);
+    String deleteCashier(long cashierId);
     List<CashierDTO> getAllCashiers();
     List<CashierDTO> getAllCashiersByActiveState(boolean activeState);
 
@@ -25,7 +28,10 @@ public interface CashierService {
 
     List<CashierUpdateBankAccountDTO> getAllCashiersBankDetails();
 
-    CashierDTO getCashierByIdWithImage(int cashierId);
+    CashierDTO getCashierByIdWithImage(long cashierId);
 
-    byte[] getImageData(int cashierId);
+    byte[] getImageData(long cashierId);
+
+    String updateCashierBankAccountDetailsByCashierId(long cashierId, CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO);
+
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 @EnableJpaRepositories
-public interface ItemRepo extends JpaRepository<Item,Integer> {
+public interface ItemRepo extends JpaRepository<Item,Long> {
     List<Item> findAllByItemNameEqualsAndStockEquals(String itemName, boolean b);
     List<Item> findAllByStockEquals(boolean activeStatus);
     Page<Item> findAllByStockEquals(boolean activeStatus, Pageable pageable);

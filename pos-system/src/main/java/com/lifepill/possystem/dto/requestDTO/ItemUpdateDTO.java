@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class ItemUpdateDTO {
-    private int itemId;
+    private long itemId;
     private String itemName;
     private double sellingPrice;
     private String itemBarCode;
@@ -21,7 +21,7 @@ public class ItemUpdateDTO {
     private boolean isDiscounted;
     private String itemManufacture;
     private double itemQuantity;
-    private String itemCategory;
+//    private String itemCategory;
     private boolean isStock;
     private MeasuringUnitType measuringUnitType;
     private Date manufactureDate;

@@ -1,6 +1,7 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.CashierDTO;
+import com.lifepill.possystem.dto.CashierWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
 import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.entity.CashierBankDetails;
@@ -31,9 +32,9 @@ public class CashierController {
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
-    @PostMapping("/save")
-    public String saveCashier(@RequestBody CashierDTO cashierDTO) {
-        cashierService.saveCashier(cashierDTO);
+    @PostMapping("/save-without-image")
+    public String saveCashierWithoutImage(@RequestBody CashierWithoutImageDTO cashierWithoutImageDTO) {
+        cashierService.saveCashierWithoutImage(cashierWithoutImageDTO);
         return "saved";
     }
 
@@ -88,12 +89,21 @@ public class CashierController {
     }
 
 
-    @PutMapping("/update")
+   /* @PutMapping("/update")
     @Transactional
     public String updateCashier(@RequestBody CashierUpdateDTO cashierUpdateDTO) {
         String message = cashierService.updateCashier(cashierUpdateDTO);
         return message;
-    }
+    }*/
+
+    // need to add both place cashier ID
+   @PutMapping("/update/{cashierId}")
+   @Transactional
+   public String updateCashier(@PathVariable Long cashierId, @RequestBody CashierAllDetailsUpdateDTO cashierAllDetailsUpdateDTO) {
+       String message = cashierService.updateCashier(cashierId, cashierAllDetailsUpdateDTO);
+       return message;
+   }
+
 
     @PutMapping("/updateAccountDetails")
     @Transactional
@@ -102,12 +112,20 @@ public class CashierController {
         return message;
     }
 
-    @PutMapping("/updateBankAccountDetails")
+/*    @PutMapping("/updateBankAccountDetails")
     @Transactional
     public String updateCashierBankAccountDetails(@RequestBody CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
         String message = cashierService.updateCashierBankAccountDetails(cashierUpdateBankAccountDTO);
         return message;
+    }*/
+
+    @PutMapping("/updateBankAccountDetails/{cashierId}")
+    @Transactional
+    public String updateCashierBankAccountDetails(@PathVariable long cashierId, @RequestBody CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
+        String message = cashierService.updateCashierBankAccountDetailsByCashierId(cashierId, cashierUpdateBankAccountDTO);
+        return message;
     }
+
 
     @PutMapping("/updatePassword")
     @Transactional

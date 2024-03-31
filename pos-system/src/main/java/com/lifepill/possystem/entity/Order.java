@@ -26,7 +26,7 @@ public class Order {
     @Id
     @Column(name = "order_id", length = 45)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int orderId;
+    private long orderId;
 
     @ManyToOne
     @JoinColumn(name = "cashier_id",nullable = false)

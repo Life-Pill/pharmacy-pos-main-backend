@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 @EnableJpaRepositories
-public interface CashierRepo extends JpaRepository<Cashier, Integer> {
+public interface CashierRepo extends JpaRepository<Cashier,Long> {
 
     List<Cashier> findByIsActiveStatusEquals(boolean activeState);
 

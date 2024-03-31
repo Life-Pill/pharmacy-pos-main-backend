@@ -5,17 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "cashierbankdetails")
+@Table(name = "cashier_bankdetails")
 public class CashierBankDetails
 {
     @Id
-    @Column(name = "cashier_id")
-    private int cashierId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cashier_bank_details_id")
+    private long cashierBankDetailsId;
     @Column(name = "bank_name")
     private String bankName;
     @Column(name = "bank_branch_name",nullable = true)
@@ -28,8 +30,11 @@ public class CashierBankDetails
     private double monthlyPayment;
     @Column(name = "payment_status",nullable = true)
     private Boolean monthlyPaymentStatus;
-    @OneToOne
-    @JoinColumn(name = "cashier_id")
-    private Cashier cashier;
+    @Column(name = "cashier_id")
+    private long cashierId;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashierBankDetails")
+    private Set<Cashier> cashiers;
+
 
 }

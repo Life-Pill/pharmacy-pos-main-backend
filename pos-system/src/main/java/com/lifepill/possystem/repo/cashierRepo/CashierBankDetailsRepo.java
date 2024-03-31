@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @EnableJpaRepositories
-public interface CashierBankDetailsRepo extends JpaRepository<CashierBankDetails, Integer> {
+public interface CashierBankDetailsRepo extends JpaRepository<CashierBankDetails, Long> {
 
 }
