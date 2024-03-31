@@ -48,9 +48,6 @@ public class Item {
     @Column(name = "item_quantity", nullable = false)
     private double itemQuantity;
 
-    /*@Column(name = "item_category", length = 100, nullable = false)
-    private String itemCategory;*/
-
     @Column(name = "is_stock", columnDefinition = "BOOLEAN default false")
     private boolean stock;;
 
@@ -99,12 +96,6 @@ public class Item {
     @UpdateTimestamp
     private Date lastUpdatedDate;
 
-
-//    // change to out of stock or not
-//    @Column(name = "active_status", columnDefinition = "BOOLEAN default false")
-//    private boolean activeStatus;
-
-
     @OneToMany(mappedBy = "items")
     private Set<OrderDetails> orderDetails;
 
@@ -112,5 +103,7 @@ public class Item {
     @JoinColumn(name = "category_id", nullable = false)
     private ItemCategory itemCategory;
 
-
+    @ManyToOne
+    @JoinColumn(name = "supplier_id", nullable = false)
+    private Supplier supplier;
 }

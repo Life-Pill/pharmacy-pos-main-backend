@@ -29,7 +29,7 @@ public interface ItemService {
 //    List<ItemGetResponseDTO> getAllItems();
     String saveCategory(ItemCategoryDTO categoryDTO);
 
-    String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSAveRequestCategoryDTO);
+    String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO);
 
     List<ItemCategoryDTO> getAllCategories();
 

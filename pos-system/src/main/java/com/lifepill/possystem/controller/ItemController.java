@@ -32,7 +32,6 @@ public class ItemController {
                 HttpStatus.CREATED);
     }
 
-
     @PostMapping(path = "/save")
     public ResponseEntity<StandardResponse> saveItem(@RequestBody ItemSaveRequestDTO itemSaveRequestDTO) {
         String message = itemService.saveItems(itemSaveRequestDTO);
@@ -42,14 +41,14 @@ public class ItemController {
                 HttpStatus.CREATED);
     }
 
-//    @GetMapping(path = "/get-all-item")
-//    public  ResponseEntity<StandardResponse> getAllItemsResponse(){
-//        List<ItemGetAllResponseDTO> allItems = itemService.getAllItems();
-//        return new ResponseEntity<StandardResponse>(
-//                new StandardResponse(201,"SUCCESS",allItems),
-//                HttpStatus.OK
-//        );
-//    }
+/*    @GetMapping(path = "/get-all-item")
+    public  ResponseEntity<StandardResponse> getAllItemsResponse(){
+        List<ItemGetAllResponseDTO> allItems = itemService.getAllItems();
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(201,"SUCCESS",allItems),
+                HttpStatus.OK
+        );
+    }*/
 
     @GetMapping(path = "get-all-items")
     public ResponseEntity<StandardResponse> getAllItems(){

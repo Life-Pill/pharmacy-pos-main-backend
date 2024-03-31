@@ -9,6 +9,7 @@ import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.entity.Item;
 import com.lifepill.possystem.entity.ItemCategory;
+import com.lifepill.possystem.entity.Supplier;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.itemRepo.ItemCategoryRepository;
@@ -40,6 +41,9 @@ public class ItemServiceIMPL implements ItemService {
 
     @Autowired
     private ItemCategoryRepository itemCategoryRepository;
+
+  /*  @Autowired
+    private  SupplierRepository supplierRepository;*/
 
     @Override
     public String saveItems(ItemSaveRequestDTO itemSaveRequestDTO) {
@@ -259,6 +263,32 @@ public class ItemServiceIMPL implements ItemService {
         itemRepo.save(item);
         return "Item saved successfully with category";
     }
+  /*  @Override
+    public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
+        // Check if category exists
+        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
+                .orElseGet(() -> {
+                    // If category doesn't exist, create a new one
+                    ItemCategory newCategory = new ItemCategory();
+                    // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
+                    // newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
+                    // Save the new category
+                    itemCategoryRepository.save(newCategory);
+                    return newCategory;
+                });
+
+        // Check if supplier exists
+        Supplier supplier = supplierRepository.findById(itemSaveRequestCategoryDTO.getSupplierId())
+                .orElseThrow(() -> new IllegalArgumentException("Supplier not found"));
+
+        // Now, associate the item with the category and supplier
+        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
+        item.setItemCategory(category);
+        item.setSupplier(supplier);
+        itemRepo.save(item);
+        return "Item saved successfully with category and supplier";
+    }*/
+
 
     @Override
     public List<ItemCategoryDTO> getAllCategories() {

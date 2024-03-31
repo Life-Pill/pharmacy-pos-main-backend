@@ -68,25 +68,25 @@ public class CashierServiceIMPL implements CashierService {
         if (cashierRepo.existsById(cashierWithoutImageDTO.getCashierId()) || cashierRepo.existsAllByCashierEmail(cashierWithoutImageDTO.getCashierEmail())) {
             throw new EntityDuplicationException("Cashier already exists");
         } else {
-
-//            Cashier cashier = new Cashier(
-//                    cashierWithoutImageDTO.getCashierId(),
-//                    cashierWithoutImageDTO.getCashierNicName(),
-//                    cashierWithoutImageDTO.getCashierFirstName(),
-//                    cashierWithoutImageDTO.getCashierLastName(),
-//                    cashierWithoutImageDTO.getCashierPassword(),
-//                    cashierWithoutImageDTO.getCashierEmail(),
-//                    cashierWithoutImageDTO.getCashierPhone(),
-//                    cashierWithoutImageDTO.getCashierAddress(),
-//                    cashierWithoutImageDTO.getCashierSalary(),
-//                    cashierWithoutImageDTO.getCashierNic(),
-//                    cashierWithoutImageDTO.isActiveStatus(),
-//                    cashierWithoutImageDTO.getPin(),
-//                    cashierWithoutImageDTO.getGender(),
-//                    cashierWithoutImageDTO.getDateOfBirth(),
-//                    cashierWithoutImageDTO.getRole()
-//                    //  (Set<Order>) cashierDTO.getOrder()
-//            );
+/*
+            Cashier cashier = new Cashier(
+                    cashierWithoutImageDTO.getCashierId(),
+                    cashierWithoutImageDTO.getCashierNicName(),
+                    cashierWithoutImageDTO.getCashierFirstName(),
+                    cashierWithoutImageDTO.getCashierLastName(),
+                    cashierWithoutImageDTO.getCashierPassword(),
+                    cashierWithoutImageDTO.getCashierEmail(),
+                    cashierWithoutImageDTO.getCashierPhone(),
+                    cashierWithoutImageDTO.getCashierAddress(),
+                    cashierWithoutImageDTO.getCashierSalary(),
+                    cashierWithoutImageDTO.getCashierNic(),
+                    cashierWithoutImageDTO.isActiveStatus(),
+                    cashierWithoutImageDTO.getPin(),
+                    cashierWithoutImageDTO.getGender(),
+                    cashierWithoutImageDTO.getDateOfBirth(),
+                    cashierWithoutImageDTO.getRole()
+                    //  (Set<Order>) cashierDTO.getOrder()
+            );*/
 
             //model mappers
             Cashier cashier = modelMapper.map(cashierWithoutImageDTO, Cashier.class);
@@ -245,9 +245,9 @@ public class CashierServiceIMPL implements CashierService {
     public CashierDTO getCashierById(long cashierId) {
         if (cashierRepo.existsById(cashierId)){
             Cashier cashier = cashierRepo.getReferenceById(cashierId);
+            CashierDTO cashierDTO = modelMapper.map(cashier, CashierDTO.class);
 
-            // can use mappers to easily below that task
-            CashierDTO cashierDTO = new CashierDTO(
+           /* CashierDTO cashierDTO = new CashierDTO(
                     cashier.getCashierId(),
                     cashier.getBranch().getBranchId(),
                     cashier.getCashierNicName(),
@@ -266,7 +266,7 @@ public class CashierServiceIMPL implements CashierService {
                     cashier.getPin(),
                     cashier.getProfileImage()
                     //(Order) cashier.getOrders()
-            );
+            );*/
             return cashierDTO;
         }else {
            throw  new NotFoundException("No cashier found for that id");
@@ -279,26 +279,26 @@ public class CashierServiceIMPL implements CashierService {
         if (cashierRepo.existsById(cashierId)){
             Cashier cashier = cashierRepo.getReferenceById(cashierId);
 
-            // can use mappers to easily below that task
-//            CashierDTO cashierDTO = new CashierDTO(
-//                    cashier.getCashierId(),
-//                    cashier.getCashierNicName(),
-//                    cashier.getCashierFirstName(),
-//                    cashier.getCashierLastName(),
-//                    cashier.getCashierPassword(),
-//                    cashier.getCashierEmail(),
-//                    cashier.getCashierPhone(),
-//                    cashier.getCashierAddress(),
-//                    cashier.getCashierSalary(),
-//                    cashier.getCashierNic(),
-//                    cashier.isActiveStatus(),
-//                    cashier.getGender(),
-//                    cashier.getDateOfBirth(),
-//                    cashier.getRole(),
-//                    cashier.getPin(),
-//                    cashier.getProfileImage()
-//                    //(Order) cashier.getOrders()
-//            );
+/*             can use mappers to easily below that task
+            CashierDTO cashierDTO = new CashierDTO(
+                    cashier.getCashierId(),
+                    cashier.getCashierNicName(),
+                    cashier.getCashierFirstName(),
+                    cashier.getCashierLastName(),
+                    cashier.getCashierPassword(),
+                    cashier.getCashierEmail(),
+                    cashier.getCashierPhone(),
+                    cashier.getCashierAddress(),
+                    cashier.getCashierSalary(),
+                    cashier.getCashierNic(),
+                    cashier.isActiveStatus(),
+                    cashier.getGender(),
+                    cashier.getDateOfBirth(),
+                    cashier.getRole(),
+                    cashier.getPin(),
+                    cashier.getProfileImage()
+                    //(Order) cashier.getOrders()
+            );*/
             CashierDTO cashierDTO = modelMapper.map(cashier, CashierDTO.class);
 
             return cashierDTO;
@@ -327,7 +327,7 @@ public class CashierServiceIMPL implements CashierService {
     public List<CashierUpdateBankAccountDTO> getAllCashiersBankDetails() {
         List<CashierBankDetails> getAllCashiersBankDetails = cashierBankDetailsRepo.findAll();
 
-        if (getAllCashiersBankDetails.size()>0){
+        if (!getAllCashiersBankDetails.isEmpty()){
             List<CashierUpdateBankAccountDTO> cashierUpdateBankAccountDTOList = new ArrayList<>();
             for (CashierBankDetails cashierBankDetails: getAllCashiersBankDetails){
                 CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO = new CashierUpdateBankAccountDTO(
@@ -357,25 +357,25 @@ public class CashierServiceIMPL implements CashierService {
         if (getAllCashiers.size() > 0){
             List<CashierDTO> cashierDTOList = new ArrayList<>();
             for (Cashier cashier: getAllCashiers){
-//                CashierDTO cashierDTO = new CashierDTO(
-//                        cashier.getCashierId(),
-//                        cashier.getCashierNicName(),
-//                        cashier.getCashierFirstName(),
-//                        cashier.getCashierLastName(),
-//                        cashier.getCashierPassword(),
-//                        cashier.getCashierEmail(),
-//                        cashier.getCashierPhone(),
-//                        cashier.getCashierAddress(),
-//                        cashier.getCashierSalary(),
-//                        cashier.getCashierNic(),
-//                        cashier.isActiveStatus(),
-//                        cashier.getGender(),
-//                        cashier.getDateOfBirth(),
-//                        cashier.getRole(),
-//                        cashier.getPin(),
-//                        cashier.getProfileImage()
-//                      // (Order) cashier.getOrders()
-//                );
+/*                CashierDTO cashierDTO = new CashierDTO(
+                        cashier.getCashierId(),
+                        cashier.getCashierNicName(),
+                        cashier.getCashierFirstName(),
+                        cashier.getCashierLastName(),
+                        cashier.getCashierPassword(),
+                        cashier.getCashierEmail(),
+                        cashier.getCashierPhone(),
+                        cashier.getCashierAddress(),
+                        cashier.getCashierSalary(),
+                        cashier.getCashierNic(),
+                        cashier.isActiveStatus(),
+                        cashier.getGender(),
+                        cashier.getDateOfBirth(),
+                        cashier.getRole(),
+                        cashier.getPin(),
+                        cashier.getProfileImage()
+                      // (Order) cashier.getOrders()
+                );*/
                 CashierDTO cashierDTO = modelMapper.map(cashier, CashierDTO.class);
                 cashierDTOList.add(cashierDTO);
             }
@@ -392,25 +392,25 @@ public class CashierServiceIMPL implements CashierService {
         if (getAllCashiers.size() > 0){
             List<CashierDTO> cashierDTOList = new ArrayList<>();
             for (Cashier cashier: getAllCashiers){
-//                CashierDTO cashierDTO = new CashierDTO(
-//                        cashier.getCashierId(),
-//                        cashier.getCashierNicName(),
-//                        cashier.getCashierFirstName(),
-//                        cashier.getCashierLastName(),
-//                        cashier.getCashierPassword(),
-//                        cashier.getCashierEmail(),
-//                        cashier.getCashierPhone(),
-//                        cashier.getCashierAddress(),
-//                        cashier.getCashierSalary(),
-//                        cashier.getCashierNic(),
-//                        cashier.isActiveStatus(),
-//                        cashier.getGender(),
-//                        cashier.getDateOfBirth(),
-//                        cashier.getRole(),
-//                        cashier.getPin(),
-//                        cashier.getProfileImage()
-//                      //  (Order) cashier.getOrders()
-//                );
+/*                CashierDTO cashierDTO = new CashierDTO(
+                        cashier.getCashierId(),
+                        cashier.getCashierNicName(),
+                        cashier.getCashierFirstName(),
+                        cashier.getCashierLastName(),
+                        cashier.getCashierPassword(),
+                        cashier.getCashierEmail(),
+                        cashier.getCashierPhone(),
+                        cashier.getCashierAddress(),
+                        cashier.getCashierSalary(),
+                        cashier.getCashierNic(),
+                        cashier.isActiveStatus(),
+                        cashier.getGender(),
+                        cashier.getDateOfBirth(),
+                        cashier.getRole(),
+                        cashier.getPin(),
+                        cashier.getProfileImage()
+                      //  (Order) cashier.getOrders()
+                );*/
                 CashierDTO cashierDTO = modelMapper.map(cashier, CashierDTO.class);
                 cashierDTOList.add(cashierDTO);
             }
@@ -465,7 +465,5 @@ public class CashierServiceIMPL implements CashierService {
 
         return cashierDTOs;
     }
-
-
 
 }
