@@ -34,4 +34,5 @@ public interface CashierService {
 
     String updateCashierBankAccountDetailsByCashierId(long cashierId, CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO);
 
+    List<CashierDTO> getAllCashiersByBranchId(int branchId);
 }

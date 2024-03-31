@@ -15,12 +15,15 @@ import com.lifepill.possystem.service.CashierService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CashierServiceIMPL implements CashierService {
 
     @Autowired
@@ -446,6 +449,22 @@ public class CashierServiceIMPL implements CashierService {
         }
     }
 
+    @Override
+    public List<CashierDTO> getAllCashiersByBranchId(int branchId) {
+        // Retrieve the branch by its ID
+        Branch branch = branchRepo.findById(branchId)
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + branchId));
+
+        // Retrieve all cashiers associated with the branch
+        List<Cashier> cashiers = cashierRepo.findAllByBranch(branch);
+
+        // Map cashier entities to DTOs
+        List<CashierDTO> cashierDTOs = cashiers.stream()
+                .map(cashier -> modelMapper.map(cashier, CashierDTO.class))
+                .collect(Collectors.toList());
+
+        return cashierDTOs;
+    }
 
 
 
