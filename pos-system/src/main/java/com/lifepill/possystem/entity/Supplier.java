@@ -14,7 +14,7 @@ import java.util.Set;
 @ToString
 @Entity
 @Table(name = "supplier")
-public class Supplier extends BaseEntity{
+public class Supplier extends BaseEntity {
     @Id
     @Column(name = "supplier_id", length = 45)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,5 +43,8 @@ public class Supplier extends BaseEntity{
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier")
     private Set<Item> items;
+
+    @Column(name = "supplier_rating")
+    private String supplierRating;
 
 }

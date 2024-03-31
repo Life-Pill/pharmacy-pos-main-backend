@@ -1,4 +1,7 @@
 package com.lifepill.possystem.repo.supplierRepository;
 
-public interface SupplierCompanyRepository {
+import com.lifepill.possystem.entity.SupplierCompany;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SupplierCompanyRepository extends JpaRepository<SupplierCompany, Long> {
 }
