@@ -1,23 +1,24 @@
 package com.lifepill.possystem.entity;
 
 import com.lifepill.possystem.entity.enums.MeasuringUnitType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "supplier")
-public class Supplier {
+public class Supplier extends BaseEntity {
     @Id
     @Column(name = "supplier_id", length = 45)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int supplierId;
+    private long supplierId;
 
     //item id
     //supplier quantity
@@ -39,5 +40,15 @@ public class Supplier {
 
     @Column(name = "supplier_image")
     private String supplierImage;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier")
+    private Set<Item> items;
+
+    @Column(name = "supplier_rating")
+    private String supplierRating;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = true)
+    private SupplierCompany supplierCompany;
 
 }

@@ -155,4 +155,76 @@ public class BranchServiceIMPL implements BranchService {
         }
     }
 
+    @Override
+    public void updateBranchImage(int branchId, MultipartFile image) {
+        if (!branchRepo.existsById(branchId)) {
+            throw new NotFoundException("Branch not found");
+        }
+
+        Optional<Branch> branchOptional = branchRepo.findById(branchId);
+        if (branchOptional.isPresent()) {
+            Branch branch = branchOptional.get();
+
+            if (image != null && !image.isEmpty()) {
+                byte[] imageBytes = SaveImageHelper.saveImage(image);
+                branch.setBranchImage(imageBytes);
+            }
+
+            branchRepo.save(branch);
+        } else {
+            throw new NotFoundException("No Branch found for that id");
+        }
+    }
+
+    @Override
+    public void updateBranchWithoutImage(int branchId, BranchUpdateDTO branchUpdateDTO) {
+        if (!branchRepo.existsById(branchId)) {
+            throw new NotFoundException("Branch not found");
+        }
+
+        Optional<Branch> branchOptional = branchRepo.findById(branchId);
+        if (branchOptional.isPresent()) {
+            Branch branch = branchOptional.get();
+
+            if (branchUpdateDTO.getBranchName() != null) {
+                branch.setBranchName(branchUpdateDTO.getBranchName());
+            }
+            if (branchUpdateDTO.getBranchAddress() != null) {
+                branch.setBranchAddress(branchUpdateDTO.getBranchAddress());
+            }
+            if (branchUpdateDTO.getBranchContact() != null) {
+                branch.setBranchContact(branchUpdateDTO.getBranchContact());
+            }
+            if (branchUpdateDTO.getBranchFax() != null) {
+                branch.setBranchFax(branchUpdateDTO.getBranchFax());
+            }
+            if (branchUpdateDTO.getBranchEmail() != null) {
+                branch.setBranchEmail(branchUpdateDTO.getBranchEmail());
+            }
+            if (branchUpdateDTO.getBranchDescription() != null) {
+                branch.setBranchDescription(branchUpdateDTO.getBranchDescription());
+            }
+            if (branchUpdateDTO.getBranchImage() != null) {
+                branch.setBranchImage(branchUpdateDTO.getBranchImage());
+            }
+            if (branchUpdateDTO.getBranchLocation() != null) {
+                branch.setBranchLocation(branchUpdateDTO.getBranchLocation());
+            }
+            if (branchUpdateDTO.getBranchCreatedOn() != null) {
+                branch.setBranchCreatedOn(branchUpdateDTO.getBranchCreatedOn());
+            }
+            if (branchUpdateDTO.getBranchCreatedBy() != null) {
+                branch.setBranchCreatedBy(branchUpdateDTO.getBranchCreatedBy());
+            }
+            branch.setBranchStatus(branchUpdateDTO.isBranchStatus());
+
+
+            branchRepo.save(branch);
+        } else {
+            throw new NotFoundException("No Branch found for that id");
+        }
+    }
+
+
+
 }

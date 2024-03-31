@@ -2,8 +2,10 @@ package com.lifepill.possystem.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lifepill.possystem.dto.BranchDTO;
+import com.lifepill.possystem.dto.CashierDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
 import com.lifepill.possystem.service.BranchService;
+import com.lifepill.possystem.service.CashierService;
 import com.lifepill.possystem.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -28,8 +30,11 @@ public class BranchController {
     @Autowired
     private BranchService branchService;
 
+    @Autowired
+    private CashierService cashierService;
+
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveBranch(@RequestParam("image") MultipartFile image,@ModelAttribute BranchDTO branchDTO) {
+    public String saveBranch(@RequestParam("image") MultipartFile image, @ModelAttribute BranchDTO branchDTO) {
         branchService.saveBranch(branchDTO, image);
         return "saved";
     }
@@ -71,14 +76,39 @@ public class BranchController {
         return deleted;
     }
 
-@PutMapping(value = "/update-branch/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-@Transactional
-public String updateBranch(
-        @PathVariable(value = "id") int branchId,
-        @RequestParam("image") MultipartFile image,
-        @ModelAttribute BranchUpdateDTO branchUpdateDTO) {
-    branchService.updateBranch(branchId, branchUpdateDTO, image);
-    return "updated";
-}
+    @PutMapping(value = "/update-branch/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Transactional
+    public String updateBranch(
+            @PathVariable(value = "id") int branchId,
+            @RequestParam("image") MultipartFile image,
+            @ModelAttribute BranchUpdateDTO branchUpdateDTO) {
+        branchService.updateBranch(branchId, branchUpdateDTO, image);
+        return "updated";
+    }
+
+    @PutMapping(value = "/update-image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Transactional
+    public String updateBranchImage(
+            @PathVariable(value = "id") int branchId,
+            @RequestParam("image") MultipartFile image) {
+        branchService.updateBranchImage(branchId, image);
+        return "image updated";
+    }
+
+    @PutMapping(value = "/update/{id}")
+    @Transactional
+    public String updateBranchWithoutImage(
+            @PathVariable(value = "id") int branchId,
+            @ModelAttribute BranchUpdateDTO branchUpdateDTO) {
+        branchService.updateBranchWithoutImage(branchId, branchUpdateDTO);
+        return "branch updated";
+    }
+
+    @GetMapping("/cashiers/by-branch/{branchId}")
+    public ResponseEntity<List<CashierDTO>> getAllCashiersByBranchId(@PathVariable int branchId) {
+        List<CashierDTO> cashierDTOs = cashierService.getAllCashiersByBranchId(branchId);
+        return new ResponseEntity<>(cashierDTOs, HttpStatus.OK);
+    }
+
 
 }
