@@ -47,4 +47,8 @@ public class Supplier extends BaseEntity {
     @Column(name = "supplier_rating")
     private String supplierRating;
 
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = true)
+    private SupplierCompany supplierCompany;
+
 }

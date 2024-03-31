@@ -39,4 +39,10 @@ public class SupplierCompanyController {
         supplierCompanyService.deleteSupplierCompanyById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping(path ="/get-supplier-company/{id}")
+    public ResponseEntity<SupplierCompanyDTO> getSupplierCompanyById(@PathVariable("id") long id) {
+        SupplierCompanyDTO companyDTO = supplierCompanyService.getSupplierCompanyById(id);
+        return new ResponseEntity<>(companyDTO, HttpStatus.OK);
+    }
 }

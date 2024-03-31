@@ -71,4 +71,10 @@ public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
             throw new NotFoundException("Supplier Company not found with id: " + id);
         }
     }
+
+    public SupplierCompanyDTO getSupplierCompanyById(long id) {
+        SupplierCompany company = supplierCompanyRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Supplier Company not found with id: " + id));
+        return modelMapper.map(company, SupplierCompanyDTO.class);
+    }
 }

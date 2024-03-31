@@ -2,10 +2,15 @@ package com.lifepill.possystem.service.impl;
 
 
 import com.lifepill.possystem.dto.CashierDTO;
+import com.lifepill.possystem.dto.CashierWithoutImageDTO;
 import com.lifepill.possystem.dto.SupplierDTO;
+import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.entity.Supplier;
+import com.lifepill.possystem.entity.SupplierCompany;
+import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.repo.supplierRepository.SupplierCompanyRepository;
 import com.lifepill.possystem.repo.supplierRepository.SupplierRepository;
 import com.lifepill.possystem.service.SupplierService;
 import org.modelmapper.ModelMapper;
@@ -26,6 +31,10 @@ public class SupplierServiceIMPL implements SupplierService {
     private SupplierRepository supplierRepository;
 
     @Autowired
+    private SupplierCompanyRepository supplierCompanyRepository;
+
+
+    @Autowired
     private ModelMapper modelMapper;
 
     public List<SupplierDTO> getAllSuppliers() {
@@ -44,9 +53,25 @@ public class SupplierServiceIMPL implements SupplierService {
     }
 
     public SupplierDTO saveSupplier(SupplierDTO supplierDTO) {
-        Supplier supplier = modelMapper.map(supplierDTO, Supplier.class);
-        Supplier savedSupplier = supplierRepository.save(supplier);
-        return modelMapper.map(savedSupplier, SupplierDTO.class);
+        if (supplierRepository.existsById(supplierDTO.getSupplierId()) || supplierRepository.existsAllBySupplierEmail(supplierDTO.getSupplierEmail())) {
+            throw new EntityDuplicationException("Supplier already exists");
+        } else {
+            // Retrieve the Supplier Company entity by its ID
+            SupplierCompany supplierCompany = supplierCompanyRepository.findById(supplierDTO.getCompanyId())
+                    .orElseThrow(() -> new NotFoundException("Supplier Company not found with ID: " + supplierDTO.getCompanyId()));
+
+            // Map CashierDTO to Supplier entity
+            Supplier supplier = modelMapper.map(supplierDTO, Supplier.class);
+
+            // Set the Branch entity to the Supplier entity
+            supplier.setSupplierCompany(supplierCompany);
+
+            // Save the Supplier entity
+            supplierRepository.save(supplier);
+
+            // In return company id is not showing but it went to the database
+            return modelMapper.map(supplier, SupplierDTO.class);
+        }
     }
 
     public SupplierDTO updateSupplierById(long id, SupplierDTO updatedSupplierDTO) {
@@ -76,6 +101,12 @@ public class SupplierServiceIMPL implements SupplierService {
         } else {
             throw new NotFoundException("Supplier not found with id: " + id);
         }
+    }
+
+    public SupplierDTO getSupplierById(long id) {
+        Supplier supplier = supplierRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Supplier not found with id: " + id));
+        return modelMapper.map(supplier, SupplierDTO.class);
     }
 
 

@@ -17,6 +17,8 @@ public class SupplierController {
     @Autowired
     private SupplierService supplierService;
 
+
+
     @GetMapping(path = "/get-all-suppliers")
     public ResponseEntity<List<SupplierDTO>> getAllSuppliers() {
         List<SupplierDTO> suppliers = supplierService.getAllSuppliers();
@@ -33,6 +35,12 @@ public class SupplierController {
     public ResponseEntity<SupplierDTO> updateSupplierById(@PathVariable("id") long id, @RequestBody SupplierDTO updatedSupplierDTO) {
         SupplierDTO updatedSupplier = supplierService.updateSupplierById(id, updatedSupplierDTO);
         return new ResponseEntity<>(updatedSupplier, HttpStatus.OK);
+    }
+
+    @GetMapping(path ="get-supplier/{id}")
+    public ResponseEntity<SupplierDTO> getSupplierById(@PathVariable("id") long id) {
+        SupplierDTO supplierDTO = supplierService.getSupplierById(id);
+        return new ResponseEntity<>(supplierDTO, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/delete-supplier/{id}")

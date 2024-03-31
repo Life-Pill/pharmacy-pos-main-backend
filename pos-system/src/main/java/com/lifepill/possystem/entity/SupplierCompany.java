@@ -3,6 +3,7 @@ package com.lifepill.possystem.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,4 +37,6 @@ public class SupplierCompany extends BaseEntity{
     @Column(name = "company_account_number")
     private String CompanyAccountNumber;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplierCompany")
+    private Set<Supplier> suppliers;
 }
