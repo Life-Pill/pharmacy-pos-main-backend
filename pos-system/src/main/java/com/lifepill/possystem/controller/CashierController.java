@@ -89,12 +89,21 @@ public class CashierController {
     }
 
 
-    @PutMapping("/update")
+   /* @PutMapping("/update")
     @Transactional
     public String updateCashier(@RequestBody CashierUpdateDTO cashierUpdateDTO) {
         String message = cashierService.updateCashier(cashierUpdateDTO);
         return message;
-    }
+    }*/
+
+    // need to add both place cashier ID
+   @PutMapping("/update/{cashierId}")
+   @Transactional
+   public String updateCashier(@PathVariable Long cashierId, @RequestBody CashierAllDetailsUpdateDTO cashierAllDetailsUpdateDTO) {
+       String message = cashierService.updateCashier(cashierId, cashierAllDetailsUpdateDTO);
+       return message;
+   }
+
 
     @PutMapping("/updateAccountDetails")
     @Transactional

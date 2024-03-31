@@ -11,7 +11,8 @@ public interface CashierService {
 
     public String saveCashier(CashierDTO cashierDTO);
     public String saveCashierWithoutImage(CashierWithoutImageDTO cashierWithoutImageDTO);
-    String updateCashier(CashierUpdateDTO cashierUpdateDTO);
+//    String updateCashier(CashierUpdateDTO cashierUpdateDTO);
+    String updateCashier(Long cashierId, CashierAllDetailsUpdateDTO cashierAllDetailsUpdateDTO);
     CashierDTO getCashierById(long cashierId);
     String deleteCashier(long cashierId);
     List<CashierDTO> getAllCashiers();

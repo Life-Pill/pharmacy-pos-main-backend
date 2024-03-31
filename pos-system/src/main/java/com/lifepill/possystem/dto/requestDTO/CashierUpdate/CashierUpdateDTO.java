@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 public class CashierUpdateDTO {
     private long cashierId;
+//    private int branchId;
     private String cashierNicName;
     private String cashierEmail;
     private String cashierNic;

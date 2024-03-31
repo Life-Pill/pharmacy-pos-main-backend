@@ -2,12 +2,15 @@ package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
+import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.entity.Branch;
+import com.lifepill.possystem.entity.Item;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.helper.SaveImageHelper;
 import com.lifepill.possystem.repo.branchRepo.BranchRepo;
 import com.lifepill.possystem.service.BranchService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,6 +26,9 @@ public class BranchServiceIMPL implements BranchService {
 
     @Autowired
     private BranchRepo branchRepo;
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     @Override
     public void saveBranch(BranchDTO branchDTO, MultipartFile image) {
@@ -30,25 +36,13 @@ public class BranchServiceIMPL implements BranchService {
             throw new EntityDuplicationException("Branch already exists");
         } else {
             byte[] imageBytes = SaveImageHelper.saveImage(image);
-            Branch branch = new Branch(
-                    branchDTO.getBranchId(),
-                    branchDTO.getBranchName(),
-                    branchDTO.getBranchAddress(),
-                    branchDTO.getBranchContact(),
-                    branchDTO.getBranchFax(),
-                    branchDTO.getBranchEmail(),
-                    branchDTO.getBranchDescription(),
-                    imageBytes,
-                    branchDTO.isBranchStatus(),
-                    branchDTO.getBranchLocation(),
-                    branchDTO.getBranchCreatedOn(),
-                    branchDTO.getBranchCreatedBy()
-            );
+            Branch branch = modelMapper.map(branchDTO, Branch.class);
+            branch.setBranchImage(imageBytes);
+
+
             branchRepo.save(branch);
         }
     }
-
-
     @Override
     public byte[] getImageData(int branchId) {
         Optional<Branch> branchOptional = branchRepo.findById(branchId);

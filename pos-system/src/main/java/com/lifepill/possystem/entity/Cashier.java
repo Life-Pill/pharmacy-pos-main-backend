@@ -66,40 +66,44 @@ public class Cashier {
     @JoinColumn(name = "cashier_bank_details_id", nullable = true)
     private CashierBankDetails cashierBankDetails;
 
-    public Cashier(long cashierId, String cashierNicName, String cashierFirstName, String cashierLastName, byte[] profileImage, String cashierPassword, String cashierEmail, String cashierPhone, String cashierAddress, double cashierSalary, String cashierNic, boolean isActiveStatus, int pin, Gender gender, Date dateOfBirth, Role role) {
-        this.cashierId = cashierId;
-        this.cashierNicName = cashierNicName;
-        this.cashierFirstName = cashierFirstName;
-        this.cashierLastName = cashierLastName;
-        this.profileImage = profileImage;
-        this.cashierPassword = cashierPassword;
-        this.cashierEmail = cashierEmail;
-        this.cashierPhone = cashierPhone;
-        this.cashierAddress = cashierAddress;
-        this.cashierSalary = cashierSalary;
-        this.cashierNic = cashierNic;
-        this.isActiveStatus = isActiveStatus;
-        this.pin = pin;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.role = role;
-    }
+    @ManyToOne
+    @JoinColumn(name = "brach_id", nullable = false)
+    private Branch branch;
 
-    public Cashier(long cashierId, String cashierNicName, String cashierFirstName, String cashierLastName, String cashierPassword, String cashierEmail, String cashierPhone, String cashierAddress, double cashierSalary, String cashierNic, boolean isActiveStatus, int pin, Gender gender, Date dateOfBirth, Role role) {
-        this.cashierId = cashierId;
-        this.cashierNicName = cashierNicName;
-        this.cashierFirstName = cashierFirstName;
-        this.cashierLastName = cashierLastName;
-        this.cashierPassword = cashierPassword;
-        this.cashierEmail = cashierEmail;
-        this.cashierPhone = cashierPhone;
-        this.cashierAddress = cashierAddress;
-        this.cashierSalary = cashierSalary;
-        this.cashierNic = cashierNic;
-        this.isActiveStatus = isActiveStatus;
-        this.pin = pin;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.role = role;
-    }
+//    public Cashier(long cashierId, String cashierNicName, String cashierFirstName, String cashierLastName, byte[] profileImage, String cashierPassword, String cashierEmail, String cashierPhone, String cashierAddress, double cashierSalary, String cashierNic, boolean isActiveStatus, int pin, Gender gender, Date dateOfBirth, Role role) {
+//        this.cashierId = cashierId;
+//        this.cashierNicName = cashierNicName;
+//        this.cashierFirstName = cashierFirstName;
+//        this.cashierLastName = cashierLastName;
+//        this.profileImage = profileImage;
+//        this.cashierPassword = cashierPassword;
+//        this.cashierEmail = cashierEmail;
+//        this.cashierPhone = cashierPhone;
+//        this.cashierAddress = cashierAddress;
+//        this.cashierSalary = cashierSalary;
+//        this.cashierNic = cashierNic;
+//        this.isActiveStatus = isActiveStatus;
+//        this.pin = pin;
+//        this.gender = gender;
+//        this.dateOfBirth = dateOfBirth;
+//        this.role = role;
+//    }
+//
+//    public Cashier(long cashierId, String cashierNicName, String cashierFirstName, String cashierLastName, String cashierPassword, String cashierEmail, String cashierPhone, String cashierAddress, double cashierSalary, String cashierNic, boolean isActiveStatus, int pin, Gender gender, Date dateOfBirth, Role role) {
+//        this.cashierId = cashierId;
+//        this.cashierNicName = cashierNicName;
+//        this.cashierFirstName = cashierFirstName;
+//        this.cashierLastName = cashierLastName;
+//        this.cashierPassword = cashierPassword;
+//        this.cashierEmail = cashierEmail;
+//        this.cashierPhone = cashierPhone;
+//        this.cashierAddress = cashierAddress;
+//        this.cashierSalary = cashierSalary;
+//        this.cashierNic = cashierNic;
+//        this.isActiveStatus = isActiveStatus;
+//        this.pin = pin;
+//        this.gender = gender;
+//        this.dateOfBirth = dateOfBirth;
+//        this.role = role;
+//    }
 }
