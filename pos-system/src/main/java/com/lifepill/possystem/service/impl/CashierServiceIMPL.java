@@ -6,6 +6,7 @@ import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.entity.CashierBankDetails;
+import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepo.BranchRepo;
@@ -464,6 +465,15 @@ public class CashierServiceIMPL implements CashierService {
                 .collect(Collectors.toList());
 
         return cashierDTOs;
+    }
+
+    @Override
+    public List<CashierDTO> getAllCashiersByRole(Role role) {
+        List<Cashier> cashiers = cashierRepo.findAllByRole(role);
+
+        return cashiers.stream()
+                .map(cashier -> modelMapper.map(cashier, CashierDTO.class))
+                .collect(Collectors.toList());
     }
 
 }

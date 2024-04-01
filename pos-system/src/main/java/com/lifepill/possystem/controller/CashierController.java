@@ -5,6 +5,7 @@ import com.lifepill.possystem.dto.CashierWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
 import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.entity.CashierBankDetails;
+import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.service.CashierService;
 import com.lifepill.possystem.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,5 +193,11 @@ public class CashierController {
                 new StandardResponse(201, "SUCCESS", allCashiersBankDetails),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("/byRole/{role}")
+    public ResponseEntity<List<CashierDTO>> getAllCashiersByRole(@PathVariable Role role) {
+        List<CashierDTO> cashiers = cashierService.getAllCashiersByRole(role);
+        return new ResponseEntity<>(cashiers, HttpStatus.OK);
     }
 }

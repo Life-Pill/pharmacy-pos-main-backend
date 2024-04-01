@@ -4,6 +4,7 @@ package com.lifepill.possystem.service;
 import com.lifepill.possystem.dto.CashierDTO;
 import com.lifepill.possystem.dto.CashierWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.CashierUpdate.*;
+import com.lifepill.possystem.entity.enums.Role;
 
 import java.util.List;
 
@@ -35,4 +36,6 @@ public interface CashierService {
     String updateCashierBankAccountDetailsByCashierId(long cashierId, CashierUpdateBankAccountDTO cashierUpdateBankAccountDTO);
 
     List<CashierDTO> getAllCashiersByBranchId(int branchId);
+
+    List<CashierDTO> getAllCashiersByRole(Role role);
 }
