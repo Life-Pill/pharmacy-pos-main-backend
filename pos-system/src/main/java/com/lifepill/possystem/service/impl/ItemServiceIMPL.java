@@ -14,6 +14,7 @@ import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.itemRepo.ItemCategoryRepository;
 import com.lifepill.possystem.repo.itemRepo.ItemRepo;
+import com.lifepill.possystem.repo.supplierRepository.SupplierRepository;
 import com.lifepill.possystem.service.ItemService;
 import com.lifepill.possystem.util.mappers.ItemMapper;
 import org.modelmapper.ModelMapper;
@@ -41,6 +42,9 @@ public class ItemServiceIMPL implements ItemService {
 
     @Autowired
     private ItemCategoryRepository itemCategoryRepository;
+
+    @Autowired
+    private SupplierRepository supplierRepository;
 
   /*  @Autowired
     private  SupplierRepository supplierRepository;*/
@@ -243,7 +247,7 @@ public class ItemServiceIMPL implements ItemService {
         return "Category saved successfully";
     }
 
-    @Override
+   /* @Override
     public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
         // Check if category exists
         ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
@@ -263,6 +267,38 @@ public class ItemServiceIMPL implements ItemService {
         itemRepo.save(item);
         return "Item saved successfully with category";
     }
+    */
+
+    @Override
+    public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
+        // Check if category exists
+        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
+                .orElseGet(() -> {
+                    // If category doesn't exist, create a new one
+                    ItemCategory newCategory = new ItemCategory();
+                    // Set category properties if needed
+                    // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
+                    // newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
+                    // Save the new category
+                    return itemCategoryRepository.save(newCategory);
+                });
+
+        // Check if supplier exists
+        Supplier supplier = supplierRepository.findById(itemSaveRequestCategoryDTO.getSupplierId())
+                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: " + itemSaveRequestCategoryDTO.getSupplierId()));
+
+        // Now, associate the item with the category and supplier
+        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
+        item.setItemCategory(category);
+        item.setSupplier(supplier); // Ensure the supplier is set
+        itemRepo.save(item);
+        return "Item saved successfully with category and supplier";
+    }
+
+
+
+
+
   /*  @Override
     public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
         // Check if category exists
