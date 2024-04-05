@@ -7,10 +7,10 @@ import com.lifepill.possystem.entity.Order;
 import com.lifepill.possystem.entity.OrderDetails;
 import com.lifepill.possystem.exception.InsufficientItemQuantityException;
 import com.lifepill.possystem.exception.NotFoundException;
-import com.lifepill.possystem.repo.cashierRepo.CashierRepo;
-import com.lifepill.possystem.repo.itemRepo.ItemRepo;
-import com.lifepill.possystem.repo.orderRepo.OrderDetailsRepo;
-import com.lifepill.possystem.repo.orderRepo.OrderRepo;
+import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
+import com.lifepill.possystem.repo.itemRepository.ItemRepository;
+import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
+import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.service.OrderService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -26,21 +26,21 @@ import java.util.Optional;
 public class OrderServiceIMPL implements OrderService {
 
     @Autowired
-    private OrderRepo orderRepo;
+    private OrderRepository orderRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    private CashierRepo cashierRepo;
+    private EmployerRepository employerRepository;
     @Autowired
-    private OrderDetailsRepo orderDetailsRepo;
+    private OrderDetailsRepository orderDetailsRepo;
     @Autowired
-    private ItemRepo itemRepo;
+    private ItemRepository itemRepository;
 
  /*   @Override
     @Transactional
     public String addOrder(RequestOrderSaveDTO requestOrderSaveDTO) {
         Order order = new Order(
-          cashierRepo.getById(requestOrderSaveDTO.getCashiers()),
+          cashierRepo.getById(requestOrderSaveDTO.getEmployers()),
           requestOrderSaveDTO.getOrderDate(),
           requestOrderSaveDTO.getTotal()
         );
@@ -73,12 +73,12 @@ public class OrderServiceIMPL implements OrderService {
         updateItemQuantities(requestOrderSaveDTO);
 
         Order order = new Order(
-          cashierRepo.getById(requestOrderSaveDTO.getCashiers()),
+          employerRepository.getById(requestOrderSaveDTO.getEmployerId()),
           requestOrderSaveDTO.getOrderDate(),
           requestOrderSaveDTO.getTotal()
         );
-        orderRepo.save(order);
-        if (orderRepo.existsById(order.getOrderId())){
+        orderRepository.save(order);
+        if (orderRepository.existsById(order.getOrderId())){
 
             List<OrderDetails> orderDetails = modelMapper.
                     map(requestOrderSaveDTO.getOrderDetails(),new TypeToken<List<OrderDetails>>(){
@@ -86,7 +86,7 @@ public class OrderServiceIMPL implements OrderService {
 
             for (int i=0;i<orderDetails.size();i++){
                 orderDetails.get(i).setOrders(order);
-                orderDetails.get(i).setItems(itemRepo.getById(requestOrderSaveDTO.getOrderDetails().get(i).getItems()));
+                orderDetails.get(i).setItems(itemRepository.getById(requestOrderSaveDTO.getOrderDetails().get(i).getItems()));
             }
 
             if (orderDetails.size()>0){
@@ -114,7 +114,7 @@ public class OrderServiceIMPL implements OrderService {
 
     private void checkItemStock(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
-            Optional<Item> optionalItem = itemRepo.findById(orderDetail.getItems());
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getItems());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
                 if (item.getItemQuantity() < orderDetail.getQty()) {
@@ -128,12 +128,12 @@ public class OrderServiceIMPL implements OrderService {
 
     private void updateItemQuantities(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
-            Optional<Item> optionalItem = itemRepo.findById(orderDetail.getItems());
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getItems());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
                 int remainingQuantity = (int) (item.getItemQuantity() - orderDetail.getQty());
                 item.setItemQuantity(remainingQuantity);
-                itemRepo.save(item);
+                itemRepository.save(item);
             } else {
                 throw new NotFoundException("Item not found with ID: " + orderDetail.getItems());
             }

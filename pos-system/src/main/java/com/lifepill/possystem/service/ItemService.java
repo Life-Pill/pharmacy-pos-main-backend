@@ -1,8 +1,6 @@
 package com.lifepill.possystem.service;
 
-import com.lifepill.possystem.dto.CashierDTO;
 import com.lifepill.possystem.dto.ItemCategoryDTO;
-import com.lifepill.possystem.dto.ItemDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;

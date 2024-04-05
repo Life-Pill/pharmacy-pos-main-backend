@@ -1,12 +1,8 @@
 package com.lifepill.possystem.entity;
 
-import com.fasterxml.jackson.annotation.JsonTypeId;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,8 +25,8 @@ public class Order {
     private long orderId;
 
     @ManyToOne
-    @JoinColumn(name = "cashier_id",nullable = false)
-    private Cashier cashiers;
+    @JoinColumn(name = "employer_id",nullable = false)
+    private Employer employer;
 
     @Column(name = "order_date", columnDefinition = "TIMESTAMP")
     private Date orderDate;
@@ -41,8 +37,8 @@ public class Order {
     @OneToMany(mappedBy = "orders")
     private Set<OrderDetails> orderDetails;
 
-    public Order(Cashier cashiers, Date orderDate, Double total) {
-        this.cashiers = cashiers;
+    public Order(Employer employers, Date orderDate, Double total) {
+        this.employer = employers;
         this.orderDate = orderDate;
         this.total = total;
     }

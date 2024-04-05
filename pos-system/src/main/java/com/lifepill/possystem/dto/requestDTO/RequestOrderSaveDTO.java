@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 public class RequestOrderSaveDTO {
 
-    private long cashiers;
+    private long employerId;
     private Date orderDate;
     private Double total;
     private List<RequestOrderDetailsSaveDTO> orderDetails;

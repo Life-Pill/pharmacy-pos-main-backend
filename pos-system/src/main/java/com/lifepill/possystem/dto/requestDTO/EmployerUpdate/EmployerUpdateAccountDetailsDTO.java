@@ -1,4 +1,4 @@
-package com.lifepill.possystem.dto.requestDTO.CashierUpdate;
+package com.lifepill.possystem.dto.requestDTO.EmployerUpdate;
 
 import com.lifepill.possystem.entity.enums.Gender;
 import lombok.AllArgsConstructor;
@@ -10,12 +10,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CashierUpdateAccountDetailsDTO {
-    private long cashierId;
-    private String cashierFirstName;
-    private String cashierLastName;
+public class EmployerUpdateAccountDetailsDTO {
+    private long employerId;
+    private String employerFirstName;
+    private String employerLastName;
     private Gender gender;
-    private String cashierAddress;
+    private String employerAddress;
     private Date dateOfBirth;
 
 //    private String cashierAddressLine1;

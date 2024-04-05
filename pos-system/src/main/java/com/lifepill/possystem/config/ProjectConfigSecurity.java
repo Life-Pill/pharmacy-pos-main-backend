@@ -17,7 +17,7 @@ public class ProjectConfigSecurity {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 .antMatchers("/lifepill/v1/cashier/","/lifepill/v1/item").permitAll()
-                .antMatchers("/lifepill/v1/cashier/get-all-cashiers","/lifepill/v1/item/save").permitAll()
+                .antMatchers("/lifepill/v1/cashier/get-all-employers","/lifepill/v1/item/save").permitAll()
                 .and().formLogin()
                 .and().httpBasic();
         return http.build();

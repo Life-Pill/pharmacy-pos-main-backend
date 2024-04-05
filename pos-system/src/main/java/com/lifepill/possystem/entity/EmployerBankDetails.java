@@ -11,30 +11,30 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "cashier_bankdetails")
-public class CashierBankDetails
+@Table(name = "employer_bankdetails")
+public class EmployerBankDetails
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cashier_bank_details_id")
-    private long cashierBankDetailsId;
+    @Column(name = "employer_bank_details_id")
+    private long employerBankDetailsId;
     @Column(name = "bank_name")
     private String bankName;
     @Column(name = "bank_branch_name",nullable = true)
     private String bankBranchName;
     @Column(name = "bank_account_number")
     private String bankAccountNumber;
-    @Column(name = "cashier_description")
-    private String cashierDescription;
+    @Column(name = "employer_description")
+    private String employerDescription;
     @Column(name = "cashier_monthly_payment")
     private double monthlyPayment;
     @Column(name = "payment_status",nullable = true)
     private Boolean monthlyPaymentStatus;
     @Column(name = "cashier_id")
-    private long cashierId;
+    private long employerId;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashierBankDetails")
-    private Set<Cashier> cashiers;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employerBankDetails")
+    private Set<Employer> employers;
 
 
 }

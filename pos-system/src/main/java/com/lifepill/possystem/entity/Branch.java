@@ -44,7 +44,7 @@ public class Branch {
     private String branchCreatedBy;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-    private Set<Cashier> cashiers;
+    private Set<Employer> employers;
 
 /*    public Branch(int branchId, String branchName, String branchAddress, String branchContact, String branchFax, String branchEmail, String branchDescription, byte[] branchImage, boolean branchStatus, String branchLocation, String branchCreatedOn, String branchCreatedBy) {
         this.branchId = branchId;

@@ -1,4 +1,4 @@
-package com.lifepill.possystem.repo.itemRepo;
+package com.lifepill.possystem.repo.itemRepository;
 
 import com.lifepill.possystem.entity.ItemCategory;
 import org.springframework.data.jpa.repository.JpaRepository;

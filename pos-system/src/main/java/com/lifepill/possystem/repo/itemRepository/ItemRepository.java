@@ -1,4 +1,4 @@
-package com.lifepill.possystem.repo.itemRepo;
+package com.lifepill.possystem.repo.itemRepository;
 import com.lifepill.possystem.entity.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 @EnableJpaRepositories
-public interface ItemRepo extends JpaRepository<Item,Long> {
+public interface ItemRepository extends JpaRepository<Item,Long> {
     List<Item> findAllByItemNameEqualsAndStockEquals(String itemName, boolean b);
     List<Item> findAllByStockEquals(boolean activeStatus);
     Page<Item> findAllByStockEquals(boolean activeStatus, Pageable pageable);

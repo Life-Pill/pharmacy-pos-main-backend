@@ -1,11 +1,10 @@
 package com.lifepill.possystem.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lifepill.possystem.dto.BranchDTO;
-import com.lifepill.possystem.dto.CashierDTO;
+import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
 import com.lifepill.possystem.service.BranchService;
-import com.lifepill.possystem.service.CashierService;
+import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -31,7 +27,7 @@ public class BranchController {
     private BranchService branchService;
 
     @Autowired
-    private CashierService cashierService;
+    private EmployerService cashierService;
 
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String saveBranch(@RequestParam("image") MultipartFile image, @ModelAttribute BranchDTO branchDTO) {
@@ -105,9 +101,9 @@ public class BranchController {
     }
 
     @GetMapping("/cashiers/by-branch/{branchId}")
-    public ResponseEntity<List<CashierDTO>> getAllCashiersByBranchId(@PathVariable int branchId) {
-        List<CashierDTO> cashierDTOs = cashierService.getAllCashiersByBranchId(branchId);
-        return new ResponseEntity<>(cashierDTOs, HttpStatus.OK);
+    public ResponseEntity<List<EmployerDTO>> getAllCashiersByBranchId(@PathVariable int branchId) {
+        List<EmployerDTO> employerDTOS = cashierService.getAllEmployerByBranchId(branchId);
+        return new ResponseEntity<>(employerDTOS, HttpStatus.OK);
     }
 
 
