@@ -38,7 +38,7 @@ public class ItemSaveRequestCategoryDTO {
 
         private long categoryId;
 
-        private int supplierId;
+        private long supplierId;
 
 //        private String categoryName;
 //        private String categoryDescription;
