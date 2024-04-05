@@ -26,7 +26,7 @@ public class EmployerControllerTests {
     private EmployerController cashierController;
 
     @Test
-    public void testSaveCashierWithImage() throws IOException {
+    public void testSaveEmployerWithImage() throws IOException {
         // Create a mock MultipartFile
         byte[] fileContent = "image content".getBytes();
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", fileContent);
@@ -39,13 +39,13 @@ public class EmployerControllerTests {
         when(cashierService.saveEmployer(any(EmployerDTO.class))).thenReturn("saved");
 
         // Call the controller method
-        String result = cashierController.saveCashierWithImage(employerDTO, multipartFile);
+        String result = cashierController.saveEmployerWithImage(employerDTO, multipartFile);
 
     }
 
     @Test
 
-    public void testSaveCashierWithImages() throws IOException {
+    public void testSaveEmployerWithImages() throws IOException {
         // Create a mock MultipartFile
         byte[] fileContent = "image content".getBytes();
         MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", fileContent);
@@ -58,7 +58,7 @@ public class EmployerControllerTests {
         when(cashierService.saveEmployer(any(EmployerDTO.class))).thenReturn("saved");
 
         // Call the controller method
-        String result = cashierController.saveCashierWithImage(employerDTO, multipartFile);
+        String result = cashierController.saveEmployerWithImage(employerDTO, multipartFile);
 
         // Verify the result
         assertEquals("saved", result);

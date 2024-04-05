@@ -18,12 +18,12 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("lifepill/v1/cashier")
+@RequestMapping("lifepill/v1/employers")
 @CrossOrigin
 public class EmployerController {
 
     @Autowired
-    private EmployerService cashierService;
+    private EmployerService employerService;
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
@@ -51,7 +51,7 @@ public class EmployerController {
     }*/
 
     @PostMapping("/save-with-image")
-    public String saveCashierWithImage(@ModelAttribute EmployerDTO employerDTO, @RequestParam("file") MultipartFile file) throws IOException {
+    public String saveEmployerWithImage(@ModelAttribute EmployerDTO employerDTO, @RequestParam("file") MultipartFile file) throws IOException {
         // Check if a file is provided
         if (!file.isEmpty()) {
             // Convert MultipartFile to byte array
@@ -60,7 +60,7 @@ public class EmployerController {
             employerDTO.setProfileImage(profileImage);
         }
         // Save the cashier along with the profile photo
-        cashierService.saveEmployer(employerDTO);
+        employerService.saveEmployer(employerDTO);
         return "saved";
     }
 
@@ -68,7 +68,7 @@ public class EmployerController {
     @Transactional
     public ResponseEntity<byte[]> getProfilePhoto(@PathVariable int employerId) {
         // Retrieve the cashier entity by ID
-        EmployerDTO cashier = cashierService.getEmployerById(employerId);
+        EmployerDTO cashier = employerService.getEmployerById(employerId);
 
         // Check if the cashier exists
         if (cashier != null && cashier.getProfileImage() != null) {
@@ -94,16 +94,16 @@ public class EmployerController {
     // need to add both place cashier ID
    @PutMapping("/update/{employerId}")
    @Transactional
-   public String updateCashier(@PathVariable Long employerId, @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO) {
-       String message = cashierService.updateEmployer(employerId, cashierAllDetailsUpdateDTO);
+   public String updateEmployer(@PathVariable Long employerId, @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO) {
+       String message = employerService.updateEmployer(employerId, cashierAllDetailsUpdateDTO);
        return message;
    }
 
 
     @PutMapping("/updateAccountDetails")
     @Transactional
-    public String updateCashierAccountDetails(@RequestBody EmployerUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO) {
-        String message = cashierService.updateEmployerAccountDetails(cashierUpdateAccountDetailsDTO);
+    public String updateEmployerAccountDetails(@RequestBody EmployerUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO) {
+        String message = employerService.updateEmployerAccountDetails(cashierUpdateAccountDetailsDTO);
         return message;
     }
 
@@ -116,37 +116,37 @@ public class EmployerController {
 
     @PutMapping("/updateBankAccountDetails/{employerId}")
     @Transactional
-    public String updateCashierBankAccountDetails(@PathVariable long employerId, @RequestBody EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
-        String message = cashierService.updateEmployerBankAccountDetailsByCashierId(employerId, cashierUpdateBankAccountDTO);
+    public String updateEmployerBankAccountDetails(@PathVariable long employerId, @RequestBody EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
+        String message = employerService.updateEmployerBankAccountDetailsByCashierId(employerId, cashierUpdateBankAccountDTO);
         return message;
     }
 
 
     @PutMapping("/updatePassword")
     @Transactional
-    public String updateCashierPassword(@RequestBody EmployerPasswordResetDTO cashierPasswordResetDTO) {
-        String message = cashierService.updateEmployerPassword(cashierPasswordResetDTO);
+    public String updateEmployerPassword(@RequestBody EmployerPasswordResetDTO cashierPasswordResetDTO) {
+        String message = employerService.updateEmployerPassword(cashierPasswordResetDTO);
         return message;
     }
 
     @PutMapping("/updateRecentPin")
     @Transactional
     public String updateRecentPin(@RequestBody EmployerRecentPinUpdateDTO cashierRecentPinUpdateDTO) {
-        String message = cashierService.updateRecentPin(cashierRecentPinUpdateDTO);
+        String message = employerService.updateRecentPin(cashierRecentPinUpdateDTO);
         return message;
     }
 
     @GetMapping(path = "/get-by-id", params = "id")
     @Transactional
-    public EmployerDTO getCashierById(@RequestParam(value = "id") int employerId) {
-        EmployerDTO employerDTO = cashierService.getEmployerById(employerId);
+    public EmployerDTO getEmployerById(@RequestParam(value = "id") int employerId) {
+        EmployerDTO employerDTO = employerService.getEmployerById(employerId);
         return employerDTO;
     }
 
     @GetMapping("/view-image/{employerId}")
     @Transactional
     public ResponseEntity<byte[]> viewImage(@PathVariable int employerId) {
-        byte[] imageData = cashierService.getImageData(employerId);
+        byte[] imageData = employerService.getImageData(employerId);
 
         if (imageData != null) {
             HttpHeaders headers = new HttpHeaders();
@@ -158,31 +158,31 @@ public class EmployerController {
     }
 
     @DeleteMapping(path = "/delete-employerId/{id}")
-    public String deleteCashier(@PathVariable(value = "id") int employerId) {
-        String deleted = cashierService.deleteEmployer(employerId);
+    public String deleteEmployer(@PathVariable(value = "id") int employerId) {
+        String deleted = employerService.deleteEmployer(employerId);
         return deleted;
     }
 
-    @GetMapping(path = "/get-all-cashiers")
-    public ResponseEntity<StandardResponse> getAllCashiers() {
-        List<EmployerDTO> allEmployer = cashierService.getAllEmployer();
+    @GetMapping(path = "/get-all-employers")
+    public ResponseEntity<StandardResponse> getAllEmployers() {
+        List<EmployerDTO> allEmployer = employerService.getAllEmployer();
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(201, "SUCCESS", allEmployer),
                 HttpStatus.OK
         );
     }
 
-    @GetMapping(path = "/get-all-cashiers-by-active-state/{status}")
+    @GetMapping(path = "/get-all-employers-by-active-state/{status}")
     @Transactional
-    public List<EmployerDTO> getAllCashiersByActiveState(@PathVariable(value = "status") boolean activeState) {
-        List<EmployerDTO> allemployer = cashierService.getAllEmployerByActiveState(activeState);
+    public List<EmployerDTO> getAllEmployerByActiveState(@PathVariable(value = "status") boolean activeState) {
+        List<EmployerDTO> allemployer = employerService.getAllEmployerByActiveState(activeState);
         return allemployer;
     }
 
-    @GetMapping(path = "/get-all-cashiers-bank-details")
+    @GetMapping(path = "/get-all-employers-bank-details")
     @Transactional
-    public ResponseEntity<StandardResponse> getAllCashiersBankDetails() {
-        List<EmployerUpdateBankAccountDTO> allCashiersBankDetails = cashierService.getAllEmployerBankDetails();
+    public ResponseEntity<StandardResponse> getAllEmployerBankDetails() {
+        List<EmployerUpdateBankAccountDTO> allCashiersBankDetails = employerService.getAllEmployerBankDetails();
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(201, "SUCCESS", allCashiersBankDetails),
                 HttpStatus.OK
@@ -190,8 +190,8 @@ public class EmployerController {
     }
 
     @GetMapping("/byRole/{role}")
-    public ResponseEntity<List<EmployerDTO>> getAllCashiersByRole(@PathVariable Role role) {
-        List<EmployerDTO> cashiers = cashierService.getAllEmployerByRole(role);
+    public ResponseEntity<List<EmployerDTO>> getAllEmployerByRole(@PathVariable Role role) {
+        List<EmployerDTO> cashiers = employerService.getAllEmployerByRole(role);
         return new ResponseEntity<>(cashiers, HttpStatus.OK);
     }
 }

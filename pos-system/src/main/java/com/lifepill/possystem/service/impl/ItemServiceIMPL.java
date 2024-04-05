@@ -17,6 +17,7 @@ import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.repo.supplierRepository.SupplierRepository;
 import com.lifepill.possystem.service.ItemService;
 import com.lifepill.possystem.util.mappers.ItemMapper;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ItemServiceIMPL implements ItemService {
     @Autowired
     private ItemRepository itemRepository;

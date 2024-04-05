@@ -441,8 +441,17 @@ public class EmployerServiceIMPL implements EmployerService {
             newBankDetails.setMonthlyPaymentStatus(cashierUpdateBankAccountDTO.isMonthlyPaymentStatus());
             newBankDetails.setEmployerId(cashierId);
 
+
             // Save the new EmployerBankDetails entity
-            cashierBankDetailsRepo.save(newBankDetails);
+            EmployerBankDetails savedBankDetails = cashierBankDetailsRepo.save(newBankDetails);
+
+            // Update the employer_bank_details_id in the employer entity
+            employer.setEmployerBankDetails(savedBankDetails);
+
+
+
+            // Save the updated employer entity
+            employerRepository.save(employer);
 
             return "Employer bank account details created successfully.";
         } else {

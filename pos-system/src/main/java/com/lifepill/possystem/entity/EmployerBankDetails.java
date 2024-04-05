@@ -30,7 +30,7 @@ public class EmployerBankDetails
     private double monthlyPayment;
     @Column(name = "payment_status",nullable = true)
     private Boolean monthlyPaymentStatus;
-    @Column(name = "cashier_id")
+    @Column(name = "employeer_id")
     private long employerId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employerBankDetails")
