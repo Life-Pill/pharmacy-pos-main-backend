@@ -36,7 +36,7 @@ public class EmployerControllerTests {
         // Set other properties if needed
 
         // Mock the behavior of cashierService.saveCashier method
-        when(cashierService.saveCashier(any(EmployerDTO.class))).thenReturn("saved");
+        when(cashierService.saveEmployer(any(EmployerDTO.class))).thenReturn("saved");
 
         // Call the controller method
         String result = cashierController.saveCashierWithImage(employerDTO, multipartFile);
@@ -55,7 +55,7 @@ public class EmployerControllerTests {
         // Set other properties if needed
 
         // Mock the behavior of cashierService.saveCashier method
-        when(cashierService.saveCashier(any(EmployerDTO.class))).thenReturn("saved");
+        when(cashierService.saveEmployer(any(EmployerDTO.class))).thenReturn("saved");
 
         // Call the controller method
         String result = cashierController.saveCashierWithImage(employerDTO, multipartFile);
@@ -64,7 +64,7 @@ public class EmployerControllerTests {
         assertEquals("saved", result);
 
         // Verify the behavior of saveCashier method
-        verify(cashierService, times(1)).saveCashier(employerDTO);
+        verify(cashierService, times(1)).saveEmployer(employerDTO);
     }
 
 
