@@ -1,11 +1,7 @@
 package com.lifepill.possystem.service.impl;
 
 
-import com.lifepill.possystem.dto.CashierDTO;
-import com.lifepill.possystem.dto.CashierWithoutImageDTO;
 import com.lifepill.possystem.dto.SupplierDTO;
-import com.lifepill.possystem.entity.Branch;
-import com.lifepill.possystem.entity.Cashier;
 import com.lifepill.possystem.entity.Supplier;
 import com.lifepill.possystem.entity.SupplierCompany;
 import com.lifepill.possystem.exception.EntityDuplicationException;
@@ -21,7 +17,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -60,7 +55,7 @@ public class SupplierServiceIMPL implements SupplierService {
             SupplierCompany supplierCompany = supplierCompanyRepository.findById(supplierDTO.getCompanyId())
                     .orElseThrow(() -> new NotFoundException("Supplier Company not found with ID: " + supplierDTO.getCompanyId()));
 
-            // Map CashierDTO to Supplier entity
+            // Map EmployerDTO to Supplier entity
             Supplier supplier = modelMapper.map(supplierDTO, Supplier.class);
 
             // Set the Branch entity to the Supplier entity

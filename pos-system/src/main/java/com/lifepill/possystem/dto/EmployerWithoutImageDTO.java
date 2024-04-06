@@ -11,17 +11,17 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CashierWithoutImageDTO {
-    private long cashierId;
-    private String cashierNicName;
-    private String cashierFirstName;
-    private String cashierLastName;
-    private String cashierPassword;
-    private String cashierEmail;
-    private String cashierPhone;
-    private String cashierAddress;
-    private double cashierSalary;
-    private String cashierNic;
+public class EmployerWithoutImageDTO {
+    private long employerId;
+    private String employerNicName;
+    private String employerFirstName;
+    private String employerLastName;
+    private String employerPassword;
+    private String employerEmail;
+    private String employerPhone;
+    private String employerAddress;
+    private double employerSalary;
+    private String employerNic;
     private boolean isActiveStatus;
     private Gender gender;
     private Date dateOfBirth;

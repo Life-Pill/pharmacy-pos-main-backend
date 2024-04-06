@@ -1,4 +1,4 @@
-package com.lifepill.possystem.dto.requestDTO.CashierUpdate;
+package com.lifepill.possystem.dto.requestDTO.EmployerUpdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CashierRecentPinUpdateDTO {
-    private long cashierId;
+public class EmployerRecentPinUpdateDTO {
+    private long employerId;
     private int pin;
 }

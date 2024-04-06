@@ -12,8 +12,8 @@ import com.lifepill.possystem.entity.ItemCategory;
 import com.lifepill.possystem.entity.Supplier;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
-import com.lifepill.possystem.repo.itemRepo.ItemCategoryRepository;
-import com.lifepill.possystem.repo.itemRepo.ItemRepo;
+import com.lifepill.possystem.repo.itemRepository.ItemCategoryRepository;
+import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.repo.supplierRepository.SupplierRepository;
 import com.lifepill.possystem.service.ItemService;
 import com.lifepill.possystem.util.mappers.ItemMapper;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class ItemServiceIMPL implements ItemService {
     @Autowired
-    private ItemRepo itemRepo;
+    private ItemRepository itemRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -52,8 +52,8 @@ public class ItemServiceIMPL implements ItemService {
     @Override
     public String saveItems(ItemSaveRequestDTO itemSaveRequestDTO) {
         Item item = modelMapper.map(itemSaveRequestDTO, Item.class);
-        if (!itemRepo.existsById(item.getItemId())) {
-            itemRepo.save(item);
+        if (!itemRepository.existsById(item.getItemId())) {
+            itemRepository.save(item);
             return item.getItemName() + " Saved Successfull";
         } else {
             throw new EntityDuplicationException("Already added this Id item");
@@ -62,7 +62,7 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public List<ItemGetAllResponseDTO> getAllItems() {
-        List<Item> getAllItems = itemRepo.findAll();
+        List<Item> getAllItems = itemRepository.findAll();
 
         if (!getAllItems.isEmpty()) {
             List<ItemGetAllResponseDTO> itemGetAllResponseDTOSList = new ArrayList<>();
@@ -105,7 +105,7 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public List<ItemGetResponseDTO> getItemByNameAndStock(String itemName) {
-        List<Item> items = itemRepo.findAllByItemNameEqualsAndStockEquals(itemName, true);
+        List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
         if (!items.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     items,
@@ -120,7 +120,7 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus) {
-        List<Item> item = itemRepo.findAllByStockEquals(activeStatus);
+        List<Item> item = itemRepository.findAllByStockEquals(activeStatus);
         if (!item.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     item,
@@ -135,7 +135,7 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
-        List<Item> item = itemRepo.findAllByItemBarCodeEquals(itemBarCode);
+        List<Item> item = itemRepository.findAllByItemBarCodeEquals(itemBarCode);
         if (!item.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     item,
@@ -151,8 +151,8 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public String updateItem(ItemUpdateDTO itemUpdateDTO) {
-        if (itemRepo.existsById(itemUpdateDTO.getItemId())) {
-            Item item = itemRepo.getReferenceById(itemUpdateDTO.getItemId());
+        if (itemRepository.existsById(itemUpdateDTO.getItemId())) {
+            Item item = itemRepository.getReferenceById(itemUpdateDTO.getItemId());
             item.setItemName(itemUpdateDTO.getItemName());
             item.setItemBarCode(itemUpdateDTO.getItemBarCode());
             item.setSupplyDate(itemUpdateDTO.getSupplyDate());
@@ -175,7 +175,7 @@ public class ItemServiceIMPL implements ItemService {
             item.setItemImage(itemUpdateDTO.getItemImage());
             item.setItemDescription(itemUpdateDTO.getItemDescription());
 
-            itemRepo.save(item);
+            itemRepository.save(item);
 
             System.out.println(item);
 
@@ -187,8 +187,8 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public String deleteItem(long itemId) {
-        if (itemRepo.existsById(itemId)) {
-            itemRepo.deleteById(itemId);
+        if (itemRepository.existsById(itemId)) {
+            itemRepository.deleteById(itemId);
 
             return "deleted succesfully: " + itemId;
         } else {
@@ -200,14 +200,14 @@ public class ItemServiceIMPL implements ItemService {
     // paginated 7/2:27
     @Override
     public PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size) {
-        Page<Item> items = itemRepo.findAllByStockEquals(activeStatus, PageRequest.of(page, size));
+        Page<Item> items = itemRepository.findAllByStockEquals(activeStatus, PageRequest.of(page, size));
 
         if (items.getSize() < 1) {
             throw new NotFoundException("No Data");
         } else {
             PaginatedResponseItemDTO paginatedResponseItemDTO = new PaginatedResponseItemDTO(
                     itemMapper.ListDTOToPage(items),
-                    itemRepo.countAllByStockEquals(activeStatus)
+                    itemRepository.countAllByStockEquals(activeStatus)
             );
             return paginatedResponseItemDTO;
         }
@@ -215,7 +215,7 @@ public class ItemServiceIMPL implements ItemService {
 
     @Override
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
-        List<Item> items = itemRepo.findAllByItemNameEqualsAndStockEquals(itemName, true);
+        List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
         if (!items.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = itemMapper.entityListToDTOList(items);
 
@@ -291,7 +291,7 @@ public class ItemServiceIMPL implements ItemService {
         Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
         item.setItemCategory(category);
         item.setSupplier(supplier); // Ensure the supplier is set
-        itemRepo.save(item);
+        itemRepository.save(item);
         return "Item saved successfully with category and supplier";
     }
 
