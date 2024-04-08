@@ -100,10 +100,15 @@ public class BranchController {
         return "branch updated";
     }
 
-    @GetMapping("/cashiers/by-branch/{branchId}")
+    @GetMapping("/employer/by-branch/{branchId}")
     public ResponseEntity<List<EmployerDTO>> getAllCashiersByBranchId(@PathVariable int branchId) {
         List<EmployerDTO> employerDTOS = cashierService.getAllEmployerByBranchId(branchId);
         return new ResponseEntity<>(employerDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/branch-test")
+    public ResponseEntity<String> testEmployer() {
+        return ResponseEntity.ok("Branch test successful");
     }
 
 

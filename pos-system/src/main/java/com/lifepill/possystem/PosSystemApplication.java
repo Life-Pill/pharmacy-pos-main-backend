@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableSwagger2
+//@EnableSwagger2
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl") // Enable JPA Auditing
 public class PosSystemApplication {
 
