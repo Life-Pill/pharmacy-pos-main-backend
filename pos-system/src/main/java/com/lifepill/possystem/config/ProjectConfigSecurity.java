@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.config;
 
 import org.springframework.context.annotation.Bean;
@@ -34,3 +35,4 @@ public class ProjectConfigSecurity {
         return http.build();
     }
 }
+*/
