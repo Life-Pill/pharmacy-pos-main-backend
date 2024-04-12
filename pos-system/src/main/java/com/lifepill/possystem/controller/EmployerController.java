@@ -1,6 +1,7 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.EmployerDTO;
+import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
 import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.service.EmployerService;
@@ -10,11 +11,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -25,13 +28,32 @@ public class EmployerController {
     @Autowired
     private EmployerService employerService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
-/*    @PostMapping("/save-without-image")
+    @PostMapping("/save-without-image")
     public String saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
-        cashierService.saveCashierWithoutImage(cashierWithoutImageDTO);
-        return "saved";
-    }*/
+//        employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
+//        return "saved";
+        try {
+            // Encode the password
+            String hashedPassword = passwordEncoder.encode(cashierWithoutImageDTO.getEmployerPassword());
+            cashierWithoutImageDTO.setEmployerPassword(hashedPassword);
+
+            // Save the employer
+            employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
+
+            // Return success response
+            return "Employer registered successfully";
+        } catch (Exception ex) {
+            // Return error response if an exception occurs
+            return "An exception occurred: " + ex.getMessage();
+        }
+    }
+
+
 
 /*    @PostMapping("/save-with-image-local-and send-name-to-database")
     public String saveCashier(@ModelAttribute EmployerDTO cashierDTO, @RequestParam("Profile_image") MultipartFile file) throws IOException{

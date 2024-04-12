@@ -69,31 +69,22 @@ public class EmployerServiceIMPL implements EmployerService {
         if (employerRepository.existsById(employerWithoutImageDTO.getEmployerId()) || employerRepository.existsAllByEmployerEmail(employerWithoutImageDTO.getEmployerEmail())) {
             throw new EntityDuplicationException("Employer already exists");
         } else {
-/*
-            Employer employer = new Employer(
-                    cashierWithoutImageDTO.getCashierId(),
-                    cashierWithoutImageDTO.getCashierNicName(),
-                    cashierWithoutImageDTO.getCashierFirstName(),
-                    cashierWithoutImageDTO.getCashierLastName(),
-                    cashierWithoutImageDTO.getCashierPassword(),
-                    cashierWithoutImageDTO.getCashierEmail(),
-                    cashierWithoutImageDTO.getCashierPhone(),
-                    cashierWithoutImageDTO.getCashierAddress(),
-                    cashierWithoutImageDTO.getCashierSalary(),
-                    cashierWithoutImageDTO.getCashierNic(),
-                    cashierWithoutImageDTO.isActiveStatus(),
-                    cashierWithoutImageDTO.getPin(),
-                    cashierWithoutImageDTO.getGender(),
-                    cashierWithoutImageDTO.getDateOfBirth(),
-                    cashierWithoutImageDTO.getRole()
-                    //  (Set<Order>) cashierDTO.getOrder()
-            );*/
 
-            //model mappers
+            // Retrieve the Branch entity by its ID
+            Branch branch = branchRepository.findById(employerWithoutImageDTO.getBranchId())
+                    .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + employerWithoutImageDTO.getBranchId()));
+
+            // Map EmployerDTO to Employer entity
             Employer employer = modelMapper.map(employerWithoutImageDTO, Employer.class);
 
+            // Set the Branch entity to the Employer
+            employer.setBranch(branch);
+
+            // Save the Employer entity
             employerRepository.save(employer);
-            return "Saved";
+            return "Employer Saved";
+
+
         }
     }
 

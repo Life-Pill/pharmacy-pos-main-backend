@@ -29,7 +29,7 @@ public class Employer {
     @Lob
     @Column(name = "profile_image",nullable = true)
     private byte[] profileImage;
-    @Column(name = "employer_password", nullable = false, length = 50)
+    @Column(name = "employer_password", nullable = false, length = 500)
     private String employerPassword;
     @Column(name = "employer_email", length = 50, unique = true)
     private String employerEmail;

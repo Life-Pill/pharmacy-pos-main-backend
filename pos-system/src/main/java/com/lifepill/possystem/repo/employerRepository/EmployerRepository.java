@@ -20,4 +20,7 @@ public interface EmployerRepository extends JpaRepository<Employer,Long> {
     List<Employer> findAllByBranch(Branch branch);
 
     List<Employer> findAllByRole(Role role);
+
+   // List<Employer> findByEmployerEmail(String username);
+    Employer findByEmployerEmail(String email);
 }
