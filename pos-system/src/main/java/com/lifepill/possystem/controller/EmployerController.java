@@ -28,49 +28,14 @@ public class EmployerController {
     @Autowired
     private EmployerService employerService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
     @PostMapping("/save-without-image")
     public String saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
-//        employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
-//        return "saved";
-        try {
-            // Encode the password
-            String hashedPassword = passwordEncoder.encode(cashierWithoutImageDTO.getEmployerPassword());
-            cashierWithoutImageDTO.setEmployerPassword(hashedPassword);
-
-            // Save the employer
-            employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
-
-            // Return success response
-            return "Employer registered successfully";
-        } catch (Exception ex) {
-            // Return error response if an exception occurs
-            return "An exception occurred: " + ex.getMessage();
-        }
+        employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
+        return "saved";
     }
 
-
-
-/*    @PostMapping("/save-with-image-local-and send-name-to-database")
-    public String saveCashier(@ModelAttribute EmployerDTO cashierDTO, @RequestParam("Profile_image") MultipartFile file) throws IOException{
-        String originalFilename = file.getOriginalFilename();
-        Path fileNameAndPath = Paths.get(uploadDirectory, originalFilename);
-        Files.write(fileNameAndPath, file.getBytes());
-        cashierDTO.setProfileImage(originalFilename);
-        cashierService.saveCashier(cashierDTO);
-        return "saved";
-    }*/
-
-/*    @GetMapping(path = "/get-by-id-with-image/{id}")
-    public ResponseEntity<EmployerDTO> getCashierByIdWithImage(@PathVariable(value = "id") int cashierId) {
-        EmployerDTO cashierDTO = cashierService.getCashierByIdWithImage(cashierId);
-        return new ResponseEntity<EmployerDTO>(cashierDTO, HttpStatus.OK);
-
-    }*/
 
     @PostMapping("/save-with-image")
     public String saveEmployerWithImage(@ModelAttribute EmployerDTO employerDTO, @RequestParam("file") MultipartFile file) throws IOException {
@@ -105,15 +70,6 @@ public class EmployerController {
         }
     }
 
-
-   /* @PutMapping("/update")
-    @Transactional
-    public String updateCashier(@RequestBody EmployerUpdateDTO cashierUpdateDTO) {
-        String message = cashierService.updateCashier(cashierUpdateDTO);
-        return message;
-    }*/
-
-    // need to add both place cashier ID
    @PutMapping("/update/{employerId}")
    @Transactional
    public String updateEmployer(@PathVariable Long employerId, @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO) {
@@ -128,13 +84,6 @@ public class EmployerController {
         String message = employerService.updateEmployerAccountDetails(cashierUpdateAccountDetailsDTO);
         return message;
     }
-
-/*    @PutMapping("/updateBankAccountDetails")
-    @Transactional
-    public String updateCashierBankAccountDetails(@RequestBody EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
-        String message = cashierService.updateCashierBankAccountDetails(cashierUpdateBankAccountDTO);
-        return message;
-    }*/
 
     @PutMapping("/updateBankAccountDetails/{employerId}")
     @Transactional

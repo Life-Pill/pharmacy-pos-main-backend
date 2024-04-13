@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @EnableJpaRepositories
@@ -21,6 +22,7 @@ public interface EmployerRepository extends JpaRepository<Employer,Long> {
 
     List<Employer> findAllByRole(Role role);
 
-    List<Employer> findByEmployerEmail(String username);
+    Optional<Employer> findByEmployerEmail(String employerEmail);
+
 
 }
