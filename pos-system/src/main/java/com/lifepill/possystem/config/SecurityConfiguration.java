@@ -28,7 +28,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        RequestMatcher requestMatcher = new AntPathRequestMatcher("/lifepill/v1/auth/register");
+        RequestMatcher requestMatcher = new AntPathRequestMatcher("/lifepill/v1/auth/*");
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->

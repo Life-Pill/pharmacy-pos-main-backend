@@ -22,6 +22,7 @@ public class JwtService {
     public String generateToken(UserDetails employer) {
         return Jwts.builder()
                 .setSubject(employer.getUsername())
+                .claim("authorities", populateAuthorities(employer.getAuthorities()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -33,5 +34,15 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    private String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        Set<String> authoritiesSet = new HashSet<>();
+        for(GrantedAuthority authority: authorities) {
+            authoritiesSet.add(authority.getAuthority());
+        }
+        //CASHIER, OWNER, MANAGER, OTHER
+        return String.join(",", authoritiesSet);
+    }
+
 
 }
