@@ -1,6 +1,8 @@
 package com.lifepill.possystem.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lifepill.possystem.entity.enums.Gender;
 import com.lifepill.possystem.entity.enums.Role;
 import lombok.*;
@@ -29,7 +31,8 @@ public class Employer {
     @Lob
     @Column(name = "profile_image",nullable = true)
     private byte[] profileImage;
-    @Column(name = "employer_password", nullable = false, length = 500)
+    @Column(name = "employer_password", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String employerPassword;
     @Column(name = "employer_email", length = 50, unique = true)
     private String employerEmail;
@@ -63,5 +66,9 @@ public class Employer {
     @ManyToOne
     @JoinColumn(name = "brach_id", nullable = false)
     private Branch branch;
+
+    @JsonIgnore // this annotation is used to ignore the authorities field when returning the employer object
+    @OneToMany(mappedBy="employer",fetch=FetchType.EAGER)
+    private Set<Authority> authorities;
 
 }

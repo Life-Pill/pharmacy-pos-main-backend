@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("lifepill/v1/notices")
-@CrossOrigin
 public class NoticesController {
 
     @GetMapping("/notices")

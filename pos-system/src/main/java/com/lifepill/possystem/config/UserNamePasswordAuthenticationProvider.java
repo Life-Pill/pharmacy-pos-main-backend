@@ -1,5 +1,6 @@
 package com.lifepill.possystem.config;
 
+import com.lifepill.possystem.entity.Authority;
 import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +29,29 @@ public class UserNamePasswordAuthenticationProvider implements AuthenticationPro
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
-        String password = authentication.getCredentials().toString();
-
-        Employer employer =  employerRepository.findByEmployerEmail(username);
-        if (employer != null && passwordEncoder.matches(password, employer.getEmployerPassword())) {
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(employer.getRole().toString()));
-            return new UsernamePasswordAuthenticationToken(username, password, authorities);
-        } else {
-            throw new BadCredentialsException("Invalid username or password");
+        String pwd = authentication.getCredentials().toString();
+        List<Employer> employers = employerRepository.findByEmployerEmail(username);
+        if (employers.size() > 0) {
+            if (passwordEncoder.matches(pwd, employers.get(0).getEmployerPassword())) {
+                return new UsernamePasswordAuthenticationToken(username, pwd, getGrantedAuthorities(employers.get(0).getAuthorities()));
+            } else {
+                throw new BadCredentialsException("Invalid password!");
+            }
+        }else {
+            throw new BadCredentialsException("No user registered with this details!");
         }
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for (Authority authority : authorities) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+        }
+        return grantedAuthorities;
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
-
 }
