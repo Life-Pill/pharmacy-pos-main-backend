@@ -26,20 +26,21 @@ public class ItemCategoryController {
                 HttpStatus.CREATED);
     }
 
-//    @GetMapping("/category/all")
-//    public ResponseEntity<StandardResponse> getAllCategories() {
-//        List<ItemCategoryDTO> categories = itemService.getAllCategories();
-//        return new ResponseEntity<>(
-//                new StandardResponse(200, "Success", categories),
-//                HttpStatus.OK);
-//    }
+/*    @GetMapping("/category/all")
+    public ResponseEntity<StandardResponse> getAllCategories() {
+        List<ItemCategoryDTO> categories = itemService.getAllCategories();
+        return new ResponseEntity<>(
+                new StandardResponse(200, "Success", categories),
+                HttpStatus.OK);
+    }*/
 
     @GetMapping("/category/all")
     public ResponseEntity<StandardResponse> getAllCategories() {
         List<ItemCategoryDTO> categories = itemService.getAllCategories();
         return new ResponseEntity<>(
                 new StandardResponse(200, "Success", categories),
-                HttpStatus.OK);
+                HttpStatus.OK
+        );
     }
 
     @PutMapping("/category/update/{categoryId}")

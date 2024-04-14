@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/lifepill/v1/cashierNew")
-public class CashierController {
+public class CashierControllerTest {
     @GetMapping
     public String getCashier() {
         return "Secured Endpoint :: GET - Cashier controller";

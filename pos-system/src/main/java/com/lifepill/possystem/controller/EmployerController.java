@@ -22,7 +22,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("lifepill/v1/employers")
-@CrossOrigin
 public class EmployerController {
 
     @Autowired
@@ -30,12 +29,14 @@ public class EmployerController {
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
+    // move to branch manager controller
     @PostMapping("/save-without-image")
     public String saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
         employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
         return "saved";
     }
 
+    // move to branch manager controller
 
     @PostMapping("/save-with-image")
     public String saveEmployerWithImage(@ModelAttribute EmployerDTO employerDTO, @RequestParam("file") MultipartFile file) throws IOException {
@@ -50,6 +51,8 @@ public class EmployerController {
         employerService.saveEmployer(employerDTO);
         return "saved";
     }
+
+    // move to branch manager controller
 
     @GetMapping("/profile-photo/{employerId}")
     @Transactional
@@ -69,6 +72,9 @@ public class EmployerController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+    // move to branch manager controller
 
    @PutMapping("/update/{employerId}")
    @Transactional
@@ -92,20 +98,22 @@ public class EmployerController {
         return message;
     }
 
-
-    @PutMapping("/updatePassword")
+ // move to cashier controller
+  /*  @PutMapping("/updatePassword")
     @Transactional
     public String updateEmployerPassword(@RequestBody EmployerPasswordResetDTO cashierPasswordResetDTO) {
         String message = employerService.updateEmployerPassword(cashierPasswordResetDTO);
         return message;
-    }
+    }*/
 
-    @PutMapping("/updateRecentPin")
+    //move to cashier controller
+
+/*    @PutMapping("/updateRecentPin")
     @Transactional
     public String updateRecentPin(@RequestBody EmployerRecentPinUpdateDTO cashierRecentPinUpdateDTO) {
         String message = employerService.updateRecentPin(cashierRecentPinUpdateDTO);
         return message;
-    }
+    }*/
 
     @GetMapping(path = "/get-by-id", params = "id")
     @Transactional
@@ -160,9 +168,10 @@ public class EmployerController {
         );
     }
 
-    @GetMapping("/byRole/{role}")
+    // move to owner controller
+/*    @GetMapping("/byRole/{role}")
     public ResponseEntity<List<EmployerDTO>> getAllEmployerByRole(@PathVariable Role role) {
         List<EmployerDTO> cashiers = employerService.getAllEmployerByRole(role);
         return new ResponseEntity<>(cashiers, HttpStatus.OK);
-    }
+    }*/
 }

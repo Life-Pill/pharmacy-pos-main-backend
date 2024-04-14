@@ -26,7 +26,7 @@ public class BranchController {
     private BranchService branchService;
 
     @Autowired
-    private EmployerService cashierService;
+    private EmployerService employerService;
 
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String saveBranch(@RequestParam("image") MultipartFile image, @ModelAttribute BranchDTO branchDTO) {
@@ -101,7 +101,7 @@ public class BranchController {
 
     @GetMapping("/employer/by-branch/{branchId}")
     public ResponseEntity<List<EmployerDTO>> getAllCashiersByBranchId(@PathVariable int branchId) {
-        List<EmployerDTO> employerDTOS = cashierService.getAllEmployerByBranchId(branchId);
+        List<EmployerDTO> employerDTOS = employerService.getAllEmployerByBranchId(branchId);
         return new ResponseEntity<>(employerDTOS, HttpStatus.OK);
     }
 
