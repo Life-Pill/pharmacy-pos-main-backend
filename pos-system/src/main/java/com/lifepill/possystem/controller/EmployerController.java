@@ -29,14 +29,13 @@ public class EmployerController {
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
-    // move to branch manager controller
+
     @PostMapping("/save-without-image")
     public String saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
         employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
         return "saved";
     }
 
-    // move to branch manager controller
 
     @PostMapping("/save-with-image")
     public String saveEmployerWithImage(@ModelAttribute EmployerDTO employerDTO, @RequestParam("file") MultipartFile file) throws IOException {
