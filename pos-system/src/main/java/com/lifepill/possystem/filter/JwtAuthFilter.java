@@ -1,5 +1,6 @@
-package com.lifepill.possystem.config;
+package com.lifepill.possystem.filter;
 
+import com.lifepill.possystem.config.JwtService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

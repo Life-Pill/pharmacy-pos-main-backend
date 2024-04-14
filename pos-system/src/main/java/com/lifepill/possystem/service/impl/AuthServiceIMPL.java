@@ -1,13 +1,16 @@
-package com.lifepill.possystem.controller.auth;
+package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.config.JwtService;
-import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
+import com.lifepill.possystem.dto.requestDTO.AuthenticationRequestDTO;
+import com.lifepill.possystem.dto.requestDTO.RegisterRequestDTO;
+import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
+import com.lifepill.possystem.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceIMPL implements AuthService {
 
     private  final EmployerRepository employerRepository;
 
@@ -32,7 +35,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
 
-    public AuthenticationResponse register(RegisterRequest registerRequest) {
+    public AuthenticationResponseDTO register(RegisterRequestDTO registerRequest) {
         if (employerRepository.existsById(registerRequest.getEmployerId()) || employerRepository.existsAllByEmployerEmail(registerRequest.getEmployerEmail())) {
             throw new EntityDuplicationException("Employer already exists");
         } else {
@@ -49,12 +52,12 @@ public class AuthService {
             var savedEmployer = employerRepository.save(employer);
             String jwtToken = jwtService.generateToken(savedEmployer);
 
-            return AuthenticationResponse.builder().accessToken(jwtToken).build();
+            return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
         }
     }
 
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
       /*  FirstStep
         We need to validate our request (validate whether password & username is correct)
         Verify whether user present in the database
@@ -74,9 +77,8 @@ public class AuthService {
         var user = employerRepository.findByEmployerEmail(request.getEmployerEmail())
                 .orElseThrow();
         String jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().accessToken(jwtToken).build();
+        return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
 
     }
 
 }
-

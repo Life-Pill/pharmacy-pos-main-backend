@@ -1,5 +1,8 @@
-package com.lifepill.possystem.controller.auth;
-
+package com.lifepill.possystem.controller;
+import com.lifepill.possystem.dto.requestDTO.AuthenticationRequestDTO;
+import com.lifepill.possystem.dto.requestDTO.RegisterRequestDTO;
+import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
+import com.lifepill.possystem.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,16 +19,16 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest registerRequest
+    public ResponseEntity<AuthenticationResponseDTO> register(
+            @RequestBody RegisterRequestDTO registerRequest
     ) {
-        AuthenticationResponse authResponse = authService.register(registerRequest);
+        AuthenticationResponseDTO authResponse = authService.register(registerRequest);
         return  ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
+    public ResponseEntity<AuthenticationResponseDTO> authenticate(
+            @RequestBody AuthenticationRequestDTO request
     ) {
         return ResponseEntity.ok(authService.authenticate(request));
     }

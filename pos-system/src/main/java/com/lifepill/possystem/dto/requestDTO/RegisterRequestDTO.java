@@ -1,4 +1,4 @@
-package com.lifepill.possystem.controller.auth;
+package com.lifepill.possystem.dto.requestDTO;
 
 import com.lifepill.possystem.entity.enums.Gender;
 import com.lifepill.possystem.entity.enums.Role;
@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class RegisterRequestDTO {
     private long employerId;
     private int branchId;
     private String employerNicName;
@@ -30,6 +29,5 @@ public class RegisterRequest {
     private Gender gender;
     private Date dateOfBirth;
     private Role role;
-
-
+    private int pin;
 }

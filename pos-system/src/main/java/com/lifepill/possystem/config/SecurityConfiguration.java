@@ -1,7 +1,6 @@
 package com.lifepill.possystem.config;
 
-import com.lifepill.possystem.config.JwtAuthFilter;
-import lombok.RequiredArgsConstructor;
+import com.lifepill.possystem.filter.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +12,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.lifepill.possystem.entity.enums.Permission.*;
 import static com.lifepill.possystem.entity.enums.Role.CASHIER;
 import static com.lifepill.possystem.entity.enums.Role.OWNER;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -35,7 +31,7 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.antMatchers("/lifepill/v1/auth/*").permitAll()
+                        req.antMatchers("/lifepill/v1/auth/**").permitAll()
                                 .antMatchers("/lifepill/v1/test/**").permitAll()
                                 //.antMatchers("/lifepill/v1/admin/**").hasAnyRole(OWNER_READ.name(), CASHIER.name())
                                 .antMatchers("/lifepill/v1/admin/**").hasRole(OWNER.name())

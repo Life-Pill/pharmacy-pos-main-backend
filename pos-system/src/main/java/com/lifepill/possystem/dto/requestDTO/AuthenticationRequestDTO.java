@@ -1,4 +1,4 @@
-package com.lifepill.possystem.controller.auth;
+package com.lifepill.possystem.dto.requestDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class AuthenticationRequestDTO {
 
     private String employerEmail;
     private String employerPassword;
