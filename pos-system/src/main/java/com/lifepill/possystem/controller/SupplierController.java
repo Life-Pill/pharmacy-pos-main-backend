@@ -17,8 +17,6 @@ public class SupplierController {
     @Autowired
     private SupplierService supplierService;
 
-
-
     @GetMapping(path = "/get-all-suppliers")
     public ResponseEntity<List<SupplierDTO>> getAllSuppliers() {
         List<SupplierDTO> suppliers = supplierService.getAllSuppliers();

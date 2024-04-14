@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Date;
 import java.util.List;
 
-import static com.lifepill.possystem.entity.enums.Gender.Male;
+import static com.lifepill.possystem.entity.enums.Gender.MALE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,9 +42,9 @@ public class EmployerRepositoryTests {
                 .employerNic("123456789012")
                 .isActiveStatus(true)
                 .pin(1234)
-                .gender(Male)
+                .gender(MALE)
                 .dateOfBirth(new Date())
-                .role(Role.Cashier)
+                .role(Role.CASHIER)
                 .build();
 
         // When save employer data
@@ -63,8 +63,8 @@ public class EmployerRepositoryTests {
         assertEquals("123456789012", savedEmployer.getEmployerNic());
         assertTrue(savedEmployer.isActiveStatus());
         assertEquals(1234, savedEmployer.getPin());
-        assertEquals(Male, savedEmployer.getGender());
-        assertEquals(Role.Cashier, savedEmployer.getRole());
+        assertEquals(MALE, savedEmployer.getGender());
+        assertEquals(Role.CASHIER, savedEmployer.getRole());
 
         // fetch the saved employer from the database and assert its values
         Employer retrievedEmployer = employerRepository.findById(savedEmployer.getEmployerId()).orElse(null);

@@ -20,8 +20,10 @@ spring:
     user:
       name: lifepill
       password: 12345
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
 server:
   port: 8081
+logging:
+  level:
+    org.springframework.security: TRACE
+
+

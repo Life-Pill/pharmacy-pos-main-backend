@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/supplierCompanies")
+@RequestMapping("/lifepill/v1/supplierCompanies")
 public class SupplierCompanyController {
 
     @Autowired

@@ -20,14 +20,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("lifepill/v1/branch")
-@CrossOrigin
 public class BranchController {
 
     @Autowired
     private BranchService branchService;
 
     @Autowired
-    private EmployerService cashierService;
+    private EmployerService employerService;
 
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String saveBranch(@RequestParam("image") MultipartFile image, @ModelAttribute BranchDTO branchDTO) {
@@ -42,7 +41,7 @@ public class BranchController {
 
         if (imageData != null) {
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG); // Adjust the media type based on your image format
+            headers.setContentType(MediaType.IMAGE_JPEG); // Adjust the media type
             return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -100,10 +99,15 @@ public class BranchController {
         return "branch updated";
     }
 
-    @GetMapping("/cashiers/by-branch/{branchId}")
+    @GetMapping("/employer/by-branch/{branchId}")
     public ResponseEntity<List<EmployerDTO>> getAllCashiersByBranchId(@PathVariable int branchId) {
-        List<EmployerDTO> employerDTOS = cashierService.getAllEmployerByBranchId(branchId);
+        List<EmployerDTO> employerDTOS = employerService.getAllEmployerByBranchId(branchId);
         return new ResponseEntity<>(employerDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/branch-test")
+    public ResponseEntity<String> testEmployer() {
+        return ResponseEntity.ok("Branch test successful");
     }
 
 

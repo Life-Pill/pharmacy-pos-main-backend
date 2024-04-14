@@ -1,17 +1,19 @@
-package com.lifepill.possystem.dto;
+package com.lifepill.possystem.dto.requestDTO;
 
 import com.lifepill.possystem.entity.enums.Gender;
 import com.lifepill.possystem.entity.enums.Role;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-public class EmployerWithoutImageDTO {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class RegisterRequestDTO {
     private long employerId;
     private int branchId;
     private String employerNicName;
@@ -28,5 +30,4 @@ public class EmployerWithoutImageDTO {
     private Date dateOfBirth;
     private Role role;
     private int pin;
-    //private Order order;
 }

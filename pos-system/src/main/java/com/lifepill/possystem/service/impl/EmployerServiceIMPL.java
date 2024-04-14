@@ -15,6 +15,8 @@ import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,10 @@ public class EmployerServiceIMPL implements EmployerService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
 
     @Override
@@ -69,31 +75,22 @@ public class EmployerServiceIMPL implements EmployerService {
         if (employerRepository.existsById(employerWithoutImageDTO.getEmployerId()) || employerRepository.existsAllByEmployerEmail(employerWithoutImageDTO.getEmployerEmail())) {
             throw new EntityDuplicationException("Employer already exists");
         } else {
-/*
-            Employer employer = new Employer(
-                    cashierWithoutImageDTO.getCashierId(),
-                    cashierWithoutImageDTO.getCashierNicName(),
-                    cashierWithoutImageDTO.getCashierFirstName(),
-                    cashierWithoutImageDTO.getCashierLastName(),
-                    cashierWithoutImageDTO.getCashierPassword(),
-                    cashierWithoutImageDTO.getCashierEmail(),
-                    cashierWithoutImageDTO.getCashierPhone(),
-                    cashierWithoutImageDTO.getCashierAddress(),
-                    cashierWithoutImageDTO.getCashierSalary(),
-                    cashierWithoutImageDTO.getCashierNic(),
-                    cashierWithoutImageDTO.isActiveStatus(),
-                    cashierWithoutImageDTO.getPin(),
-                    cashierWithoutImageDTO.getGender(),
-                    cashierWithoutImageDTO.getDateOfBirth(),
-                    cashierWithoutImageDTO.getRole()
-                    //  (Set<Order>) cashierDTO.getOrder()
-            );*/
 
-            //model mappers
+            // Retrieve the Branch entity by its ID
+            Branch branch = branchRepository.findById(employerWithoutImageDTO.getBranchId())
+                    .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + employerWithoutImageDTO.getBranchId()));
+
+            // Map EmployerDTO to Employer entity
             Employer employer = modelMapper.map(employerWithoutImageDTO, Employer.class);
 
+            // Set the Branch entity to the Employer
+            employer.setBranch(branch);
+
+            // Save the Employer entity
             employerRepository.save(employer);
-            return "Saved";
+            return "Employer Saved";
+
+
         }
     }
 
@@ -118,6 +115,7 @@ public class EmployerServiceIMPL implements EmployerService {
             throw new NotFoundException("No data found for that id");
         }
     }*/
+/*
 
     @Override
     public String updateEmployer(Long employerId, EmployerAllDetailsUpdateDTO employerAllDetailsUpdateDTO) {
@@ -146,6 +144,43 @@ public class EmployerServiceIMPL implements EmployerService {
 
         return "Employer updated successfully";
     }
+*/
+
+    @Override
+    public String updateEmployer(Long employerId, EmployerAllDetailsUpdateDTO employerAllDetailsUpdateDTO) {
+        // Check if the employer exists
+        Employer existingEmployer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new NotFoundException("Employer not found with ID: " + employerId));
+
+        // Check if the email is already associated with another employer
+        if (!existingEmployer.getEmployerEmail().equals(employerAllDetailsUpdateDTO.getEmployerEmail()) &&
+                employerRepository.existsAllByEmployerEmail(employerAllDetailsUpdateDTO.getEmployerEmail())) {
+            throw new EntityDuplicationException("Email already exists");
+        }
+
+        // Map updated details to existing employer
+        modelMapper.map(employerAllDetailsUpdateDTO, existingEmployer);
+
+        // If the password is provided, encode it before updating
+        if (employerAllDetailsUpdateDTO.getEmployerPassword() != null) {
+
+            String encodedPassword = passwordEncoder.encode(employerAllDetailsUpdateDTO.getEmployerPassword());
+            existingEmployer.setEmployerPassword(encodedPassword);
+        }
+
+        // If the branch ID is provided, update the branch
+        if (employerAllDetailsUpdateDTO.getBranchId() != 0) {
+            Branch branch = branchRepository.findById(employerAllDetailsUpdateDTO.getBranchId())
+                    .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + employerAllDetailsUpdateDTO.getBranchId()));
+            existingEmployer.setBranch(branch);
+        }
+
+        // Save the updated employer
+        employerRepository.save(existingEmployer);
+
+        return "Employer updated successfully";
+    }
+
 
 
     @Override
@@ -441,8 +476,17 @@ public class EmployerServiceIMPL implements EmployerService {
             newBankDetails.setMonthlyPaymentStatus(cashierUpdateBankAccountDTO.isMonthlyPaymentStatus());
             newBankDetails.setEmployerId(cashierId);
 
+
             // Save the new EmployerBankDetails entity
-            cashierBankDetailsRepo.save(newBankDetails);
+            EmployerBankDetails savedBankDetails = cashierBankDetailsRepo.save(newBankDetails);
+
+            // Update the employer_bank_details_id in the employer entity
+            employer.setEmployerBankDetails(savedBankDetails);
+
+
+
+            // Save the updated employer entity
+            employerRepository.save(employer);
 
             return "Employer bank account details created successfully.";
         } else {
