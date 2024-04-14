@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "employer")
@@ -77,7 +78,7 @@ public class Employer implements UserDetails {
     @Column(name = "role",length = 15,nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "employer")
+    @OneToMany(mappedBy = "employer", fetch = FetchType.EAGER)
     private Set<Order> orders;
 
     @ManyToOne
@@ -90,7 +91,7 @@ public class Employer implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_"+role.name()));
     }
 
     @Override

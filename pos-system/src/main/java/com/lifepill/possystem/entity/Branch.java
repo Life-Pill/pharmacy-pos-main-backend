@@ -1,15 +1,13 @@
 package com.lifepill.possystem.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "branch")
@@ -43,8 +41,15 @@ public class Branch {
     @Column(name = "branch_created_by")
     private String branchCreatedBy;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+/*
+   @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
+    //@OneToMany(mappedBy = "branch", fetch = FetchType.EAGER)
     private Set<Employer> employers;
+*/
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch", fetch = FetchType.EAGER)
+    private Set<Employer> employers;
+
 
 /*    public Branch(int branchId, String branchName, String branchAddress, String branchContact, String branchFax, String branchEmail, String branchDescription, byte[] branchImage, boolean branchStatus, String branchLocation, String branchCreatedOn, String branchCreatedBy) {
         this.branchId = branchId;

@@ -43,26 +43,26 @@ VALUES
 
 INSERT INTO employer (employer_id, employer_nic_name, employer_first_name, employer_last_name, profile_image, employer_password, employer_email, employer_phone, employer_address, employer_sallary, employer_nic, is_active, pin, gender, employer_date_of_birth, role, employer_bank_details_id, brach_id)
 VALUES
-    (1, 'NicName1', 'John', 'Doe', NULL, 'password1', 'john@example.com', '123-456-7890', '123 Main St', 2500.00, '123456789012', true, 1234, 'Male', '1990-01-01', 'Cashier', 1, 1),
-    (2, 'NicName2', 'Jane', 'Smith', NULL, 'password2', 'jane@example.com', '234-567-8901', '456 Elm St', 2800.00, '234567890123', true, 2345, 'Female', '1991-02-02', 'BranchManager', 2, 2),
-    (3, 'NicName3', 'Michael', 'Johnson', NULL, 'password3', 'michael@example.com', '345-678-9012', '789 Oak St', 3000.00, '345678901234', true, 3456, 'Male', '1992-03-03', 'Cashier', 3, 3),
-    (4, 'NicName4', 'Emily', 'Williams', NULL, 'password4', 'emily@example.com', '456-789-0123', '101 Pine St', 3200.00, '456789012345', true, 4567, 'Female', '1993-04-04', 'Cashier', 4, 4),
-    (5, 'NicName5', 'David', 'Brown', NULL, 'password5', 'david@example.com', '567-890-1234', '202 Maple St', 3400.00, '567890123456', true, 5678, 'Male', '1994-05-05', 'Cashier', 5, 5),
-    (6, 'NicName6', 'Sarah', 'Jones', NULL, 'password6', 'sarah@example.com', '678-901-2345', '303 Cedar St', 3600.00, '678901234567', true, 6789, 'Female', '1995-06-06', 'BranchManager', 6, 6),
-    (7, 'NicName7', 'Christopher', 'Martinez', NULL, 'password7', 'christopher@example.com', '789-012-3456', '404 Walnut St', 3800.00, '789012345678', true, 7890, 'Male', '1996-07-07', 'Cashier', 7, 7),
-    (8, 'NicName8', 'Amanda', 'Garcia', NULL, 'password8', 'amanda@example.com', '890-123-4567', '505 Birch St', 4000.00, '890123456789', true, 8901, 'Female', '1997-08-08', 'Other', 8, 8),
-    (9, 'NicName9', 'James', 'Rodriguez', NULL, 'password9', 'james@example.com', '901-234-5678', '606 Pine St', 4200.00, '901234567890', true, 9012, 'Male', '1998-09-09', 'Cashier', 9, 9),
-    (10, 'NicName10', 'Jessica', 'Hernandez', NULL, 'password10', 'jessica@example.com', '012-345-6789', '707 Oak St', 4400.00, '012345678901', true, 1234, 'Female', '1999-10-10', 'BranchManager', 10, 10),
-    (11, 'NicName11', 'Matthew', 'Lopez', NULL, 'password11', 'matthew@example.com', '123-456-7890', '123 Main St', 2500.00, '123456789012', true, 2345, 'Male', '1990-01-01', 'Cashier', 11, 1),
-    (12, 'NicName12', 'Ashley', 'Gonzalez', NULL, 'password12', 'ashley@example.com', '234-567-8901', '456 Elm St', 2800.00, '234567890123', true, 3456, 'Female', '1991-02-02', 'Cashier', 12, 2),
-    (13, 'NicName13', 'Daniel', 'Wilson', NULL, 'password13', 'daniel@example.com', '345-678-9012', '789 Oak St', 3000.00, '345678901234', true, 4567, 'Male', '1992-03-03', 'Cashier', 13, 3),
-    (14, 'NicName14', 'Brittany', 'Taylor', NULL, 'password14', 'brittany@example.com', '456-789-0123', '101 Pine St', 3200.00, '456789012345', true, 5678, 'Female', '1993-04-04', 'Owner', 14, 4),
-    (15, 'NicName15', 'Andrew', 'Lee', NULL, 'password15', 'andrew@example.com', '567-890-1234', '202 Maple St', 3400.00, '567890123456', true, 6789, 'Male', '1994-05-05', 'Cashier', 15, 5),
-    (16, 'NicName16', 'Stephanie', 'Martinez', NULL, 'password16', 'stephanie@example.com', '678-901-2345', '303 Cedar St', 3600.00, '678901234567', true, 7890, 'Female', '1995-06-06', 'BranchManager', 16, 6),
-    (17, 'NicName17', 'Ryan', 'Hernandez', NULL, 'password17', 'ryan@example.com', '789-012-3456', '404 Walnut St', 3800.00, '789012345678', true, 8901, 'Male', '1996-07-07', 'Cashier', 17, 7),
-    (18, 'NicName18', 'Lauren', 'Young', NULL, 'password18', 'lauren@example.com', '890-123-4567', '505 Birch St', 4000.00, '890123456789', true, 9012, 'Female', '1997-08-08', 'BranchManager', 18, 8),
-    (19, 'NicName19', 'Kevin', 'King', NULL, 'password19', 'kevin@example.com', '901-234-5678', '606 Pine St', 4200.00, '901234567890', true, 1234, 'Male', '1998-09-09', 'BranchManager', 19, 9),
-    (20, 'NicName20', 'Megan', 'Wright', NULL, 'password20', 'megan@example.com', '012-345-6789', '707 Oak St', 4400.00, '012345678901', true, 2345, 'Female', '1999-10-10', 'Cashier', 20, 10);
+    (1, 'NicName1', 'John', 'Doe', NULL, 'password1', 'john@example.com', '123-456-7890', '123 Main St', 2500.00, '123456789012', true, 1234, 'MALE', '1990-01-01', 'CASHIER', 1, 1),
+    (2, 'NicName2', 'Jane', 'Smith', NULL, 'password2', 'jane@example.com', '234-567-8901', '456 Elm St', 2800.00, '234567890123', true, 2345, 'FEMALE', '1991-02-02', 'MANAGER', 2, 2),
+    (3, 'NicName3', 'Michael', 'Johnson', NULL, 'password3', 'michael@example.com', '345-678-9012', '789 Oak St', 3000.00, '345678901234', true, 3456, 'MALE', '1992-03-03', 'CASHIER', 3, 3),
+    (4, 'NicName4', 'Emily', 'Williams', NULL, 'password4', 'emily@example.com', '456-789-0123', '101 Pine St', 3200.00, '456789012345', true, 4567, 'FEMALE', '1993-04-04', 'CASHIER', 4, 4),
+    (5, 'NicName5', 'David', 'Brown', NULL, 'password5', 'david@example.com', '567-890-1234', '202 Maple St', 3400.00, '567890123456', true, 5678, 'MALE', '1994-05-05', 'CASHIER', 5, 5),
+    (6, 'NicName6', 'Sarah', 'Jones', NULL, 'password6', 'sarah@example.com', '678-901-2345', '303 Cedar St', 3600.00, '678901234567', true, 6789, 'FEMALE', '1995-06-06', 'MANAGER', 6, 6),
+    (7, 'NicName7', 'Christopher', 'Martinez', NULL, 'password7', 'christopher@example.com', '789-012-3456', '404 Walnut St', 3800.00, '789012345678', true, 7890, 'FEMALE', '1996-07-07', 'CASHIER', 7, 7),
+    (8, 'NicName8', 'Amanda', 'Garcia', NULL, 'password8', 'amanda@example.com', '890-123-4567', '505 Birch St', 4000.00, '890123456789', true, 8901, 'FEMALE', '1997-08-08', 'OTHER', 8, 8),
+    (9, 'NicName9', 'James', 'Rodriguez', NULL, 'password9', 'james@example.com', '901-234-5678', '606 Pine St', 4200.00, '901234567890', true, 9012, 'MALE', '1998-09-09', 'CASHIER', 9, 9),
+    (10, 'NicName10', 'Jessica', 'Hernandez', NULL, 'password10', 'jessica@example.com', '012-345-6789', '707 Oak St', 4400.00, '012345678901', true, 1234, 'FEMALE', '1999-10-10', 'MANAGER', 10, 10),
+    (11, 'NicName11', 'Matthew', 'Lopez', NULL, 'password11', 'matthew@example.com', '123-456-7890', '123 Main St', 2500.00, '123456789012', true, 2345, 'MALE', '1990-01-01', 'CASHIER', 11, 1),
+    (12, 'NicName12', 'Ashley', 'Gonzalez', NULL, 'password12', 'ashley@example.com', '234-567-8901', '456 Elm St', 2800.00, '234567890123', true, 3456, 'FEMALE', '1991-02-02', 'CASHIER', 12, 2),
+    (13, 'NicName13', 'Daniel', 'Wilson', NULL, 'password13', 'daniel@example.com', '345-678-9012', '789 Oak St', 3000.00, '345678901234', true, 4567, 'MALE', '1992-03-03', 'CASHIER', 13, 3),
+    (14, 'NicName14', 'Brittany', 'Taylor', NULL, 'password14', 'brittany@example.com', '456-789-0123', '101 Pine St', 3200.00, '456789012345', true, 5678, 'FEMALE', '1993-04-04', 'OWNER', 14, 4),
+    (15, 'NicName15', 'Andrew', 'Lee', NULL, 'password15', 'andrew@example.com', '567-890-1234', '202 Maple St', 3400.00, '567890123456', true, 6789, 'MALE', '1994-05-05', 'CASHIER', 15, 5),
+    (16, 'NicName16', 'Stephanie', 'Martinez', NULL, 'password16', 'stephanie@example.com', '678-901-2345', '303 Cedar St', 3600.00, '678901234567', true, 7890, 'FEMALE', '1995-06-06', 'MANAGER', 16, 6),
+    (17, 'NicName17', 'Ryan', 'Hernandez', NULL, 'password17', 'ryan@example.com', '789-012-3456', '404 Walnut St', 3800.00, '789012345678', true, 8901, 'MALE', '1996-07-07', 'CASHIER', 17, 7),
+    (18, 'NicName18', 'Lauren', 'Young', NULL, 'password18', 'lauren@example.com', '890-123-4567', '505 Birch St', 4000.00, '890123456789', true, 9012, 'FEMALE', '1997-08-08', 'MANAGER', 18, 8),
+    (19, 'NicName19', 'Kevin', 'King', NULL, 'password19', 'kevin@example.com', '901-234-5678', '606 Pine St', 4200.00, '901234567890', true, 1234, 'MALE', '1998-09-09', 'MANAGER', 19, 9),
+    (20, 'NicName20', 'Megan', 'Wright', NULL, 'password20', 'megan@example.com', '012-345-6789', '707 Oak St', 4400.00, '012345678901', true, 2345, 'FEMALE', '1999-10-10', 'CASHIER', 20, 10);
 
 INSERT INTO item_category (category_id, category_name, category_description, category_image)
 VALUES

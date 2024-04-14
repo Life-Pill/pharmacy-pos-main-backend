@@ -55,25 +55,25 @@ public class AuthService {
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        //FirstStep
-        //We need to validate our request (validate whether password & username is correct)
-        //Verify whether user present in the database
-        //Which AuthenticationProvider -> DaoAuthenticationProvider (Inject)
-        //We need to authenticate using authenticationManager injecting this authenticationProvider
-        //SecondStep
-        //Verify whether userName and password is correct => UserNamePasswordAuthenticationToken
-        //Verify whether user present in db
-        //generateToken
-        //Return the token
+      /*  FirstStep
+        We need to validate our request (validate whether password & username is correct)
+        Verify whether user present in the database
+        Which AuthenticationProvider -> DaoAuthenticationProvider (Inject)
+        We need to authenticate using authenticationManager injecting this authenticationProvider
+        SecondStep
+        Verify whether userName and password is correct => UserNamePasswordAuthenticationToken
+        Verify whether user present in db
+        generateToken
+        Return the token*/
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmployerEmail(),
                         request.getEmployerPassword()
                 )
         );
-        var employer = employerRepository.findByEmployerEmail(request.getEmployerEmail())
+        var user = employerRepository.findByEmployerEmail(request.getEmployerEmail())
                 .orElseThrow();
-        String jwtToken = jwtService.generateToken(employer);
+        String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().accessToken(jwtToken).build();
 
     }

@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("lifepill/v1/branch")
-@CrossOrigin
 public class BranchController {
 
     @Autowired
@@ -42,7 +41,7 @@ public class BranchController {
 
         if (imageData != null) {
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG); // Adjust the media type based on your image format
+            headers.setContentType(MediaType.IMAGE_JPEG); // Adjust the media type
             return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

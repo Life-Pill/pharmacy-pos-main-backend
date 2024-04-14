@@ -1,5 +1,6 @@
 package com.lifepill.possystem.dto;
 
+import com.lifepill.possystem.entity.Branch;
 import lombok.*;
 
 @Getter
@@ -20,5 +21,6 @@ public class BranchDTO {
     private String branchLocation;
     private String branchCreatedOn;
     private String branchCreatedBy;
+
 }
 
