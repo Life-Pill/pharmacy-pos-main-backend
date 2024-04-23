@@ -14,4 +14,5 @@ public class AuthenticationResponseDTO {
 
     @JsonProperty("access_token")
     private String accessToken;
+
 }
