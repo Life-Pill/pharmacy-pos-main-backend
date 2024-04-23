@@ -20,6 +20,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -95,13 +97,30 @@ public class AuthServiceIMPL implements AuthService {
         // Convert EmployerDTO to EmployerAuthDetailsResponseDTO using ModelMapper
         EmployerAuthDetailsResponseDTO employerDetailsResponseDTO = modelMapper.map(employerDTO, EmployerAuthDetailsResponseDTO.class);
 
-        return employerDetailsResponseDTO;
-    }
+        employerDetailsResponseDTO.setActiveStatus(true);
 
-    // Utility method to convert EmployerDTO to EmployerAuthDetailsResponseDTO
-    private EmployerAuthDetailsResponseDTO convertToAuthDetailsResponseDTO(EmployerDTO employerDTO) {
-        return modelMapper.map(employerDTO, EmployerAuthDetailsResponseDTO.class);
+    /*    // Set activeStatus based on whether the user is logged in or not
+        if (isLoggedIn(username)) {
+            employerDetailsResponseDTO.setActiveStatus(true);
+        } else {
+            employerDetailsResponseDTO.setActiveStatus(false);
+        }
+*/
+        return employerDetailsResponseDTO;
+
     }
+/*    private boolean isLoggedIn(String username) {
+        // Retrieve the currently authenticated user from Spring Security context
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Check if the principal is an instance of UserDetails (indicating the user is authenticated)
+        if (principal instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) principal;
+            return userDetails.getUsername().equals(username);
+        } else {
+            return false; // User is not authenticated
+        }
+    }*/
 
 
 }
