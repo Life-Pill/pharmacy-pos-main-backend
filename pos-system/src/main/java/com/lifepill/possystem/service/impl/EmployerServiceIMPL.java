@@ -15,7 +15,6 @@ import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -282,32 +281,10 @@ public class EmployerServiceIMPL implements EmployerService {
         if (employerRepository.existsById(employerId)){
             Employer employer = employerRepository.getReferenceById(employerId);
             EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
-
-           /* EmployerDTO employerDTO = new EmployerDTO(
-                    employer.getCashierId(),
-                    employer.getBranch().getBranchId(),
-                    employer.getCashierNicName(),
-                    employer.getCashierFirstName(),
-                    employer.getCashierLastName(),
-                    employer.getCashierPassword(),
-                    employer.getCashierEmail(),
-                    employer.getCashierPhone(),
-                    employer.getCashierAddress(),
-                    employer.getCashierSalary(),
-                    employer.getCashierNic(),
-                    employer.isActiveStatus(),
-                    employer.getGender(),
-                    employer.getDateOfBirth(),
-                    employer.getRole(),
-                    employer.getPin(),
-                    employer.getProfileImage()
-                    //(Order) employer.getOrders()
-            );*/
             return employerDTO;
         }else {
            throw  new NotFoundException("No employer found for that id");
         }
-
     }
 
     @Override
@@ -518,6 +495,17 @@ public class EmployerServiceIMPL implements EmployerService {
         return employers.stream()
                 .map(employer -> modelMapper.map(employer, EmployerDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public EmployerDTO getEmployerByUsername(String username) {
+        Optional<Employer> employer = employerRepository.findByEmployerEmail(username);
+        if (employer != null) {
+            return modelMapper.map(employer, EmployerDTO.class);
+        } else {
+            // Handle case when employer is not found
+            return null; // Or throw an exception, or return a default DTO
+        }
     }
 
 }
