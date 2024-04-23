@@ -38,4 +38,5 @@ public interface EmployerService {
     List<EmployerDTO> getAllEmployerByBranchId(int branchId);
 
     List<EmployerDTO> getAllEmployerByRole(Role role);
+    EmployerDTO getEmployerByUsername(String username);
 }
