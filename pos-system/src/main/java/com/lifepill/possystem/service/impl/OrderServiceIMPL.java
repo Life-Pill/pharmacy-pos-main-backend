@@ -60,12 +60,6 @@ public class OrderServiceIMPL implements OrderService {
         // Update item quantities
         updateItemQuantities(requestOrderSaveDTO);
 
-     /*   Order order = new Order(
-          employerRepository.getById(requestOrderSaveDTO.getEmployerId()),
-          requestOrderSaveDTO.getOrderDate(),
-          requestOrderSaveDTO.getTotal()
-        );*/
-
         Order order = new Order();
         order.setEmployer(employerRepository.getById(requestOrderSaveDTO.getEmployerId()));
         order.setOrderDate(requestOrderSaveDTO.getOrderDate());
@@ -105,7 +99,6 @@ public class OrderServiceIMPL implements OrderService {
         paymentDetails.setOrders(order); // Set the order for which this payment is made
         paymentRepository.save(paymentDetails);
     }
-
 
     /*private void checkItemStock(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
