@@ -30,7 +30,4 @@ public class ItemCategory {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "itemCategory")
     private Set<Item> items;
 
-
-
-
 }
