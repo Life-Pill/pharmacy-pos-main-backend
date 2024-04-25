@@ -16,6 +16,6 @@ public class RequestOrderDetailsSaveDTO {
     private String itemName;
     private Double qty;
     private Double totalAmount;
-    private long items;
+    private long id;
 
 }

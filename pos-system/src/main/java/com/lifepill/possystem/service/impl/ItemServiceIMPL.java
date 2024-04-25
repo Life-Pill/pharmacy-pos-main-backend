@@ -297,10 +297,6 @@ public class ItemServiceIMPL implements ItemService {
         return "Item saved successfully with category and supplier";
     }
 
-
-
-
-
   /*  @Override
     public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
         // Check if category exists
@@ -326,7 +322,6 @@ public class ItemServiceIMPL implements ItemService {
         itemRepo.save(item);
         return "Item saved successfully with category and supplier";
     }*/
-
 
     @Override
     public List<ItemCategoryDTO> getAllCategories() {
