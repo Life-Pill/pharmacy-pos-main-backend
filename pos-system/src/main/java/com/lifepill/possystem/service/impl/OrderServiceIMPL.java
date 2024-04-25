@@ -96,7 +96,7 @@ public class OrderServiceIMPL implements OrderService {
         paymentDetails.setPaymentDate(paymentDetailsDTO.getPaymentDate());
         paymentDetails.setPaymentNotes(paymentDetailsDTO.getPaymentNotes());
         paymentDetails.setPaymentDiscount(paymentDetailsDTO.getPaymentDiscount());
-        paymentDetails.setPayedAmount(paymentDetailsDTO.getPayedAmount());
+        paymentDetails.setPaidAmount(paymentDetailsDTO.getPayedAmount());
         paymentDetails.setOrders(order); // Set the order for which this payment is made
         paymentRepository.save(paymentDetails);
     }
