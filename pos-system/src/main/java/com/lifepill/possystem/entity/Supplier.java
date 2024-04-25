@@ -20,9 +20,6 @@ public class Supplier extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long supplierId;
 
-    //item id
-    //supplier quantity
-
     @Column(name = "supplier_name", length = 100)
     private String supplierName;
 
