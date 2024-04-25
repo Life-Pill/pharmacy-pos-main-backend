@@ -13,8 +13,8 @@ import javax.persistence.*;
 @Data
 public class RequestOrderDetailsSaveDTO {
 
-    private String itemName;
-    private Double qty;
+    private String name;
+    private Double amount;
     private Double totalAmount;
     private long id;
 

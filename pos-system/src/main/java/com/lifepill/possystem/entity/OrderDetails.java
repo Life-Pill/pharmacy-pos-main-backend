@@ -23,11 +23,11 @@ public class OrderDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int orderDetailsId;
 
-    @Column(name = "item_name",length = 100,nullable = false)
-    private String itemName;
+    @Column(name = "name",length = 100,nullable = false)
+    private String name;
 
-    @Column(name = "qty",length = 100,nullable = false)
-    private Double qty;
+    @Column(name = "amount",length = 100,nullable = false)
+    private Double amount;
 
     @Column(name = "total_amount",nullable = false)
     private Double totalAmount;
