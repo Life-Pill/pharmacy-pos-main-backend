@@ -17,4 +17,5 @@ public class RequestOrderDetailsSaveDTO {
     private Double qty;
     private Double totalAmount;
     private long items;
+
 }

@@ -34,8 +34,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.antMatchers("/lifepill/v1/auth/**").permitAll()
-                                .antMatchers("/lifepill/v1/test/**","lifepill/v1/contact/**","lifepill/v1/notices/**").permitAll()
-                                .antMatchers("/swagger-ui.html#/", "/swagger-ui/**", "/v2/api-docs", "/webjars/**").permitAll()
+                                .antMatchers("/lifepill/v1/test/**","lifepill/v1/contact/**","lifepill/v1/notices/**","/swagger-ui.html#/").permitAll()
+                                .antMatchers("/swagger-ui.html#/", "/swagger-ui/**", "/v2/api-docs", "/webjars/**","/v3/api-docs").permitAll()
                                 //.antMatchers("/lifepill/v1/admin/**").hasAnyRole(OWNER_READ.name(), CASHIER.name())
                                 .antMatchers("/lifepill/v1/admin/**").hasRole(OWNER.name())
                                 //.antMatchers( "/lifepill/v1/admin/**").permitAll()

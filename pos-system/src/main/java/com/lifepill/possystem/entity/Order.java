@@ -3,6 +3,7 @@ package com.lifepill.possystem.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,13 +12,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "orders")
-//@TypeDefs({
-//        @TypeDef(name = "json", typeClass = JsonNode.class)
-//})
-
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
+@RequiredArgsConstructor
 public class Order {
     @Id
     @Column(name = "order_id", length = 45)
@@ -28,6 +25,9 @@ public class Order {
     @JoinColumn(name = "employer_id",nullable = false)
     private Employer employer;
 
+    @Column(name = "branch_id",nullable = false)
+    private long branchId;
+
     @Column(name = "order_date", columnDefinition = "TIMESTAMP")
     private Date orderDate;
 
@@ -37,9 +37,13 @@ public class Order {
     @OneToMany(mappedBy = "orders")
     private Set<OrderDetails> orderDetails;
 
+    @OneToMany(mappedBy = "orders")
+    private Set<PaymentDetails> paymentDetails;
+
     public Order(Employer employers, Date orderDate, Double total) {
         this.employer = employers;
         this.orderDate = orderDate;
         this.total = total;
     }
+
 }

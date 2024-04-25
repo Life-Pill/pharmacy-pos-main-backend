@@ -15,7 +15,11 @@ import java.util.Set;
 public class RequestOrderSaveDTO {
 
     private long employerId;
+    private long orderId;
+    private long branchId;
     private Date orderDate;
     private Double total;
     private List<RequestOrderDetailsSaveDTO> orderDetails;
+    private List<RequestPaymentDetailsDTO> paymentDetails;
+
 }

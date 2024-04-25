@@ -13,7 +13,7 @@ public class AppWideExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<StandardResponse> handleNotFoundException(NotFoundException e) {
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(404, "Error Coming", e.getMessage()),
+                new StandardResponse(404, "Error Cumming", e.getMessage()),
                 HttpStatus.NOT_FOUND
         );
     }

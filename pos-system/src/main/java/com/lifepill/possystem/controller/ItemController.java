@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "hhttp://localhost:3000/", maxAge = 3600)
 @RequestMapping("/lifepill/v1/item")
 public class ItemController {
 
@@ -49,7 +50,7 @@ public class ItemController {
         );
     }*/
 
-    @CrossOrigin(origins = "hhttp://localhost:3000/", maxAge = 3600)
+
     @GetMapping(path = "get-all-items")
     public ResponseEntity<StandardResponse> getAllItems(){
         List<ItemGetAllResponseDTO> allItems = itemService.getAllItems();
