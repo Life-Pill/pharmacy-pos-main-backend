@@ -75,7 +75,7 @@ public class OrderServiceIMPL implements OrderService {
 
             for (int i=0;i<orderDetails.size();i++){
                 orderDetails.get(i).setOrders(order);
-                orderDetails.get(i).setItems(itemRepository.getById(requestOrderSaveDTO.getOrderDetails().get(i).getItems()));
+                orderDetails.get(i).setItems(itemRepository.getById(requestOrderSaveDTO.getOrderDetails().get(i).getId()));
             }
 
             if (orderDetails.size()>0){
@@ -116,28 +116,28 @@ public class OrderServiceIMPL implements OrderService {
 
     private void checkItemStock(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
-            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getItems());
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
                 if (item.getItemQuantity() < orderDetail.getQty()) {
                     throw new InsufficientItemQuantityException("Item " + item.getItemId() + " does not have enough quantity");
                 }
             } else {
-                throw new NotFoundException("Item not found with ID: " + orderDetail.getItems());
+                throw new NotFoundException("Item not found with ID: " + orderDetail.getId());
             }
         }
     }
 
     private void updateItemQuantities(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
-            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getItems());
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
                 int remainingQuantity = (int) (item.getItemQuantity() - orderDetail.getQty());
                 item.setItemQuantity(remainingQuantity);
                 itemRepository.save(item);
             } else {
-                throw new NotFoundException("Item not found with ID: " + orderDetail.getItems());
+                throw new NotFoundException("Item not found with ID: " + orderDetail.getId());
             }
         }
     }
