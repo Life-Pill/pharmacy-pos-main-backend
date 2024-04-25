@@ -46,34 +46,12 @@ public class OrderServiceIMPL implements OrderService {
     @Autowired
     private PaymentRepository paymentRepository;
 
- /*   @Override
-    @Transactional
-    public String addOrder(RequestOrderSaveDTO requestOrderSaveDTO) {
-        Order order = new Order(
-          cashierRepo.getById(requestOrderSaveDTO.getEmployers()),
-          requestOrderSaveDTO.getOrderDate(),
-          requestOrderSaveDTO.getTotal()
-        );
-        orderRepo.save(order);
-        if (orderRepo.existsById(order.getOrderId())){
 
-            List<OrderDetails> orderDetails = modelMapper.
-                    map(requestOrderSaveDTO.getOrderDetails(),new TypeToken<List<OrderDetails>>(){
-                    }.getType());
-
-            for (int i=0;i<orderDetails.size();i++){
-                orderDetails.get(i).setOrders(order);
-                orderDetails.get(i).setItems(itemRepo.getById(requestOrderSaveDTO.getOrderDetails().get(i).getItems()));
-            }
-
-            if (orderDetails.size()>0){
-                orderDetailsRepo.saveAll(orderDetails);
-            }
-            return "saved";
-        }
-        return null;
-    }*/
-
+    /**
+     * Adds an order to the system.
+     * @param requestOrderSaveDTO The DTO containing order details.
+     * @return A message indicating the result of the operation.
+     */
     @Override
     public String addOrder(RequestOrderSaveDTO requestOrderSaveDTO) {
         // Check if items in the order have sufficient quantity
