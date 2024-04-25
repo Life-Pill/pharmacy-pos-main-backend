@@ -28,8 +28,8 @@ public class PaymentDetails {
     private String paymentNotes;
     @Column(name = "payment_discount")
     private double paymentDiscount;
-    @Column(name = "payed_amount")
-    private double payedAmount;
+    @Column(name = "paid_amount")
+    private double paidAmount;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)

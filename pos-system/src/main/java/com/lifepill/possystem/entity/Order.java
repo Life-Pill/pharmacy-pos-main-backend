@@ -1,9 +1,6 @@
 package com.lifepill.possystem.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,7 +10,8 @@ import java.util.Set;
 @Entity
 @Table(name = "orders")
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @RequiredArgsConstructor
 public class Order {
     @Id
