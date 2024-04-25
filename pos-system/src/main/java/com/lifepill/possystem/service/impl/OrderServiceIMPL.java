@@ -119,7 +119,7 @@ public class OrderServiceIMPL implements OrderService {
             Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                if (item.getItemQuantity() < orderDetail.getQty()) {
+                if (item.getItemQuantity() < orderDetail.getAmount()) {
                     throw new InsufficientItemQuantityException("Item " + item.getItemId() + " does not have enough quantity");
                 }
             } else {
@@ -133,7 +133,7 @@ public class OrderServiceIMPL implements OrderService {
             Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                int remainingQuantity = (int) (item.getItemQuantity() - orderDetail.getQty());
+                int remainingQuantity = (int) (item.getItemQuantity() - orderDetail.getAmount());
                 item.setItemQuantity(remainingQuantity);
                 itemRepository.save(item);
             } else {
