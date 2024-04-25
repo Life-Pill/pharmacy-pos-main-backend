@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/lifepill/v1/item-Category")
-@CrossOrigin
+@CrossOrigin(origins =  "http://localhost:3000")
 public class ItemCategoryController {
 
     @Autowired

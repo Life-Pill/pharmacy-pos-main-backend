@@ -5,7 +5,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/pos-monolithic
     username: postgres
-    password: Prami@3990
+    password: Thari@2590
   jpa:
     hibernate:
       ddl-auto: update
