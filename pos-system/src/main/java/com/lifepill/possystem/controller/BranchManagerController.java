@@ -18,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller class for managing branch-related operations by branch managers.
+ */
 @RestController
 @RequestMapping("lifepill/v1/branch-manager")
 public class BranchManagerController {
@@ -28,12 +31,15 @@ public class BranchManagerController {
     @Autowired
     private EmployerService employerService;
 
-
-    // need to change only look for branch manager's branch employers only
+    /**
+     * Retrieves all cashiers (employers) associated with a specific branch managed by the branch manager.
+     *
+     * @param branchId The ID of the branch for which cashiers are to be retrieved.
+     * @return A ResponseEntity containing a list of EmployerDTO objects representing the cashiers.
+     */
     @GetMapping("/employer/by-branch-manager/{branchId}")
     public ResponseEntity<List<EmployerDTO>> getAllCashiersByBranchId(@PathVariable int branchId) {
         List<EmployerDTO> employerDTOS = employerService.getAllEmployerByBranchId(branchId);
         return new ResponseEntity<>(employerDTOS, HttpStatus.OK);
     }
-
 }

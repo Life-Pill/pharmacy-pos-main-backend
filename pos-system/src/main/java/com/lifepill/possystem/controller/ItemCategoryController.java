@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller class for managing item category-related operations.
+ */
 @RestController
 @RequestMapping("/lifepill/v1/item-Category")
 @CrossOrigin(origins =  "http://localhost:3000")
@@ -17,6 +20,13 @@ public class ItemCategoryController {
 
     @Autowired
     private ItemService itemService;
+
+    /**
+     * Saves a new item category.
+     *
+     * @param categoryDTO The DTO containing details of the item category to be saved.
+     * @return ResponseEntity containing a StandardResponse object with a success message.
+     */
     @PostMapping(path = "/save")
     public ResponseEntity<StandardResponse> saveCategory(@RequestBody ItemCategoryDTO categoryDTO) {
 
@@ -26,14 +36,11 @@ public class ItemCategoryController {
                 HttpStatus.CREATED);
     }
 
-/*    @GetMapping("/category/all")
-    public ResponseEntity<StandardResponse> getAllCategories() {
-        List<ItemCategoryDTO> categories = itemService.getAllCategories();
-        return new ResponseEntity<>(
-                new StandardResponse(200, "Success", categories),
-                HttpStatus.OK);
-    }*/
-
+    /**
+     * Retrieves all item categories.
+     *
+     * @return ResponseEntity containing a StandardResponse object with a list of all item categories.
+     */
     @GetMapping("/category/all")
     public ResponseEntity<StandardResponse> getAllCategories() {
         List<ItemCategoryDTO> categories = itemService.getAllCategories();
@@ -43,14 +50,30 @@ public class ItemCategoryController {
         );
     }
 
+    /**
+     * Updates details of an item category.
+     *
+     * @param categoryId The ID of the category to update.
+     * @param categoryDTO The DTO containing updated details of the category.
+     * @return ResponseEntity containing a StandardResponse object with a success message.
+     */
     @PutMapping("/category/update/{categoryId}")
-    public ResponseEntity<StandardResponse> updateCategoryDetails(@PathVariable long categoryId, @RequestBody ItemCategoryDTO categoryDTO) {
+    public ResponseEntity<StandardResponse> updateCategoryDetails(
+            @PathVariable long categoryId,
+            @RequestBody ItemCategoryDTO categoryDTO
+    ) {
         String message = itemService.updateCategoryDetails(categoryId, categoryDTO);
         return new ResponseEntity<>(
                 new StandardResponse(200, "Success", message),
                 HttpStatus.OK);
     }
 
+    /**
+      * Deletes an item category.
+            *
+            * @param categoryId The ID of the category to delete.
+            * @return ResponseEntity containing a StandardResponse object with a success message.
+     * */
     @DeleteMapping("/category/delete/{categoryId}")
     public ResponseEntity<StandardResponse> deleteCategory(@PathVariable long categoryId) {
         String message = itemService.deleteCategory(categoryId);

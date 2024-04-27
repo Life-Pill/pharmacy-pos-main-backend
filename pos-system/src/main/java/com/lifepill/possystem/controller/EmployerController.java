@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Controller class for managing employer-related operations.
+ */
 @RestController
 @RequestMapping("lifepill/v1/employers")
 public class EmployerController {
@@ -29,16 +32,32 @@ public class EmployerController {
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
-
+    /**
+     * Saves an employer without an image.
+     *
+     * @param cashierWithoutImageDTO DTO containing details of the employer without image.
+     * @return A string indicating the success of the operation.
+     */
     @PostMapping("/save-without-image")
     public String saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
         employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
         return "saved";
     }
 
-
+    /**
+     * Saves an employer with an image.
+     *
+     * @param employerDTO DTO containing details of the employer including image.
+     * @param file        MultipartFile representing the image file.
+     * @return A string indicating the success of the operation.
+     * @throws IOException If an I/O error occurs.
+     */
     @PostMapping("/save-with-image")
-    public String saveEmployerWithImage(@ModelAttribute EmployerDTO employerDTO, @RequestParam("file") MultipartFile file) throws IOException {
+    public String saveEmployerWithImage(
+            @ModelAttribute EmployerDTO employerDTO,
+            @RequestParam("file") MultipartFile file
+    )
+            throws IOException {
         // Check if a file is provided
         if (!file.isEmpty()) {
             // Convert MultipartFile to byte array
@@ -51,8 +70,12 @@ public class EmployerController {
         return "saved";
     }
 
-    // move to branch manager controller
-
+    /**
+     * Retrieves the profile photo of an employer by ID.
+     *
+     * @param employerId The ID of the employer.
+     * @return ResponseEntity containing the profile photo byte array.
+     */
     @GetMapping("/profile-photo/{employerId}")
     @Transactional
     public ResponseEntity<byte[]> getProfilePhoto(@PathVariable int employerId) {
@@ -72,17 +95,26 @@ public class EmployerController {
         }
     }
 
+    /**
+     * Updates details of an employer.
+     *
+     * @param employerId                 The ID of the employer to be updated.
+     * @param cashierAllDetailsUpdateDTO DTO containing updated details of the employer.
+     * @return A string indicating the success of the operation.
+     */
+    @PutMapping("/update/{employerId}")
+    @Transactional
+    public String updateEmployer(@PathVariable Long employerId, @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO) {
+        String message = employerService.updateEmployer(employerId, cashierAllDetailsUpdateDTO);
+        return message;
+    }
 
-    // move to branch manager controller
-
-   @PutMapping("/update/{employerId}")
-   @Transactional
-   public String updateEmployer(@PathVariable Long employerId, @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO) {
-       String message = employerService.updateEmployer(employerId, cashierAllDetailsUpdateDTO);
-       return message;
-   }
-
-
+    /**
+     * Updates the account details of an employer.
+     *
+     * @param cashierUpdateAccountDetailsDTO DTO containing updated account details of the employer.
+     * @return A string indicating the success of the operation.
+     */
     @PutMapping("/updateAccountDetails")
     @Transactional
     public String updateEmployerAccountDetails(@RequestBody EmployerUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO) {
@@ -90,30 +122,31 @@ public class EmployerController {
         return message;
     }
 
+    /**
+     * Updates the bank account details of an employer.
+     *
+     * @param employerId                  The ID of the employer whose bank account details are to be updated.
+     * @param cashierUpdateBankAccountDTO DTO containing updated bank account details of the employer.
+     * @return A string indicating the success of the operation.
+     */
     @PutMapping("/updateBankAccountDetails/{employerId}")
     @Transactional
-    public String updateEmployerBankAccountDetails(@PathVariable long employerId, @RequestBody EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
-        String message = employerService.updateEmployerBankAccountDetailsByCashierId(employerId, cashierUpdateBankAccountDTO);
+    public String updateEmployerBankAccountDetails(
+            @PathVariable long employerId,
+            @RequestBody EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO
+    ) {
+        String message = employerService.updateEmployerBankAccountDetailsByCashierId(
+                employerId, cashierUpdateBankAccountDTO
+        );
         return message;
     }
 
- // move to cashier controller
-  /*  @PutMapping("/updatePassword")
-    @Transactional
-    public String updateEmployerPassword(@RequestBody EmployerPasswordResetDTO cashierPasswordResetDTO) {
-        String message = employerService.updateEmployerPassword(cashierPasswordResetDTO);
-        return message;
-    }*/
-
-    //move to cashier controller
-
-/*    @PutMapping("/updateRecentPin")
-    @Transactional
-    public String updateRecentPin(@RequestBody EmployerRecentPinUpdateDTO cashierRecentPinUpdateDTO) {
-        String message = employerService.updateRecentPin(cashierRecentPinUpdateDTO);
-        return message;
-    }*/
-
+    /**
+     * Retrieves an employer by ID.
+     *
+     * @param employerId The ID of the employer to retrieve.
+     * @return The EmployerDTO object representing the employer.
+     */
     @GetMapping(path = "/get-by-id", params = "id")
     @Transactional
     public EmployerDTO getEmployerById(@RequestParam(value = "id") int employerId) {
@@ -121,6 +154,12 @@ public class EmployerController {
         return employerDTO;
     }
 
+    /**
+     * Retrieves the image of an employer by ID.
+     *
+     * @param employerId The ID of the employer whose image is to be retrieved.
+     * @return ResponseEntity containing the image byte array.
+     */
     @GetMapping("/view-image/{employerId}")
     @Transactional
     public ResponseEntity<byte[]> viewImage(@PathVariable int employerId) {
@@ -135,12 +174,23 @@ public class EmployerController {
         }
     }
 
+    /**
+     * Deletes an employer by ID.
+     *
+     * @param employerId The ID of the employer to delete.
+     * @return A string indicating the success of the operation.
+     */
     @DeleteMapping(path = "/delete-employerId/{id}")
     public String deleteEmployer(@PathVariable(value = "id") int employerId) {
         String deleted = employerService.deleteEmployer(employerId);
         return deleted;
     }
 
+    /**
+     * Retrieves all employers.
+     *
+     * @return ResponseEntity containing a list of all employers.
+     */
     @GetMapping(path = "/get-all-employers")
     public ResponseEntity<StandardResponse> getAllEmployers() {
         List<EmployerDTO> allEmployer = employerService.getAllEmployer();
@@ -150,6 +200,12 @@ public class EmployerController {
         );
     }
 
+
+    /**
+     * Retrieves all employers.
+     *
+     * @return ResponseEntity containing a list of all employers.
+     */
     @GetMapping(path = "/get-all-employers-by-active-state/{status}")
     @Transactional
     public List<EmployerDTO> getAllEmployerByActiveState(@PathVariable(value = "status") boolean activeState) {
@@ -157,6 +213,11 @@ public class EmployerController {
         return allemployer;
     }
 
+    /**
+     * Retrieves bank details of all employers.
+     *
+     * @return ResponseEntity containing a StandardResponse object with a list of employer bank details.
+     */
     @GetMapping(path = "/get-all-employers-bank-details")
     @Transactional
     public ResponseEntity<StandardResponse> getAllEmployerBankDetails() {
@@ -166,11 +227,4 @@ public class EmployerController {
                 HttpStatus.OK
         );
     }
-
-    // move to owner controller
-/*    @GetMapping("/byRole/{role}")
-    public ResponseEntity<List<EmployerDTO>> getAllEmployerByRole(@PathVariable Role role) {
-        List<EmployerDTO> cashiers = employerService.getAllEmployerByRole(role);
-        return new ResponseEntity<>(cashiers, HttpStatus.OK);
-    }*/
 }

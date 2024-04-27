@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+/**
+ * Implementation of AuditorAware interface to provide the current auditor of the application.
+ */
 @Component("auditorAwareImpl")
 public class AuditAwareImpl implements AuditorAware<String> {
 

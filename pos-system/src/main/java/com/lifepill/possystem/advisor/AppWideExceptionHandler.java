@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Global exception handler for handling application-wide exceptions.
+ */
 @RestControllerAdvice
 public class AppWideExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
@@ -18,6 +21,12 @@ public class AppWideExceptionHandler {
         );
     }
 
+    /**
+     * Handles NotFoundException by returning a ResponseEntity with a corresponding error message.
+     *
+     * @param e The NotFoundException instance
+     * @return ResponseEntity with a StandardResponse containing the error details
+     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         // Log the exception for debugging purposes

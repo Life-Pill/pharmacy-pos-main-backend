@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controller class for managing owner-related endpoints.
+ */
 @RestController
 @RequestMapping("lifepill/v1/owner")
 public class OwnerController {
@@ -20,6 +23,12 @@ public class OwnerController {
     @Autowired
     private EmployerService employerService;
 
+    /**
+     * Retrieves all employers by role.
+     *
+     * @param role The role of the employers to retrieve.
+     * @return ResponseEntity containing a list of EmployerDTOs with the specified role.
+     */
     @GetMapping("/byRole/{role}")
     public ResponseEntity<List<EmployerDTO>> getAllEmployerByRole(@PathVariable Role role) {
         List<EmployerDTO> cashiers = employerService.getAllEmployerByRole(role);
