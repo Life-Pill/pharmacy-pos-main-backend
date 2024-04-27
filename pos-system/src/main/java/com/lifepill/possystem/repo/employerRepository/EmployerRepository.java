@@ -24,4 +24,6 @@ public interface EmployerRepository extends JpaRepository<Employer,Long> {
 
     Optional<Employer> findByEmployerEmail(String employerEmail);
 
+    Employer findByBranch_BranchIdAndRole(Integer branchId, Role role);
+
 }

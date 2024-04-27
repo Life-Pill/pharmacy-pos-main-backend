@@ -3,7 +3,9 @@ package com.lifepill.possystem.service.impl;
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.entity.Branch;
+import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.entity.Order;
+import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
@@ -68,12 +70,21 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
 
     // Implement methods to fetch manager details and branch details based on branchId
     private String getManagerForBranch(Long branchId) {
-//       String branchManagerName = employerRepository.findByBranchId(branchId).get(0).getName();
-//        return branchManagerName;
-        return null;
+        // Typecast branchId to int
+        int branchIdAsInt = branchId.intValue();
+        // Find the manager for the given branch ID with the role "MANAGER"
+        Employer manager = employerRepository.findByBranch_BranchIdAndRole(branchIdAsInt, Role.MANAGER);
+
+        // If manager is found, return their first name
+        if (manager != null) {
+            return manager.getEmployerFirstName();
+        } else {
+            // If no manager found for the given branch, return null or handle as needed
+            return "No Manager Assigned for ${branchId}, branch";
+        }
     }
     private BranchDTO getBranchDetails(Long branchId) {
-        // Your implementation here
+        //TODO: Implement this method to fetch branch details based on branchId
         return null;
     }
 }
