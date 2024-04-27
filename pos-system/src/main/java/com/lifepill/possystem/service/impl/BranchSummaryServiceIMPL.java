@@ -6,6 +6,7 @@ import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.entity.Order;
 import com.lifepill.possystem.entity.enums.Role;
+import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
@@ -84,7 +85,30 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         }
     }
     private BranchDTO getBranchDetails(Long branchId) {
-        //TODO: Implement this method to fetch branch details based on branchId
-        return null;
+        // Typecast branchId to int
+        int branchIdAsInt = branchId.intValue();
+
+        if (branchRepository.existsById(branchIdAsInt)){
+            Branch branch = branchRepository.getReferenceById(branchIdAsInt);
+
+            // can use mappers to easily below that task
+            BranchDTO branchDTO  = new BranchDTO(
+                    branch.getBranchId(),
+                    branch.getBranchName(),
+                    branch.getBranchAddress(),
+                    branch.getBranchContact(),
+                    branch.getBranchFax(),
+                    branch.getBranchEmail(),
+                    branch.getBranchDescription(),
+                    branch.getBranchImage(),
+                    branch.isBranchStatus(),
+                    branch.getBranchLocation(),
+                    branch.getBranchCreatedOn(),
+                    branch.getBranchCreatedBy()
+            );
+            return branchDTO;
+        }else {
+            throw  new NotFoundException("No Branch found for that id");
+        }
     }
 }
