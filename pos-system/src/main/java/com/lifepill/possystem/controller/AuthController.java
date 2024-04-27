@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controller class for handling authentication-related requests.
+ */
 @RestController
 @RequestMapping("/lifepill/v1/auth")
 @RequiredArgsConstructor
@@ -24,6 +27,12 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * Handles user registration.
+     *
+     * @param registerRequest The request body containing registration details
+     * @return ResponseEntity containing the authentication response
+     */
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponseDTO> register(
             @RequestBody RegisterRequestDTO registerRequest
@@ -32,44 +41,23 @@ public class AuthController {
         return  ResponseEntity.ok(authResponse);
     }
 
-/*    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponseDTO> authenticate(
-            @RequestBody AuthenticationRequestDTO request
-    ) {
-        return ResponseEntity.ok(authService.authenticate(request));
-    }*/
-
+    /**
+     * Test endpoint.
+     *
+     * @return A simple message indicating authentication success.
+     */
     @GetMapping("/test")
     public String test(){
         return "Authenticated";
     }
 
-  /*  @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(
-            @RequestBody AuthenticationRequestDTO request,
-            HttpServletResponse response // Inject HttpServletResponse
-    ) {
-        try {
-            AuthenticationResponseDTO authResponse = authService.authenticate(request);
-
-            // Set the token as a cookie in the HTTP response
-            Cookie cookie = new Cookie("Authorization", authResponse.getAccessToken());
-            cookie.setHttpOnly(true); // Ensure the cookie is only accessible via HTTP
-            cookie.setMaxAge(24 * 60 * 60); // Set the cookie's expiration time in seconds (24 hours)
-            cookie.setPath("/"); // Set the cookie's path to root ("/") to make it accessible from any path
-            response.addCookie(cookie);
-            System.out.println(cookie);
-
-            authResponse.setMessage("Successfully logged in."); // Set the success message
-
-            return ResponseEntity.ok(authResponse);
-        } catch (AuthenticationException e) {
-            // Authentication failed due to incorrect username or password
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new StandardResponse(401, "Authentication failed: Incorrect username or password", null));
-        }
-    }*/
-
+    /**
+     * Authenticates user and returns an access token.
+     *
+     * @param request  The request body containing authentication details
+     * @param response HttpServletResponse to set the access token as a cookie
+     * @return ResponseEntity containing either the authentication response and employer details or an error message
+     */
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequestDTO request,
@@ -77,7 +65,8 @@ public class AuthController {
     ) {
         try {
             AuthenticationResponseDTO authResponse = authService.authenticate(request);
-            EmployerAuthDetailsResponseDTO employerDetails = authService.getEmployerDetails(request.getEmployerEmail());
+            EmployerAuthDetailsResponseDTO employerDetails = authService
+                    .getEmployerDetails(request.getEmployerEmail());
 
             // Set the token as a cookie in the HTTP response
             Cookie cookie = new Cookie("Authorization", authResponse.getAccessToken());
@@ -98,7 +87,12 @@ public class AuthController {
         } catch (AuthenticationException e) {
             // Authentication failed due to incorrect username or password
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new StandardResponse(401, "Authentication failed: Incorrect username or password", null));
+                    .body(new StandardResponse(
+                            401,
+                            "Authentication failed: Incorrect username or password",
+                            null
+                            )
+                    );
         }
     }
 
