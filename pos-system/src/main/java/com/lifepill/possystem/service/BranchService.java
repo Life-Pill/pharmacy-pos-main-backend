@@ -12,17 +12,17 @@ public interface BranchService {
 
     public void saveBranch(BranchDTO branchDTO, MultipartFile image);
 
-    byte[] getImageData(int branchId);
+    byte[] getImageData(long branchId);
 
     List<BranchDTO> getAllBranches();
 
-    public BranchDTO getBranchById(int branchId);
+    public BranchDTO getBranchById(long branchId);
 
-    String deleteBranch(int branchId);
-    String updateBranch(int branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image);
+    String deleteBranch(long branchId);
+    String updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image);
 
-    void updateBranchImage(int branchId, MultipartFile image);
+    void updateBranchImage(long branchId, MultipartFile image);
 
-    void updateBranchWithoutImage(int branchId, BranchUpdateDTO branchUpdateDTO);
+    void updateBranchWithoutImage(long branchId, BranchUpdateDTO branchUpdateDTO);
 
 }

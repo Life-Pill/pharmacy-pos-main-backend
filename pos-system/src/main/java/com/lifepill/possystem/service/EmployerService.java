@@ -35,7 +35,7 @@ public interface EmployerService {
 
     String updateEmployerBankAccountDetailsByCashierId(long employerId, EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO);
 
-    List<EmployerDTO> getAllEmployerByBranchId(int branchId);
+    List<EmployerDTO> getAllEmployerByBranchId(long branchId);
 
     List<EmployerDTO> getAllEmployerByRole(Role role);
     EmployerDTO getEmployerByUsername(String username);

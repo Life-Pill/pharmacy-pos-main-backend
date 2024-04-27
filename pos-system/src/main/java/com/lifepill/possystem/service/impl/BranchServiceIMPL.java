@@ -45,7 +45,7 @@ public class BranchServiceIMPL implements BranchService {
         }
     }
     @Override
-    public byte[] getImageData(int branchId) {
+    public byte[] getImageData(long branchId) {
         Optional<Branch> branchOptional = branchRepository.findById(branchId);
         return branchOptional.map(Branch::getBranchImage).orElse(null);
     }
@@ -81,7 +81,7 @@ public class BranchServiceIMPL implements BranchService {
     }
 
     @Override
-    public BranchDTO getBranchById(int branchId) {
+    public BranchDTO getBranchById(long branchId) {
         if (branchRepository.existsById(branchId)){
             Branch branch = branchRepository.getReferenceById(branchId);
 
@@ -108,7 +108,7 @@ public class BranchServiceIMPL implements BranchService {
     }
 
     @Override
-    public String deleteBranch(int branchId) {
+    public String deleteBranch(long branchId) {
         if (branchRepository.existsById(branchId)){
             branchRepository.deleteById(branchId);
 
@@ -118,7 +118,7 @@ public class BranchServiceIMPL implements BranchService {
         }
     }
 
-    public String updateBranch(int branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image) {
+    public String updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image) {
         if (!branchRepository.existsById(branchId)) {
             throw new EntityNotFoundException("Branch not found");
         }
@@ -157,7 +157,7 @@ public class BranchServiceIMPL implements BranchService {
     }
 
     @Override
-    public void updateBranchImage(int branchId, MultipartFile image) {
+    public void updateBranchImage(long branchId, MultipartFile image) {
         if (!branchRepository.existsById(branchId)) {
             throw new NotFoundException("Branch not found");
         }
@@ -178,7 +178,7 @@ public class BranchServiceIMPL implements BranchService {
     }
 
     @Override
-    public void updateBranchWithoutImage(int branchId, BranchUpdateDTO branchUpdateDTO) {
+    public void updateBranchWithoutImage(long branchId, BranchUpdateDTO branchUpdateDTO) {
         if (!branchRepository.existsById(branchId)) {
             throw new NotFoundException("Branch not found");
         }

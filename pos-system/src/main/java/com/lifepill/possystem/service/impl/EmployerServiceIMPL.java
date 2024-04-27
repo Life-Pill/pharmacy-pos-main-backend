@@ -472,7 +472,7 @@ public class EmployerServiceIMPL implements EmployerService {
     }
 
     @Override
-    public List<EmployerDTO> getAllEmployerByBranchId(int branchId) {
+    public List<EmployerDTO> getAllEmployerByBranchId(long branchId) {
         // Retrieve the branch by its ID
         Branch branch = branchRepository.findById(branchId)
                 .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + branchId));

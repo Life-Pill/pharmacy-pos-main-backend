@@ -55,7 +55,7 @@ public class BranchSummaryServiceIMPLTest {
         // Mock data
         List<Order> mockOrders = new ArrayList<>();
         Order mockOrder1 = new Order();
-        mockOrder1.setBranchId(3);
+        mockOrder1.setBranchId(3L);
         mockOrder1.setTotal(100.0);
         mockOrders.add(mockOrder1);
 
@@ -64,7 +64,7 @@ public class BranchSummaryServiceIMPLTest {
         when(orderRepository.findAll()).thenReturn(mockOrders);
 
         // Mocking manager details
-        when(employerRepository.findByBranch_BranchIdAndRole(3, Role.MANAGER))
+        when(employerRepository.findByBranch_BranchIdAndRole(3L, Role.MANAGER))
                 .thenReturn(Employer.builder()
                         .employerId(1L)
                         .employerFirstName("Mihiranga")
@@ -73,7 +73,7 @@ public class BranchSummaryServiceIMPLTest {
                         .role(Role.MANAGER)
                         .build());
 
-        when(employerRepository.findByBranch_BranchIdAndRole(1, Role.MANAGER))
+        when(employerRepository.findByBranch_BranchIdAndRole(1L, Role.MANAGER))
                 .thenReturn(null);
 
         // Mocking branch details
@@ -81,8 +81,8 @@ public class BranchSummaryServiceIMPLTest {
         mockBranch.setBranchId(3);
         mockBranch.setBranchName("Branch C");
 
-        when(branchRepository.existsById(3)).thenReturn(true);
-        when(branchRepository.getReferenceById(3)).thenReturn(mockBranch);
+        when(branchRepository.existsById(3L)).thenReturn(true);
+        when(branchRepository.getReferenceById(3L)).thenReturn(mockBranch);
 
         // Test method
         List<PharmacyBranchResponseDTO> result = branchSummaryService.getAllBranchesWithSales();
@@ -97,10 +97,10 @@ public class BranchSummaryServiceIMPLTest {
         verify(orderRepository, times(1))
                 .findAll();
         verify(employerRepository, times(1))
-                .findByBranch_BranchIdAndRole(anyInt(), eq(Role.MANAGER));
+                .findByBranch_BranchIdAndRole(anyLong(), eq(Role.MANAGER));
         verify(branchRepository, times(1))
-                .existsById(anyInt());
+                .existsById(anyLong());
         verify(branchRepository, times(1))
-                .getReferenceById(anyInt());
+                .getReferenceById(anyLong());
     }
 }

@@ -70,22 +70,20 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
     }
 
     @Override
-    public PharmacyBranchResponseDTO getBranchSalesById(Integer branchId) {
-
-        long branchIdAsLong = branchId.longValue();
+    public PharmacyBranchResponseDTO getBranchSalesById(long branchId) {
 
         // Fetch all orders from the repository for the given branchId
-        List<Order> branchOrders = orderRepository.findByBranchId(branchIdAsLong);
+        List<Order> branchOrders = orderRepository.findByBranchId(branchId);
 
         // Calculate total sales and count of orders for the branch
         Double totalSales = branchOrders.stream().mapToDouble(Order::getTotal).sum();
         Integer orderCount = branchOrders.size();
 
         // Fetch manager details for the branch
-        String manager = getManagerForBranch(branchIdAsLong);
+        String manager = getManagerForBranch(branchId);
 
         // Fetch branch details
-        BranchDTO branchDTO = getBranchDetails(branchIdAsLong);
+        BranchDTO branchDTO = getBranchDetails(branchId);
 
         // Create and return PharmacyBranchResponseDTO
         return new PharmacyBranchResponseDTO(totalSales, orderCount, manager, branchDTO);
@@ -94,10 +92,9 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
 
     // Implement methods to fetch manager details and branch details based on branchId
     private String getManagerForBranch(Long branchId) {
-        // Typecast branchId to int
-        int branchIdAsInt = branchId.intValue();
+
         // Find the manager for the given branch ID with the role "MANAGER"
-        Employer manager = employerRepository.findByBranch_BranchIdAndRole(branchIdAsInt, Role.MANAGER);
+        Employer manager = employerRepository.findByBranch_BranchIdAndRole(branchId, Role.MANAGER);
 
         // If manager is found, return their first name
         if (manager != null) {
@@ -109,11 +106,9 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
     }
 
     private BranchDTO getBranchDetails(Long branchId) {
-        // Typecast branchId to int
-        int branchIdAsInt = branchId.intValue();
 
-        if (branchRepository.existsById(branchIdAsInt)) {
-            Branch branch = branchRepository.getReferenceById(branchIdAsInt);
+        if (branchRepository.existsById(branchId)) {
+            Branch branch = branchRepository.getReferenceById(branchId);
 
             return modelMapper.map(branch, BranchDTO.class);
 
