@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * The type Request payment details dto.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

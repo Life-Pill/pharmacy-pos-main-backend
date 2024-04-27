@@ -3,6 +3,9 @@ package com.lifepill.possystem.dto.requestDTO.EmployerUpdate;
 import com.lifepill.possystem.entity.enums.Role;
 import lombok.*;
 
+/**
+ * The type Employer update dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

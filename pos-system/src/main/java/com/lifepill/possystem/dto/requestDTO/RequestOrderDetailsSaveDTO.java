@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * The type Request order details save dto.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

@@ -14,8 +14,10 @@ import com.lifepill.possystem.service.BranchSummaryService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
     private final EmployerRepository employerRepository;
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(BranchSummaryServiceIMPL.class);
 
     /**
      * Retrieves all branches with their sales information.
@@ -93,6 +96,49 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
 
         // Create and return PharmacyBranchResponseDTO
         return new PharmacyBranchResponseDTO(totalSales, orderCount, manager, branchDTO);
+    }
+
+    /**
+     * Retrieves pharmacy data for a selected date.
+     *
+     * @param date The date for which pharmacy data is requested.
+     * @return A list of PharmacyBranchResponseDTO containing sales, order count, manager, and branch details for each pharmacy branch.
+     */
+    @Override
+    public List<PharmacyBranchResponseDTO> getPharmacyDataByDate(Date date) {
+        logger.info("Fetching all branches with sales information...");
+        // Fetch all orders for the selected date from the repository
+        System.out.println(orderRepository.findByOrderDate(date) + "orderRepository.findByOrderDate(date)");
+        List<Order> ordersForDate = orderRepository.findByOrderDate(date);
+
+        logger.debug(ordersForDate.toString() + "ordersForDate");
+
+        // Group orders by branchId and calculate total sales and count of orders for each branch
+        Map<Long, Double> branchSalesMap = ordersForDate.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.summingDouble(Order::getTotal))
+                );
+        logger.info(branchSalesMap.toString() + "branchSalesMap");
+        Map<Long, Long> branchOrdersCountMap = ordersForDate.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.counting())
+                );
+
+        // Retrieve additional branch and manager details
+        List<PharmacyBranchResponseDTO> pharmacyData = branchSalesMap.entrySet().stream().map(entry -> {
+            Long branchId = entry.getKey();
+            Double sales = entry.getValue();
+
+            Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
+            // Assuming you have a method to fetch manager details based on branchId
+            String manager = getManagerForBranch(branchId);
+            // Assuming you have a method to fetch branch details based on branchId
+            BranchDTO branchDTO = getBranchDetails(branchId);
+            return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
+        }).collect(Collectors.toList());
+
+        logger.info("Fetched all branches with sales information successfully.");
+        return pharmacyData;
     }
 
 

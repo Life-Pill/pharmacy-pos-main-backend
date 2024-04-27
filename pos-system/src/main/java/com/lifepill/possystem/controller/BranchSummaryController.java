@@ -4,10 +4,12 @@ import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.service.BranchSummaryService;
 import com.lifepill.possystem.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,6 +51,18 @@ public class BranchSummaryController {
                 new StandardResponse(201, "SUCCESS", pharmacyBranchResponseDTO),
                 HttpStatus.OK
         );
+    }
+
+    /**
+     * Retrieves all pharmacy data for a selected date.
+     *
+     * @param date The selected date.
+     * @return List of PharmacyBranchResponseDTO containing pharmacy data for the selected date.
+     */
+    @GetMapping("/phamacy-summary-by-date/")
+    public ResponseEntity<List<PharmacyBranchResponseDTO>> getPharmacyDataByDate(@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService.getPharmacyDataByDate(date);
+        return new ResponseEntity<>(pharmacyData, HttpStatus.OK);
     }
 
 }

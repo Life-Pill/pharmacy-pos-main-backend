@@ -10,9 +10,15 @@ import java.util.stream.Collectors;
 
 import static com.lifepill.possystem.entity.enums.Permission.*;
 
+/**
+ * The enum Role.
+ */
 @RequiredArgsConstructor
 public enum Role {
-   // CASHIER,MANAGER,OWNER,OTHER
+    /**
+     * Owner role.
+     */
+// CASHIER,MANAGER,OWNER,OTHER
    OWNER(
             Set.of(
             OWNER_READ,
@@ -24,6 +30,9 @@ public enum Role {
             )
   ),
 
+    /**
+     * Manager role.
+     */
     MANAGER(
             Set.of(
                     MANAGER_READ,
@@ -34,6 +43,9 @@ public enum Role {
                     OTHER_CREATE
             )
     ),
+    /**
+     * Cashier role.
+     */
     CASHIER(
             Set.of(
             CASHIER_READ,
@@ -41,6 +53,9 @@ public enum Role {
             )
     ),
 
+    /**
+     * Other role.
+     */
     OTHER(
             Set.of(
             OTHER_READ,
@@ -53,6 +68,11 @@ public enum Role {
     @Getter
     private final Set<Permission> permissions;
 
+    /**
+     * Gets authorities.
+     *
+     * @return the authorities
+     */
     public List<SimpleGrantedAuthority> getAuthorities() {
         var authorities = getPermissions()
                 .stream()

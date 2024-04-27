@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * The type Employer bank details.
+ */
 @Entity
 @Data
 @NoArgsConstructor

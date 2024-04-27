@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Employer update bank account dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

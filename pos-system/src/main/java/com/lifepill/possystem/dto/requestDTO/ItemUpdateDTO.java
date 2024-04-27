@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * The type Item update dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

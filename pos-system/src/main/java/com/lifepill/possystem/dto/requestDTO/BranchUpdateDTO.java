@@ -2,6 +2,9 @@ package com.lifepill.possystem.dto.requestDTO;
 
 import lombok.*;
 
+/**
+ * The type Branch update dto.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
