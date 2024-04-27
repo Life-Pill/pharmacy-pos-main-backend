@@ -7,13 +7,17 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration class for ModelMapper.
+ */
 @Configuration
 public class ModelMapperConfig {
-/*    @Bean
-    public ModelMapper modelMapper(){
-        return new ModelMapper();
-    }*/
 
+    /**
+     * Configures and initializes the ModelMapper bean.
+     *
+     * @return Initialized ModelMapper instance.
+     */
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();

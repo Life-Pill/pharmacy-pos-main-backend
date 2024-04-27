@@ -1,5 +1,6 @@
 package com.lifepill.possystem.service;
 
+import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Employer;
@@ -17,9 +18,11 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 /**
@@ -55,7 +58,7 @@ public class BranchSummaryServiceIMPLTest {
         // Mock data
         List<Order> mockOrders = new ArrayList<>();
         Order mockOrder1 = new Order();
-        mockOrder1.setBranchId(3);
+        mockOrder1.setBranchId(3L);
         mockOrder1.setTotal(100.0);
         mockOrders.add(mockOrder1);
 
@@ -64,7 +67,7 @@ public class BranchSummaryServiceIMPLTest {
         when(orderRepository.findAll()).thenReturn(mockOrders);
 
         // Mocking manager details
-        when(employerRepository.findByBranch_BranchIdAndRole(3, Role.MANAGER))
+        when(employerRepository.findByBranch_BranchIdAndRole(3L, Role.MANAGER))
                 .thenReturn(Employer.builder()
                         .employerId(1L)
                         .employerFirstName("Mihiranga")
@@ -73,7 +76,7 @@ public class BranchSummaryServiceIMPLTest {
                         .role(Role.MANAGER)
                         .build());
 
-        when(employerRepository.findByBranch_BranchIdAndRole(1, Role.MANAGER))
+        when(employerRepository.findByBranch_BranchIdAndRole(1L, Role.MANAGER))
                 .thenReturn(null);
 
         // Mocking branch details
@@ -81,26 +84,62 @@ public class BranchSummaryServiceIMPLTest {
         mockBranch.setBranchId(3);
         mockBranch.setBranchName("Branch C");
 
-        when(branchRepository.existsById(3)).thenReturn(true);
-        when(branchRepository.getReferenceById(3)).thenReturn(mockBranch);
+        when(branchRepository.existsById(3L)).thenReturn(true);
+        when(branchRepository.getReferenceById(3L)).thenReturn(mockBranch);
 
         // Test method
         List<PharmacyBranchResponseDTO> result = branchSummaryService.getAllBranchesWithSales();
 
-// Assertions
+        // Assertions
         assertEquals(1, result.size());
         assertEquals(100.0, result.get(0).getSales());
         assertEquals(1, result.get(0).getOrders());
         assertEquals("Mihiranga", result.get(0).getManager());
 
-// Verify repository method calls
+        // Verify repository method calls
         verify(orderRepository, times(1))
                 .findAll();
         verify(employerRepository, times(1))
-                .findByBranch_BranchIdAndRole(anyInt(), eq(Role.MANAGER));
+                .findByBranch_BranchIdAndRole(anyLong(), eq(Role.MANAGER));
         verify(branchRepository, times(1))
-                .existsById(anyInt());
+                .existsById(anyLong());
         verify(branchRepository, times(1))
-                .getReferenceById(anyInt());
+                .getReferenceById(anyLong());
+    }
+
+    /**
+     * Test method for getBranchSalesById() with valid branch ID.
+     */
+    @Test
+    void getBranchSalesById_ValidBranchId_ReturnsPharmacyBranchResponseDTO() {
+        // Arrange
+        long branchId = 1L;
+        Branch branch = new Branch();
+        branch.setBranchId(branchId);
+        branch.setBranchName("Test Branch");
+
+        Employer manager = new Employer();
+        manager.setEmployerFirstName("John");
+        manager.setRole(Role.MANAGER);
+
+        BranchDTO branchDTO = new BranchDTO();
+        branchDTO.setBranchId(branchId);
+        branchDTO.setBranchName("Test Branch");
+
+        Order order = new Order();
+        order.setBranchId(branchId);
+        order.setTotal(100.0);
+
+        when(branchRepository.existsById(branchId)).thenReturn(true);
+        when(branchRepository.getReferenceById(branchId)).thenReturn(branch);
+        when(employerRepository.findByBranch_BranchIdAndRole(branchId, Role.MANAGER)).thenReturn(manager);
+        when(orderRepository.findByBranchId(branchId)).thenReturn(Collections.singletonList(order));
+
+        // Act
+        PharmacyBranchResponseDTO responseDTO = branchSummaryService.getBranchSalesById(branchId);
+
+        // Assert
+        assertNotNull(responseDTO);
+        assertEquals(100.0, responseDTO.getSales());
     }
 }

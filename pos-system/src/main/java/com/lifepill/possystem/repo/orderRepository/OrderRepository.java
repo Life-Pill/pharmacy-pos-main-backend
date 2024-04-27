@@ -7,10 +7,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 @EnableJpaRepositories
 public interface OrderRepository extends JpaRepository<Order,Long> {
-    Collection<Object> findByBranchId(Branch branch);
+   List<Order> findByBranchId(Long branchId);
+   //  Collection<Object> findByBranchId(Branch branch);
+
 
 }

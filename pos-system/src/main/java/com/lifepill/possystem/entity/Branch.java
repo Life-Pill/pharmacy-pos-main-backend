@@ -16,7 +16,7 @@ public class Branch {
     @Id
     @Column(name = "brach_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int branchId;
+    private long branchId;
     @Column(name = "branch_name", length = 20, nullable = false)
     private String branchName;
     @Column(name = "branch_address", length = 100, nullable = false)

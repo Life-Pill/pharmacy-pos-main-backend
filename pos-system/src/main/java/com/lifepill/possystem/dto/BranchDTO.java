@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class BranchDTO {
-    private int branchId;
+    private long branchId;
     private String branchName;
     private String branchAddress;
     private String branchContact;

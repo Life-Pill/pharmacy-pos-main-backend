@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 /**
@@ -70,5 +71,27 @@ public class BranchSummaryControllerTest {
 
         // Verify service method call
         verify(branchSummaryService, times(1)).getAllBranchesWithSales();
+    }
+
+    /**
+     * Test method for getBranchSalesById() with valid branch ID.
+     */
+    @Test
+    void getBranchSalesById_ValidBranchId_ReturnsResponseEntityWithStatusOK() {
+        // Arrange
+        long branchId = 1L;
+        PharmacyBranchResponseDTO responseDTO = new PharmacyBranchResponseDTO();
+        responseDTO.setSales(100.0);
+
+        when(branchSummaryService.getBranchSalesById(branchId)).thenReturn(responseDTO);
+
+        // Act
+        ResponseEntity<StandardResponse> responseEntity = branchSummaryController.getBranchSalesById(branchId);
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+        assertEquals(201, responseEntity.getBody().getCode());
+        assertEquals("SUCCESS", responseEntity.getBody().getMessage());
     }
 }

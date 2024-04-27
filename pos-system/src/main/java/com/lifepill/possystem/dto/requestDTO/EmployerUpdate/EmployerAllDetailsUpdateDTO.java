@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 public class EmployerAllDetailsUpdateDTO {
  //   private long cashierId;
-    private int branchId;
+    private long branchId;
     private String employerNicName;
     private String employerFirstName;
     private String employerLastName;

@@ -10,13 +10,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller class for managing cashier-related operations.
+ */
 @RestController
 @RequestMapping("lifepill/v1/cashier")
 public class CashierController {
 
     @Autowired
     private EmployerService employerService;
-/**/
+
+    /**
+     * Updates the password of a cashier.
+     *
+     * @param cashierPasswordResetDTO DTO containing details necessary for resetting the password.
+     * @return A message indicating the success or failure of the password update operation.
+     */
     @PutMapping("/updatePassword")
     @Transactional
     public String updateEmployerPassword(@RequestBody EmployerPasswordResetDTO cashierPasswordResetDTO) {
@@ -24,6 +33,12 @@ public class CashierController {
         return message;
     }
 
+    /**
+     * Updates the recent PIN of a cashier.
+     *
+     * @param cashierRecentPinUpdateDTO DTO containing details necessary for updating the recent PIN.
+     * @return A message indicating the success or failure of the recent PIN update operation.
+     */
     @PutMapping("/updateRecentPin")
     @Transactional
     public String updateRecentPin(@RequestBody EmployerRecentPinUpdateDTO cashierRecentPinUpdateDTO) {

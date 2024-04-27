@@ -6,4 +6,7 @@ import java.util.List;
 
 public interface BranchSummaryService {
     List<PharmacyBranchResponseDTO> getAllBranchesWithSales();
+    PharmacyBranchResponseDTO getBranchSalesById(long branchId);
+
+
 }

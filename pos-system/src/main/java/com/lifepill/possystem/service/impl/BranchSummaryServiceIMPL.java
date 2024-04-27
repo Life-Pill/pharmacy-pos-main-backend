@@ -9,12 +9,10 @@ import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
-import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.service.BranchSummaryService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -71,12 +69,43 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         }).collect(Collectors.toList());
     }
 
-    // Implement methods to fetch manager details and branch details based on branchId
+    /**
+     * Retrieves sales information for a pharmacy branch by its ID.
+     *
+     * @param branchId The ID of the pharmacy branch.
+     * @return A PharmacyBranchResponseDTO containing the total sales, order count, manager details, and branch details.
+     */
+    @Override
+    public PharmacyBranchResponseDTO getBranchSalesById(long branchId) {
+
+        // Fetch all orders from the repository for the given branchId
+        List<Order> branchOrders = orderRepository.findByBranchId(branchId);
+
+        // Calculate total sales and count of orders for the branch
+        Double totalSales = branchOrders.stream().mapToDouble(Order::getTotal).sum();
+        Integer orderCount = branchOrders.size();
+
+        // Fetch manager details for the branch
+        String manager = getManagerForBranch(branchId);
+
+        // Fetch branch details
+        BranchDTO branchDTO = getBranchDetails(branchId);
+
+        // Create and return PharmacyBranchResponseDTO
+        return new PharmacyBranchResponseDTO(totalSales, orderCount, manager, branchDTO);
+    }
+
+
+    /**
+     * Retrieves the manager's first name for the given branch ID.
+     *
+     * @param branchId The ID of the branch.
+     * @return The manager's first name or "No Manager Assigned" if no manager is found.
+     */
     private String getManagerForBranch(Long branchId) {
-        // Typecast branchId to int
-        int branchIdAsInt = branchId.intValue();
+    // Implement methods to fetch manager details and branch details based on branchId
         // Find the manager for the given branch ID with the role "MANAGER"
-        Employer manager = employerRepository.findByBranch_BranchIdAndRole(branchIdAsInt, Role.MANAGER);
+        Employer manager = employerRepository.findByBranch_BranchIdAndRole(branchId, Role.MANAGER);
 
         // If manager is found, return their first name
         if (manager != null) {
@@ -87,12 +116,17 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         }
     }
 
+    /**
+     * Retrieves branch details for the given branch ID.
+     *
+     * @param branchId The ID of the branch.
+     * @return The BranchDTO object containing branch details.
+     * @throws NotFoundException if no branch is found for the given ID.
+     */
     private BranchDTO getBranchDetails(Long branchId) {
-        // Typecast branchId to int
-        int branchIdAsInt = branchId.intValue();
 
-        if (branchRepository.existsById(branchIdAsInt)) {
-            Branch branch = branchRepository.getReferenceById(branchIdAsInt);
+        if (branchRepository.existsById(branchId)) {
+            Branch branch = branchRepository.getReferenceById(branchId);
 
             return modelMapper.map(branch, BranchDTO.class);
 

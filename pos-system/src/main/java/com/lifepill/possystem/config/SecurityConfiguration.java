@@ -18,6 +18,9 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 import static com.lifepill.possystem.entity.enums.Role.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+/**
+ * Configuration class for Security.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -28,6 +31,13 @@ public class SecurityConfiguration {
     @Autowired
     JwtAuthFilter jwtAuthFilter;
 
+    /**
+     * Configures security filter chain.
+     *
+     * @param http HttpSecurity object
+     * @return SecurityFilterChain object
+     * @throws Exception If an error occurs during configuration
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
