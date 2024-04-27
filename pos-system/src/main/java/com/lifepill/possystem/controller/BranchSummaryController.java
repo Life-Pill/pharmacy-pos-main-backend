@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller class to handle branch summary related endpoints.
+ */
 @RestController
 @RequestMapping("lifepill/v1/branch-summary")
 public class BranchSummaryController {
@@ -17,6 +20,12 @@ public class BranchSummaryController {
     @Autowired
     private BranchSummaryService branchSummaryService;
 
+    /**
+     * Retrieves all branches along with their sales summary.
+     *
+     * @return ResponseEntity containing StandardResponse with status 201 (SUCCESS)
+     * and list of PharmacyBranchResponseDTO
+     */
     @GetMapping("/sales-summary")
     public ResponseEntity<StandardResponse> getAllBranchesWithSales() {
         List<PharmacyBranchResponseDTO> allBranchesWithSales = branchSummaryService.getAllBranchesWithSales();
@@ -26,6 +35,12 @@ public class BranchSummaryController {
         );
     }
 
+    /**
+     * Retrieves sales summary of a specific branch by its ID.
+     *
+     * @param branchId The ID of the branch
+     * @return ResponseEntity containing StandardResponse with status 201 (SUCCESS) and PharmacyBranchResponseDTO
+     */
     @GetMapping(path ="/sales-summary/{id}")
     public ResponseEntity<StandardResponse> getBranchSalesById(@PathVariable(value = "id") long branchId){
 
