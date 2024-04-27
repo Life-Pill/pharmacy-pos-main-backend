@@ -22,51 +22,53 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the BranchSummaryService interface.
+ */
 @Service
 @AllArgsConstructor
 public class BranchSummaryServiceIMPL implements BranchSummaryService {
 
-    @Autowired
-    private BranchRepository branchRepository;
+    private final BranchRepository branchRepository;
+    private final EmployerRepository employerRepository;
+    private final OrderRepository orderRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private EmployerRepository employerRepository;
-
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private OrderDetailsRepository orderDetailsRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-  @Override
+    /**
+     * Retrieves all branches with their sales information.
+     *
+     * @return List of PharmacyBranchResponseDTO containing sales information for each branch.
+     */
+    @Override
     public List<PharmacyBranchResponseDTO> getAllBranchesWithSales() {
 
         // Fetch all orders from the repository
         List<Order> allOrders = orderRepository.findAll();
 
-          // Group orders by branchId and calculate total sales and count of orders for each branch
-          Map<Long, Double> branchSalesMap = allOrders.stream()
-                  .collect(Collectors.groupingBy(Order::getBranchId,
-                          Collectors.summingDouble(Order::getTotal)));
-          Map<Long, Long> branchOrdersCountMap = allOrders.stream()
-                  .collect(Collectors.groupingBy(Order::getBranchId, Collectors.counting()));
+        // Group orders by branchId and calculate total sales and count of orders for each branch
+        Map<Long, Double> branchSalesMap = allOrders
+                .stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.summingDouble(Order::getTotal))
+                );
+        Map<Long, Long> branchOrdersCountMap = allOrders
+                .stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.counting())
+                );
 
-          return branchSalesMap.entrySet().stream()
-                  .map(entry -> {
-                      Long branchId = entry.getKey();
-                      Double sales = entry.getValue();
-                      Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
-                      // Assuming you have a method to fetch manager details based on branchId
-                      // TODO: Implement this method
-                      String manager = getManagerForBranch(branchId);
-                      // Assuming you have a method to fetch branch details based on branchId
-                      // TODO: Implement this method
-                      BranchDTO branchDTO = getBranchDetails(branchId);
-                      return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
-                  })
-                  .collect(Collectors.toList());
+        return branchSalesMap.entrySet().stream().map(entry -> {
+            Long branchId = entry.getKey();
+            Double sales = entry.getValue();
+
+            Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
+            // Assuming you have a method to fetch manager details based on branchId
+            String manager = getManagerForBranch(branchId);
+            // Assuming you have a method to fetch branch details based on branchId
+            BranchDTO branchDTO = getBranchDetails(branchId);
+            return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
+
+        }).collect(Collectors.toList());
     }
 
     // Implement methods to fetch manager details and branch details based on branchId
@@ -80,35 +82,22 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         if (manager != null) {
             return manager.getEmployerFirstName();
         } else {
-            // If no manager found for the given branch, return null or handle as needed
-            return "No Manager Assigned for ${branchId}, branch";
+            // If no manager found for the given branch, return a default value or handle as needed
+            return "No Manager Assigned";
         }
     }
+
     private BranchDTO getBranchDetails(Long branchId) {
         // Typecast branchId to int
         int branchIdAsInt = branchId.intValue();
 
-        if (branchRepository.existsById(branchIdAsInt)){
+        if (branchRepository.existsById(branchIdAsInt)) {
             Branch branch = branchRepository.getReferenceById(branchIdAsInt);
 
-            // can use mappers to easily below that task
-            BranchDTO branchDTO  = new BranchDTO(
-                    branch.getBranchId(),
-                    branch.getBranchName(),
-                    branch.getBranchAddress(),
-                    branch.getBranchContact(),
-                    branch.getBranchFax(),
-                    branch.getBranchEmail(),
-                    branch.getBranchDescription(),
-                    branch.getBranchImage(),
-                    branch.isBranchStatus(),
-                    branch.getBranchLocation(),
-                    branch.getBranchCreatedOn(),
-                    branch.getBranchCreatedBy()
-            );
-            return branchDTO;
-        }else {
-            throw  new NotFoundException("No Branch found for that id");
+            return modelMapper.map(branch, BranchDTO.class);
+
+        } else {
+            throw new NotFoundException("No Branch found for that id");
         }
     }
 }

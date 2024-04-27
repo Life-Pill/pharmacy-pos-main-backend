@@ -20,7 +20,7 @@ public class BranchSummaryController {
     private BranchSummaryService branchSummaryService;
 
     @GetMapping("/sales-summary")
-    public ResponseEntity<StandardResponse> getAllBranchesWithSales(){
+    public ResponseEntity<StandardResponse> getAllBranchesWithSales() {
         List<PharmacyBranchResponseDTO> allBranchesWithSales = branchSummaryService.getAllBranchesWithSales();
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(201, "SUCCESS", allBranchesWithSales),
