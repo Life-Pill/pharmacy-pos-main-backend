@@ -17,7 +17,6 @@ public interface ItemService {
     List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
     String updateItem(ItemUpdateDTO itemUpdateDTO);
     String deleteItem(long itemId);
-
     List<ItemGetAllResponseDTO> getAllItems();
 
     //List<ItemGetResponseDTO> getItemByActiveStatusLazy(boolean activeStatus);

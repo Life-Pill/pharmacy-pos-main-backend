@@ -9,12 +9,10 @@ import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
-import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.service.BranchSummaryService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -70,6 +68,29 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
 
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public PharmacyBranchResponseDTO getBranchSalesById(Integer branchId) {
+
+        long branchIdAsLong = branchId.longValue();
+
+        // Fetch all orders from the repository for the given branchId
+        List<Order> branchOrders = orderRepository.findByBranchId(branchIdAsLong);
+
+        // Calculate total sales and count of orders for the branch
+        Double totalSales = branchOrders.stream().mapToDouble(Order::getTotal).sum();
+        Integer orderCount = branchOrders.size();
+
+        // Fetch manager details for the branch
+        String manager = getManagerForBranch(branchIdAsLong);
+
+        // Fetch branch details
+        BranchDTO branchDTO = getBranchDetails(branchIdAsLong);
+
+        // Create and return PharmacyBranchResponseDTO
+        return new PharmacyBranchResponseDTO(totalSales, orderCount, manager, branchDTO);
+    }
+
 
     // Implement methods to fetch manager details and branch details based on branchId
     private String getManagerForBranch(Long branchId) {
