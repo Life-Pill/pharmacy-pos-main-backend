@@ -94,9 +94,13 @@ public class BranchSummaryServiceIMPLTest {
         assertEquals("Mihiranga", result.get(0).getManager());
 
 // Verify repository method calls
-        verify(orderRepository, times(1)).findAll();
-        verify(employerRepository, times(1)).findByBranch_BranchIdAndRole(anyInt(), eq(Role.MANAGER));
-        verify(branchRepository, times(1)).existsById(anyInt());
-        verify(branchRepository, times(1)).getReferenceById(anyInt());
+        verify(orderRepository, times(1))
+                .findAll();
+        verify(employerRepository, times(1))
+                .findByBranch_BranchIdAndRole(anyInt(), eq(Role.MANAGER));
+        verify(branchRepository, times(1))
+                .existsById(anyInt());
+        verify(branchRepository, times(1))
+                .getReferenceById(anyInt());
     }
 }
