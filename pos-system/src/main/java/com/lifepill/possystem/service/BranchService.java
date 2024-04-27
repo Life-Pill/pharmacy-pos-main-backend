@@ -2,6 +2,7 @@ package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
+import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 

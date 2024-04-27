@@ -33,15 +33,25 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.antMatchers("/lifepill/v1/auth/**","/swagger-ui/index.html#/").permitAll()
-                                .antMatchers("/lifepill/v1/test/**","lifepill/v1/contact/**","/lifepill/v1/notices/**","/swagger-ui/index.html#/v3/api-docs").permitAll()
-                                .antMatchers("/swagger-ui.html#/", "/swagger-ui/**", "/v2/api-docs", "/webjars/**","/v3/api-docs").permitAll()
+                        req.antMatchers("/lifepill/v1/auth/**",
+                                        "/swagger-ui/index.html#/",
+                                        "/swagger-ui.html#/",
+                                        "/lifepill/v1/test/**",
+                                        "lifepill/v1/contact/**",
+                                        "/lifepill/v1/notices/**",
+                                        "/swagger-ui/index.html#/v3/api-docs",
+                                        "/swagger-ui.html#/",
+                                        "/swagger-ui/**",
+                                        "/v2/api-docs",
+                                        "/webjars/**",
+                                        "/v3/api-docs"
+                                ).permitAll()
                                 //.antMatchers("/lifepill/v1/admin/**").hasAnyRole(OWNER_READ.name(), CASHIER.name())
                                 .antMatchers("/lifepill/v1/admin/**").hasRole(OWNER.name())
                                 //.antMatchers( "/lifepill/v1/admin/**").permitAll()
                                 .antMatchers("/lifepill/v1/cashierNew/**").hasRole(CASHIER.name())
                                // .antMatchers(POST, "/lifepill/v1/cashierNew/**").hasAnyAuthority(CASHIER_CREATE.name(),OWNER_CREATE.name())
-                                .antMatchers("lifepill/v1/branch/**").hasAnyRole(OWNER.name())
+                                .antMatchers("lifepill/v1/branch/**","/lifepill/v1/branch-summary/sales-summary").hasAnyRole(OWNER.name())
                                 .antMatchers("lifepill/v1/employers/**").hasAnyRole(OWNER.name(), MANAGER.name())
                                 .antMatchers("lifepill/v1/cashier/**").hasAnyRole(CASHIER.name(), MANAGER.name(), OWNER.name())
                                 .antMatchers("lifepill/v1/owner/**").hasRole(OWNER.name())

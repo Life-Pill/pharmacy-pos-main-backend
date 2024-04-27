@@ -12,7 +12,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 public class RequestOrderDetailsSaveDTO {
-
     private String name;
     private Double amount;
     private long id;

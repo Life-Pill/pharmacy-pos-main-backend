@@ -2,6 +2,7 @@ package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
+import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
@@ -54,7 +55,7 @@ public class BranchServiceIMPL implements BranchService {
     @Override
     public List<BranchDTO> getAllBranches() {
         List<Branch> getAllBranches = branchRepository.findAll();
-        if (getAllBranches.size() > 0){
+        if (!getAllBranches.isEmpty()){
             List<BranchDTO> branchDTOList = new ArrayList<>();
             for (Branch branch: getAllBranches){
                 BranchDTO employerDTO = new BranchDTO(
@@ -224,6 +225,5 @@ public class BranchServiceIMPL implements BranchService {
             throw new NotFoundException("No Branch found for that id");
         }
     }
-
 
 }
