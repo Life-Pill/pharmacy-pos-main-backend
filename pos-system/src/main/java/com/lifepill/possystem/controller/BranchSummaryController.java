@@ -59,7 +59,7 @@ public class BranchSummaryController {
      * @param date The selected date.
      * @return List of PharmacyBranchResponseDTO containing pharmacy data for the selected date.
      */
-    @GetMapping("/phamacy-summary-by-date/")
+    @GetMapping("/pharmacy-summary-by-date/")
     public ResponseEntity<List<PharmacyBranchResponseDTO>> getPharmacyDataByDate(@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
         List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService.getPharmacyDataByDate(date);
         return new ResponseEntity<>(pharmacyData, HttpStatus.OK);

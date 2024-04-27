@@ -12,11 +12,13 @@ import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.service.BranchSummaryService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -106,12 +108,17 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
      */
     @Override
     public List<PharmacyBranchResponseDTO> getPharmacyDataByDate(Date date) {
-        logger.info("Fetching all branches with sales information...");
-        // Fetch all orders for the selected date from the repository
-        System.out.println(orderRepository.findByOrderDate(date) + "orderRepository.findByOrderDate(date)");
-        List<Order> ordersForDate = orderRepository.findByOrderDate(date);
 
-        logger.debug(ordersForDate.toString() + "ordersForDate");
+        // Fetch all orders for the selected date from the repository
+        List<Order> ordersForDate = orderRepository.findByOrderDateBetween(
+                // Start of the given date
+                DateUtils.truncate(date, Calendar.DAY_OF_MONTH),
+                // End of the given date
+                DateUtils.addMilliseconds(
+                        DateUtils.ceiling(date, Calendar.DAY_OF_MONTH),
+                        -1
+                )
+        );
 
         // Group orders by branchId and calculate total sales and count of orders for each branch
         Map<Long, Double> branchSalesMap = ordersForDate.stream()

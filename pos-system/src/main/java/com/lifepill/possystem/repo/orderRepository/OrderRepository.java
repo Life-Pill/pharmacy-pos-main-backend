@@ -26,13 +26,14 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     List<Order> findByBranchId(Long branchId);
 
     /**
-     * Find by order date list.
+     * Find by order date between list.
      *
-     * @param date the date
+     * @param truncate the truncate
+     * @param date     Order date
      * @return the list
      */
-    List<Order> findByOrderDate(Date date);
-    //  Collection<Object> findByBranchId(Branch branch);
+    List<Order> findByOrderDateBetween(Date truncate, Date date);
+
 
 
 }
