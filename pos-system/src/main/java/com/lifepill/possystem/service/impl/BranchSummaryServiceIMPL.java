@@ -69,6 +69,12 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves sales information for a pharmacy branch by its ID.
+     *
+     * @param branchId The ID of the pharmacy branch.
+     * @return A PharmacyBranchResponseDTO containing the total sales, order count, manager details, and branch details.
+     */
     @Override
     public PharmacyBranchResponseDTO getBranchSalesById(long branchId) {
 
@@ -90,9 +96,14 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
     }
 
 
-    // Implement methods to fetch manager details and branch details based on branchId
+    /**
+     * Retrieves the manager's first name for the given branch ID.
+     *
+     * @param branchId The ID of the branch.
+     * @return The manager's first name or "No Manager Assigned" if no manager is found.
+     */
     private String getManagerForBranch(Long branchId) {
-
+    // Implement methods to fetch manager details and branch details based on branchId
         // Find the manager for the given branch ID with the role "MANAGER"
         Employer manager = employerRepository.findByBranch_BranchIdAndRole(branchId, Role.MANAGER);
 
@@ -105,6 +116,13 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         }
     }
 
+    /**
+     * Retrieves branch details for the given branch ID.
+     *
+     * @param branchId The ID of the branch.
+     * @return The BranchDTO object containing branch details.
+     * @throws NotFoundException if no branch is found for the given ID.
+     */
     private BranchDTO getBranchDetails(Long branchId) {
 
         if (branchRepository.existsById(branchId)) {
