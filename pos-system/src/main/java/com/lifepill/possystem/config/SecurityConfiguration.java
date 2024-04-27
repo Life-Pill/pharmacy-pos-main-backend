@@ -51,7 +51,7 @@ public class SecurityConfiguration {
                                 //.antMatchers( "/lifepill/v1/admin/**").permitAll()
                                 .antMatchers("/lifepill/v1/cashierNew/**").hasRole(CASHIER.name())
                                // .antMatchers(POST, "/lifepill/v1/cashierNew/**").hasAnyAuthority(CASHIER_CREATE.name(),OWNER_CREATE.name())
-                                .antMatchers("lifepill/v1/branch/**").hasAnyRole(OWNER.name())
+                                .antMatchers("lifepill/v1/branch/**","/lifepill/v1/branch-summary/sales-summary").hasAnyRole(OWNER.name())
                                 .antMatchers("lifepill/v1/employers/**").hasAnyRole(OWNER.name(), MANAGER.name())
                                 .antMatchers("lifepill/v1/cashier/**").hasAnyRole(CASHIER.name(), MANAGER.name(), OWNER.name())
                                 .antMatchers("lifepill/v1/owner/**").hasRole(OWNER.name())

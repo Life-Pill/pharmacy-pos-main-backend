@@ -24,5 +24,4 @@ public interface EmployerRepository extends JpaRepository<Employer,Long> {
 
     Optional<Employer> findByEmployerEmail(String employerEmail);
 
-
 }
