@@ -29,10 +29,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 		)
 )
 @SpringBootApplication
-//@EnableSwagger2
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl") // Enable JPA Auditing
 public class PosSystemApplication {
 
+	/**
+	 * Entry point of the application.
+	 * @param args Command-line arguments.
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(PosSystemApplication.class, args);
 	}
