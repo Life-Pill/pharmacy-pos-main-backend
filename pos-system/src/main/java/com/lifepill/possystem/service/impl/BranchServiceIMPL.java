@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service implementation for managing branches.
+ */
 @Service
 public class BranchServiceIMPL implements BranchService {
 
@@ -30,7 +33,13 @@ public class BranchServiceIMPL implements BranchService {
     @Autowired
     private ModelMapper modelMapper;
 
-
+    /**
+     * Saves a new branch.
+     *
+     * @param branchDTO The branch DTO containing branch details.
+     * @param image     The image file associated with the branch.
+     * @throws EntityDuplicationException If a branch with the same ID or email already exists.
+     */
     @Override
     public void saveBranch(BranchDTO branchDTO, MultipartFile image) {
         if (branchRepository.existsById(branchDTO.getBranchId()) || branchRepository.existsByBranchEmail(branchDTO.getBranchEmail())) {
@@ -44,14 +53,25 @@ public class BranchServiceIMPL implements BranchService {
             branchRepository.save(branch);
         }
     }
+
+    /**
+     * Retrieves image data associated with a branch.
+     *
+     * @param branchId The ID of the branch.
+     * @return The byte array representing the image data.
+     */
     @Override
     public byte[] getImageData(long branchId) {
         Optional<Branch> branchOptional = branchRepository.findById(branchId);
         return branchOptional.map(Branch::getBranchImage).orElse(null);
     }
 
-
-
+    /**
+     * Retrieves all branches.
+     *
+     * @return A list of all branches.
+     * @throws NotFoundException If no branches are found.
+     */
     @Override
     public List<BranchDTO> getAllBranches() {
         List<Branch> getAllBranches = branchRepository.findAll();
@@ -107,6 +127,12 @@ public class BranchServiceIMPL implements BranchService {
 
     }
 
+    /**
+     * Retrieves all branches.
+     *
+     * @return A list of all branches.
+     * @throws NotFoundException If no branches are found.
+     */
     @Override
     public String deleteBranch(long branchId) {
         if (branchRepository.existsById(branchId)){
@@ -118,6 +144,16 @@ public class BranchServiceIMPL implements BranchService {
         }
     }
 
+    /**
+     * Updates a branch with new details and optionally changes its image.
+     *
+     * @param branchId        The ID of the branch to update.
+     * @param branchUpdateDTO The DTO containing updated branch details.
+     * @param image           The new image file for the branch (optional).
+     * @return A message indicating the update operation.
+     * @throws EntityNotFoundException If the branch with the given ID is not found.
+     * @throws NotFoundException       If the branch with the given ID is not found.
+     */
     public String updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image) {
         if (!branchRepository.existsById(branchId)) {
             throw new EntityNotFoundException("Branch not found");
@@ -156,6 +192,13 @@ public class BranchServiceIMPL implements BranchService {
         }
     }
 
+    /**
+     * Updates the image of a branch.
+     *
+     * @param branchId The ID of the branch to update.
+     * @param image    The new image file for the branch.
+     * @throws NotFoundException If the branch with the given ID is not found.
+     */
     @Override
     public void updateBranchImage(long branchId, MultipartFile image) {
         if (!branchRepository.existsById(branchId)) {
@@ -177,6 +220,13 @@ public class BranchServiceIMPL implements BranchService {
         }
     }
 
+    /**
+     * Updates a branch without changing its image.
+     *
+     * @param branchId        The ID of the branch to update.
+     * @param branchUpdateDTO The DTO containing updated branch details.
+     * @throws NotFoundException If the branch with the given ID is not found.
+     */
     @Override
     public void updateBranchWithoutImage(long branchId, BranchUpdateDTO branchUpdateDTO) {
         if (!branchRepository.existsById(branchId)) {

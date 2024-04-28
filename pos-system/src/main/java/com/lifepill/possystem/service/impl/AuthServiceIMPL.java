@@ -25,6 +25,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service implementation for handling authentication operations.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthServiceIMPL implements AuthService {
@@ -43,7 +46,12 @@ public class AuthServiceIMPL implements AuthService {
 
     private final EmployerService employerService;
 
-
+    /**
+     * Registers a new employer.
+     *
+     * @param registerRequest The registration request containing employer details.
+     * @return The authentication response containing the generated JWT token.
+     */
     public AuthenticationResponseDTO register(RegisterRequestDTO registerRequest) {
         if (employerRepository.existsById(registerRequest.getEmployerId()) || employerRepository.existsAllByEmployerEmail(registerRequest.getEmployerEmail())) {
             throw new EntityDuplicationException("Employer already exists");
@@ -65,7 +73,13 @@ public class AuthServiceIMPL implements AuthService {
         }
     }
 
-
+    /**
+     * Authenticates an employer.
+     *
+     * @param request The authentication request containing employer credentials.
+     * @return The authentication response containing the generated JWT token.
+     * @throws AuthenticationException If authentication fails due to incorrect credentials.
+     */
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
         try {
             // Authenticate user using Spring Security's authenticationManager
@@ -89,6 +103,13 @@ public class AuthServiceIMPL implements AuthService {
         }
     }
 
+    /**
+     * Authenticates an employer.
+     *
+     * @param request The authentication request containing employer credentials.
+     * @return The authentication response containing the generated JWT token.
+     * @throws AuthenticationException If authentication fails due to incorrect credentials.
+     */
     @Override
     public EmployerAuthDetailsResponseDTO getEmployerDetails(String username) {
         // Retrieve employer details DTO using EmployerService
