@@ -1,0 +1,38 @@
+#services:
+#  lifePill-pos:
+#    image: "lifepill/pos:s4"
+#    container_name: pos:ms
+#    ports:
+#      - "8081:8081"
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 7000m
+#    networks:
+#      - lifepill
+#  loans:
+#    image: "pramithamj/loans:s4"
+#    container_name: loans-ms
+#    ports:
+#      - "8090:8090"
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 7000m
+#    networks:
+#      - pramithamj
+#
+#  cards:
+#    image: "pramithamj/cards:s4"
+#    container_name: cards-ms
+#    ports:
+#      - "9000:9000"
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 7000m
+#    networks:
+#      - pramithamj
+#networks:
+#  pramithamj:
+#    driver: "bridge"
