@@ -43,8 +43,14 @@ public class EmployerServiceIMPL implements EmployerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
+    /**
+     * Saves an employer with image.
+     *
+     * @param employerDTO The employer data transfer object.
+     * @return A message indicating the success of the operation.
+     * @throws EntityDuplicationException If the employer already exists.
+     * @throws NotFoundException         If the associated branch is not found.
+     */
     @Override
     public String saveEmployer(EmployerDTO employerDTO){
         // check if the cashier already exists email or id
@@ -67,7 +73,14 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
-
+    /**
+     * Saves an employer without image.
+     *
+     * @param employerWithoutImageDTO The employer data transfer object without an image.
+     * @return A message indicating the success of the operation.
+     * @throws EntityDuplicationException If the employer already exists.
+     * @throws NotFoundException         If the associated branch is not found.
+     */
     @Override
     public String saveEmployerWithoutImage(EmployerWithoutImageDTO employerWithoutImageDTO) {
         // check if the employer already exists email or id
@@ -92,59 +105,14 @@ public class EmployerServiceIMPL implements EmployerService {
 
         }
     }
-
-   /* @Override
-    public String updateCashier(EmployerUpdateDTO cashierUpdateDTO) {
-        if (cashierRepo.existsById(cashierUpdateDTO.getCashierId())){
-            Employer cashier = cashierRepo.getReferenceById(cashierUpdateDTO.getCashierId());
-
-            cashier.setCashierNicName(cashierUpdateDTO.getCashierNicName());
-            cashier.setCashierEmail(cashierUpdateDTO.getCashierEmail());
-            cashier.setCashierNic(cashierUpdateDTO.getCashierNic());
-            cashier.setCashierPhone(cashierUpdateDTO.getCashierPhone());
-            cashier.setRole(cashierUpdateDTO.getRole());
-            cashier.setCashierSalary(cashierUpdateDTO.getCashierSalary());
-
-            cashierRepo.save(cashier);
-
-            System.out.println(cashier);
-
-            return "UPDATED CUSTOMER";
-        }else {
-            throw new NotFoundException("No data found for that id");
-        }
-    }*/
-/*
-
-    @Override
-    public String updateEmployer(Long employerId, EmployerAllDetailsUpdateDTO employerAllDetailsUpdateDTO) {
-        // Check if the cashier exists
-        Employer existingEmployer = employerRepository.findById(employerId)
-                .orElseThrow(() -> new NotFoundException("Employer not found with ID: " + employerId));
-
-        // Check if the email is already associated with another cashier
-        if (!existingEmployer.getEmployerEmail().equals(employerAllDetailsUpdateDTO.getEmployerEmail()) &&
-                employerRepository.existsAllByEmployerEmail(employerAllDetailsUpdateDTO.getEmployerEmail())) {
-            throw new EntityDuplicationException("Email already exists");
-        }
-
-        // Map updatedCashierDTO to existingEmployer
-        modelMapper.map(employerAllDetailsUpdateDTO, existingEmployer);
-
-        // If the branch ID is provided, update the branch
-        if (employerAllDetailsUpdateDTO.getBranchId() != 0) {
-            Branch branch = branchRepository.findById(employerAllDetailsUpdateDTO.getBranchId())
-                    .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + employerAllDetailsUpdateDTO.getBranchId()));
-            existingEmployer.setBranch(branch);
-        }
-
-        // Save the updated cashier
-        employerRepository.save(existingEmployer);
-
-        return "Employer updated successfully";
-    }
-*/
-
+    /**
+     * Updates details of an employer.
+     *
+     * @param employerId                The ID of the employer to update.
+     * @param employerAllDetailsUpdateDTO The DTO containing updated employer details.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateEmployer(Long employerId, EmployerAllDetailsUpdateDTO employerAllDetailsUpdateDTO) {
         // Check if the employer exists
@@ -180,8 +148,13 @@ public class EmployerServiceIMPL implements EmployerService {
         return "Employer updated successfully";
     }
 
-
-
+    /**
+     * Updates account details of an employer.
+     *
+     * @param employerUpdateAccountDetailsDTO The DTO containing updated employer account details.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateEmployerAccountDetails(EmployerUpdateAccountDetailsDTO employerUpdateAccountDetailsDTO) {
         if (employerRepository.existsById(employerUpdateAccountDetailsDTO.getEmployerId())){
@@ -203,6 +176,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Updates the password of an employer.
+     *
+     * @param employerPasswordResetDTO The DTO containing the employer ID and the new password.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateEmployerPassword(EmployerPasswordResetDTO employerPasswordResetDTO) {
         if (employerRepository.existsById(employerPasswordResetDTO.getEmployerId())){
