@@ -69,4 +69,60 @@ public class BranchSummaryController {
                 HttpStatus.OK
         );
     }
+
+    /**
+     * Endpoint for retrieving pharmacy data within a specified time period.
+     *
+     * @param startDate The start date of the time period.
+     * @param endDate   The end date of the time period.
+     * @return ResponseEntity containing a list of PharmacyBranchResponseDTOs with pharmacy data within the specified time period.
+     */
+    @GetMapping("/pharmacy-summary-by-period")
+    public ResponseEntity<StandardResponse> getPharmacyDataByTimePeriod(
+            @RequestParam("startDate")
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam("endDate")
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+        List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService.getPharmacyDataByTimePeriod(startDate, endDate);
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(201, "SUCCESS", pharmacyData),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * Endpoint to retrieve a summary of sales for the given month and year.
+     *
+     * @param month The month for which to retrieve the summary (1-12).
+     * @param year  The year for which to retrieve the summary.
+     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with the summary of sales for the given month.
+     */
+    @GetMapping("/monthly-summary")
+    public ResponseEntity<StandardResponse> getMonthlySummary(
+            @RequestParam("month") int month,
+            @RequestParam("year") int year) {
+        List<PharmacyBranchResponseDTO> monthlySummary = branchSummaryService.getMonthlySummary(month, year);
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(201, "SUCCESS", monthlySummary),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * Endpoint to retrieve a summary of sales for the given year.
+     *
+     * @param year The year for which to retrieve the summary.
+     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with the summary of sales for the given year.
+     */
+    @GetMapping("/yearly-summary")
+    public ResponseEntity<StandardResponse> getYearlySummary(
+            @RequestParam("year") int year) {
+        List<PharmacyBranchResponseDTO> yearlySummary = branchSummaryService.getYearlySummary(year);
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(201, "SUCCESS", yearlySummary),
+                HttpStatus.OK
+        );
+    }
+
+
 }

@@ -5,8 +5,23 @@ import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The interface Branch summary service.
+ */
 public interface BranchSummaryService {
+    /**
+     * Gets all branches with sales.
+     *
+     * @return the all branches with sales
+     */
     List<PharmacyBranchResponseDTO> getAllBranchesWithSales();
+
+    /**
+     * Gets branch sales by id.
+     *
+     * @param branchId the branch id
+     * @return the branch sales by id
+     */
     PharmacyBranchResponseDTO getBranchSalesById(long branchId);
 
     /**
@@ -16,4 +31,28 @@ public interface BranchSummaryService {
      * @return List of PharmacyBranchResponseDTO containing pharmacy data for the selected date.
      */
     List<PharmacyBranchResponseDTO> getPharmacyDataByDate(Date date);
+
+    /**
+     * Retrieves pharmacy data within the given time period.
+     *
+     * @param startDate The start date of the time period.
+     * @param endDate   The end date of the time period.
+     * @return List of PharmacyBranchResponseDTO containing pharmacy data within the time period.
+     */
+    List<PharmacyBranchResponseDTO> getPharmacyDataByTimePeriod(Date startDate, Date endDate);
+
+    /**
+     * Retrieves monthly sales data.
+     *
+     * @return List of PharmacyBranchResponseDTO containing monthly sales data.
+     */
+    List<PharmacyBranchResponseDTO> getMonthlySummary(int month, int year);
+
+    /**
+     * Retrieves a summary of sales for the given year.
+     *
+     * @param year The year for which to retrieve the summary.
+     * @return A list of PharmacyBranchResponseDTO containing the summary of sales for the given year.
+     */
+    List<PharmacyBranchResponseDTO> getYearlySummary(int year);
 }
