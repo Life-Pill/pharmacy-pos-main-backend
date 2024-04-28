@@ -82,6 +82,7 @@ public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
             throw new NotFoundException("Supplier Company not found with id: " + id);
         }
     }
+
     /**
      * Deletes a SupplierCompany by its ID.
      *
