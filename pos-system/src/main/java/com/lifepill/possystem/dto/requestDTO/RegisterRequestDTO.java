@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * The type Register request dto.
+ */
 @Data
 @Builder
 @AllArgsConstructor

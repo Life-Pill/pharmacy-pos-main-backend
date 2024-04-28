@@ -3,6 +3,9 @@ package com.lifepill.possystem.dto;
 import com.lifepill.possystem.entity.Branch;
 import lombok.*;
 
+/**
+ * The type Branch dto.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

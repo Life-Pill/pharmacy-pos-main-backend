@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Authentication response dto.
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,9 +17,5 @@ public class AuthenticationResponseDTO {
 
     @JsonProperty("access_token")
     private String accessToken;
-
     private String message;
-
-
-
 }

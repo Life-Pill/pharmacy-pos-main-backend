@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Item category dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

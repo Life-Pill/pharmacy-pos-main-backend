@@ -9,6 +9,9 @@ import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 
+/**
+ * The type Order details.
+ */
 @Entity
 @Table(name = "order_details")
 @TypeDefs({

@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.Set;
 
 
+/**
+ * The type Order.
+ */
 @Entity
 @Table(name = "orders")
 @AllArgsConstructor
@@ -38,10 +41,16 @@ public class Order {
     @OneToMany(mappedBy = "orders")
     private Set<PaymentDetails> paymentDetails;
 
+    /**
+     * Instantiates a new Order.
+     *
+     * @param employers the employers
+     * @param orderDate the order date
+     * @param total     the total
+     */
     public Order(Employer employers, Date orderDate, Double total) {
         this.employer = employers;
         this.orderDate = orderDate;
         this.total = total;
     }
-
 }

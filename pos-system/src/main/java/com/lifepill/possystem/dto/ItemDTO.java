@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * The type Item dto.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

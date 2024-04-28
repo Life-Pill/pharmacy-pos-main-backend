@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * The type Employer all details update dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

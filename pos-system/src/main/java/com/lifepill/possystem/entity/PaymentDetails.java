@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * The type Payment details.
+ */
 @Entity
 @Table(name = "payment_details")
 @AllArgsConstructor

@@ -7,10 +7,16 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * The type Paginated response item dto.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class PaginatedResponseItemDTO {
+    /**
+     * The List.
+     */
     List<ItemGetResponseDTO> list;
     private long dataCount;
 }

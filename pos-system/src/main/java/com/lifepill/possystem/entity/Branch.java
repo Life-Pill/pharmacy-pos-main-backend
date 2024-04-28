@@ -5,6 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * The type Branch.
+ */
 @Entity
 @Getter
 @Setter

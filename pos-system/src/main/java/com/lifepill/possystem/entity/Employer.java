@@ -16,6 +16,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The type Employer.
+ */
 @Entity
 @Getter
 @Setter

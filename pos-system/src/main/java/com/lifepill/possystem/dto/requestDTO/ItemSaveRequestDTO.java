@@ -5,6 +5,9 @@ import lombok.*;
 
 import java.util.Date;
 
+/**
+ * The type Item save request dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

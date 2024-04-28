@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * The type Item get all response dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

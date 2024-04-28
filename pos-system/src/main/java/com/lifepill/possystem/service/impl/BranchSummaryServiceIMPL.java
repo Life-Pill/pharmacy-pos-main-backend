@@ -12,10 +12,14 @@ import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.service.BranchSummaryService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,6 +35,7 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
     private final EmployerRepository employerRepository;
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(BranchSummaryServiceIMPL.class);
 
     /**
      * Retrieves all branches with their sales information.
@@ -60,9 +65,9 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             Double sales = entry.getValue();
 
             Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
-            // Assuming you have a method to fetch manager details based on branchId
+            // fetch manager details based on branchId
             String manager = getManagerForBranch(branchId);
-            // Assuming you have a method to fetch branch details based on branchId
+            // fetch branch details based on branchId
             BranchDTO branchDTO = getBranchDetails(branchId);
             return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
 
@@ -93,6 +98,190 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
 
         // Create and return PharmacyBranchResponseDTO
         return new PharmacyBranchResponseDTO(totalSales, orderCount, manager, branchDTO);
+    }
+
+    /**
+     * Retrieves pharmacy data for a selected date.
+     *
+     * @param date The date for which pharmacy data is requested.
+     * @return A list of PharmacyBranchResponseDTO containing sales, order count, manager, and branch details for each pharmacy branch.
+     */
+    @Override
+    public List<PharmacyBranchResponseDTO> getPharmacyDataByDate(Date date) {
+
+        // Fetch all orders for the selected date from the repository
+        List<Order> ordersForDate = orderRepository.findByOrderDateBetween(
+                // Start of the given date
+                DateUtils.truncate(date, Calendar.DAY_OF_MONTH),
+                // End of the given date
+                DateUtils.addMilliseconds(
+                        DateUtils.ceiling(date, Calendar.DAY_OF_MONTH),
+                        -1
+                )
+        );
+
+        // Group orders by branchId and calculate total sales and count of orders for each branch
+        Map<Long, Double> branchSalesMap = ordersForDate.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.summingDouble(Order::getTotal))
+                );
+        logger.info(branchSalesMap.toString() + "branchSalesMap");
+        Map<Long, Long> branchOrdersCountMap = ordersForDate.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.counting())
+                );
+
+        // Retrieve additional branch and manager details
+        List<PharmacyBranchResponseDTO> pharmacyData = branchSalesMap.entrySet().stream().map(entry -> {
+            Long branchId = entry.getKey();
+            Double sales = entry.getValue();
+
+            Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
+            // fetch manager details based on branchId
+            String manager = getManagerForBranch(branchId);
+            // fetch branch details based on branchId
+            BranchDTO branchDTO = getBranchDetails(branchId);
+            return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
+        }).collect(Collectors.toList());
+
+        logger.info("Fetched all branches with sales information successfully.");
+        return pharmacyData;
+    }
+
+    /**
+     * Retrieves pharmacy data within the given time period.
+     *
+     * @param startDate The start date of the time period.
+     * @param endDate   The end date of the time period.
+     * @return List of PharmacyBranchResponseDTO containing pharmacy data within the time period.
+     */
+    @Override
+    public List<PharmacyBranchResponseDTO> getPharmacyDataByTimePeriod(Date startDate, Date endDate) {
+
+            // Fetch all orders within the given time period from the repository
+            List<Order> ordersForPeriod = orderRepository.findByOrderDateBetween(startDate, endDate);
+
+            // Group orders by branchId and calculate total sales and count of orders for each branch
+            Map<Long, Double> branchSalesMap = ordersForPeriod.stream()
+                    .collect(Collectors.groupingBy(
+                            Order::getBranchId, Collectors.summingDouble(Order::getTotal))
+                    );
+            Map<Long, Long> branchOrdersCountMap = ordersForPeriod.stream()
+                    .collect(Collectors.groupingBy(
+                            Order::getBranchId, Collectors.counting())
+                    );
+
+            // Retrieve additional branch and manager details
+            List<PharmacyBranchResponseDTO> pharmacyData = branchSalesMap.entrySet().stream().map(entry -> {
+                Long branchId = entry.getKey();
+                Double sales = entry.getValue();
+
+                Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
+                //fetch manager details based on branchId
+                String manager = getManagerForBranch(branchId);
+                //fetch branch details based on branchId
+                BranchDTO branchDTO = getBranchDetails(branchId);
+                return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
+            }).collect(Collectors.toList());
+
+            logger.info("Fetched all branches with sales information successfully.");
+            return pharmacyData;
+    }
+
+
+    /**
+     * Retrieves a summary of sales for the given month.
+     *
+     * @param month The month for which to retrieve the summary (1-12).
+     * @param year  The year for which to retrieve the summary.
+     * @return A list of PharmacyBranchResponseDTO containing the summary of sales for the given month.
+     */
+    @Override
+    public List<PharmacyBranchResponseDTO> getMonthlySummary(int month, int year) {
+
+        // Fetch all orders for the given month and year from the repository
+        List<Order> ordersForMonth = orderRepository.findByOrderDateBetween(
+                // Start of the given month
+                DateUtils.truncate(new Date(year - 1900, month - 1, 1), Calendar.MONTH),
+                // End of the given month
+                DateUtils.addMilliseconds(
+                        DateUtils.ceiling(new Date(year - 1900, month - 1, 1), Calendar.MONTH),
+                        -1
+                )
+        );
+
+        // Group orders by branchId and calculate total sales and count of orders for each branch
+        Map<Long, Double> branchSalesMap = ordersForMonth.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.summingDouble(Order::getTotal))
+                );
+        Map<Long, Long> branchOrdersCountMap = ordersForMonth.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.counting())
+                );
+
+        // Retrieve additional branch and manager details
+        List<PharmacyBranchResponseDTO> pharmacyData = branchSalesMap.entrySet().stream().map(entry -> {
+            Long branchId = entry.getKey();
+            Double sales = entry.getValue();
+
+            Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
+            //fetch manager details based on branchId
+            String manager = getManagerForBranch(branchId);
+            //fetch branch details based on branchId
+            BranchDTO branchDTO = getBranchDetails(branchId);
+            return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
+        }).collect(Collectors.toList());
+
+        logger.info("Fetched all branches with sales information successfully.");
+        return pharmacyData;
+    }
+
+    /**
+     * Retrieves a summary of sales for the given year.
+     *
+     * @param year The year for which to retrieve the summary.
+     * @return A list of PharmacyBranchResponseDTO containing the summary of sales for the given year.
+     */
+    @Override
+    public List<PharmacyBranchResponseDTO> getYearlySummary(int year) {
+
+            // Fetch all orders for the given year from the repository
+            List<Order> ordersForYear = orderRepository.findByOrderDateBetween(
+                    // Start of the given year
+                    DateUtils.truncate(new Date(year - 1900, 0, 1), Calendar.YEAR),
+                    // End of the given year
+                    DateUtils.addMilliseconds(
+                            DateUtils.ceiling(new Date(year - 1900, 0, 1), Calendar.YEAR),
+                            -1
+                    )
+            );
+
+            // Group orders by branchId and calculate total sales and count of orders for each branch
+            Map<Long, Double> branchSalesMap = ordersForYear.stream()
+                    .collect(Collectors.groupingBy(
+                            Order::getBranchId, Collectors.summingDouble(Order::getTotal))
+                    );
+            Map<Long, Long> branchOrdersCountMap = ordersForYear.stream()
+                    .collect(Collectors.groupingBy(
+                            Order::getBranchId, Collectors.counting())
+                    );
+
+            // Retrieve additional branch and manager details
+            List<PharmacyBranchResponseDTO> pharmacyData = branchSalesMap.entrySet().stream().map(entry -> {
+                Long branchId = entry.getKey();
+                Double sales = entry.getValue();
+
+                Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
+                //fetch manager details based on branchId
+                String manager = getManagerForBranch(branchId);
+                //fetch branch details based on branchId
+                BranchDTO branchDTO = getBranchDetails(branchId);
+                return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
+            }).collect(Collectors.toList());
+
+            logger.info("Fetched all branches with sales information successfully.");
+            return pharmacyData;
     }
 
 
@@ -134,4 +323,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             throw new NotFoundException("No Branch found for that id");
         }
     }
+
+
 }

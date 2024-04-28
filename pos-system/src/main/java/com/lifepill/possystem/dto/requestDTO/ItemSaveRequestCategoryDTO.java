@@ -6,6 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+
+/**
+ * The type Item save request category dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

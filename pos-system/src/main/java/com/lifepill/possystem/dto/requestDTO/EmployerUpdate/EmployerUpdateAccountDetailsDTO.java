@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * The type Employer update account details dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
