@@ -51,11 +51,13 @@ public class AuthServiceIMPL implements AuthService {
      * @return The authentication response containing the generated JWT token.
      */
     public AuthenticationResponseDTO register(RegisterRequestDTO registerRequest) {
-        if (employerRepository.existsById(registerRequest.getEmployerId()) || employerRepository.existsAllByEmployerEmail(registerRequest.getEmployerEmail())) {
+        if (employerRepository.existsById(registerRequest.getEmployerId()) ||
+                employerRepository.existsAllByEmployerEmail(registerRequest.getEmployerEmail())) {
             throw new EntityDuplicationException("Employer already exists");
         } else {
             Branch branch = branchRepository.findById(registerRequest.getBranchId())
-                    .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + registerRequest.getBranchId()));
+                    .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
+                            + registerRequest.getBranchId()));
 
             // Encode the password before saving
             String encodedPassword = passwordEncoder.encode(registerRequest.getEmployerPassword());
@@ -115,7 +117,8 @@ public class AuthServiceIMPL implements AuthService {
         EmployerDTO employerDTO = employerService.getEmployerByUsername(username);
 
         // Convert EmployerDTO to EmployerAuthDetailsResponseDTO using ModelMapper
-        EmployerAuthDetailsResponseDTO employerDetailsResponseDTO = modelMapper.map(employerDTO, EmployerAuthDetailsResponseDTO.class);
+        EmployerAuthDetailsResponseDTO employerDetailsResponseDTO = modelMapper
+                .map(employerDTO, EmployerAuthDetailsResponseDTO.class);
 
         employerDetailsResponseDTO.setActiveStatus(true);
 
@@ -141,5 +144,4 @@ public class AuthServiceIMPL implements AuthService {
             return false; // User is not authenticated
         }
     }*/
-
 }

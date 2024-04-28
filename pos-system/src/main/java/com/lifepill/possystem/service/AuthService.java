@@ -7,9 +7,7 @@ import com.lifepill.possystem.dto.responseDTO.EmployerAuthDetailsResponseDTO;
 
 public interface AuthService {
 
-    public AuthenticationResponseDTO register(RegisterRequestDTO registerRequest);
-
-    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request);
-
+    AuthenticationResponseDTO register(RegisterRequestDTO registerRequest);
+    AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request);
     EmployerAuthDetailsResponseDTO getEmployerDetails(String username);
 }

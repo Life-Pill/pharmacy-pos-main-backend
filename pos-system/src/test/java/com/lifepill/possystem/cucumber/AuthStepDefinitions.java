@@ -9,25 +9,18 @@ import com.lifepill.possystem.dto.requestDTO.AuthenticationRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.RegisterRequestDTO;
 import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.EmployerAuthDetailsResponseDTO;
-import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.exception.AuthenticationException;
 import com.lifepill.possystem.service.AuthService;
-import com.lifepill.possystem.util.StandardResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -128,7 +121,4 @@ public class AuthStepDefinitions {
         // Verify that an error message is returned
         Assertions.assertNotNull(responseEntity.getBody());
     }
-
-
-
 }
