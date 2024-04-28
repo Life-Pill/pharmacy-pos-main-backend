@@ -5,6 +5,7 @@ import com.lifepill.possystem.dto.requestDTO.AuthenticationRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.RegisterRequestDTO;
 import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.EmployerAuthDetailsResponseDTO;
+import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.exception.AuthenticationException;
 import com.lifepill.possystem.service.AuthService;
 import com.lifepill.possystem.util.StandardResponse;
@@ -123,11 +124,117 @@ public class AuthControllerTest {
     }
 
     // testCookieSetOnAuthenticate
+    @Test
+    void testCookieSetOnAuthenticate() {
+        // Prepare test data
+        AuthenticationRequestDTO request = new AuthenticationRequestDTO();
+        AuthenticationResponseDTO authResponse = new AuthenticationResponseDTO();
+        authResponse.setAccessToken("dummyAccessToken"); // Set dummy access token for testing
+
+        // Mock the service method to return the authentication response
+        when(authService.authenticate(request)).thenReturn(authResponse);
+
+        // Call the controller method
+        ResponseEntity<?> responseEntity = authController.authenticate(request, response);
+
+        // Verify that the access token is set as a cookie in the response
+        verify(response, times(1)).addCookie(any());
+    }
+
    // testEmployerDetailsRetrievalOnAuthenticate
-   // testInvalidCredentialsOnAuthenticate
+   @Test
+   void testEmployerDetailsRetrievalOnAuthenticate() {
+       // Prepare test data
+       AuthenticationRequestDTO request = new AuthenticationRequestDTO();
+       // Set the employer email for which details will be retrieved
+       request.setEmployerEmail("employer@example.com");
+       AuthenticationResponseDTO authResponse = new AuthenticationResponseDTO();
+       authResponse.setAccessToken("access_token"); // Set a valid access token
+
+       // Mock the service method to return authentication response
+       when(authService.authenticate(request)).thenReturn(authResponse);
+
+       // Mock the service method to return employer details
+       EmployerAuthDetailsResponseDTO employerDetailsResponse = new EmployerAuthDetailsResponseDTO();
+       // Set employer details data for testing
+       employerDetailsResponse.setEmployerFirstName("John Doe");
+       employerDetailsResponse.setRole(Role.MANAGER);
+       when(authService.getEmployerDetails(request.getEmployerEmail())).thenReturn(employerDetailsResponse);
+
+       // Call the controller method
+       ResponseEntity<?> responseEntity = authController.authenticate(request, response);
+
+       // Assertions
+       assertEquals(HttpStatus.OK, responseEntity.getStatusCode()); // Check for correct HTTP status code
+       assertNotNull(responseEntity.getBody()); // Ensure response body is not null
+
+       // Verify that a cookie is added to the response
+       verify(response, times(1)).addCookie(any());
+
+       // Assert the authentication response in the response body
+       assertEquals(authResponse, ((Map<String, Object>) responseEntity.getBody()).get("authenticationResponse"));
+
+       // Assert the employer details in the response body
+       assertEquals(employerDetailsResponse, ((Map<String, Object>) responseEntity.getBody()).get("employerDetails"));
+   }
+
+
+    // testInvalidCredentialsOnAuthenticate
+    @Test
+    void testInvalidCredentialsOnAuthenticate() {
+        // Prepare test data
+        AuthenticationRequestDTO request = new AuthenticationRequestDTO();
+        AuthenticationResponseDTO authResponse = new AuthenticationResponseDTO();
+        authResponse.setAccessToken(null); // Set null access token to simulate authentication failure
+
+        // Mock the service method to throw an AuthenticationException
+        when(authService.authenticate(request)).thenThrow(new AuthenticationException("Incorrect username or password"));
+
+        // Call the controller method
+        ResponseEntity<?> responseEntity = authController.authenticate(request, response);
+
+        // Assertions
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode()); // Check for correct HTTP status code
+        assertNotNull(responseEntity.getBody()); // Ensure response body is not null
+
+        // Verify that no cookie is added to the response
+        verify(response, never()).addCookie(any());
+
+        // Assert the error message in the response body
+        assertEquals("Authentication failed: Incorrect username or password",
+                ((StandardResponse) responseEntity.getBody()).getMessage());
+    }
+
    // testErrorResponseOnAuthenticate
+    @Test
+    void testErrorResponseOnAuthenticate() {
+        // Prepare test data
+        AuthenticationRequestDTO request = new AuthenticationRequestDTO();
+        AuthenticationResponseDTO authResponse = new AuthenticationResponseDTO();
+        authResponse.setAccessToken(null); // Set null access token to simulate authentication failure
+
+        // Mock the service method to throw an AuthenticationException
+        when(authService.authenticate(request)).thenThrow(new AuthenticationException("Incorrect username or password"));
+
+        // Call the controller method
+        ResponseEntity<?> responseEntity = authController.authenticate(request, response);
+
+        // Assertions
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode()); // Check for correct HTTP status code
+        assertNotNull(responseEntity.getBody()); // Ensure response body is not null
+
+        // Verify that no cookie is added to the response
+        verify(response, never()).addCookie(any());
+
+        // Assert the error message in the response body
+        assertEquals("Authentication failed: Incorrect username or password",
+                ((StandardResponse) responseEntity.getBody()).getMessage());
+    }
+
    // testAuthenticationExceptionHandling
+
    // testTestEndpoint
+
    // testRegisterEndpoint
 
 }
