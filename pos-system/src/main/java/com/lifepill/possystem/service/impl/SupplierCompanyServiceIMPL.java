@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the service layer for managing supplier companies.
+ */
 @Service
 @Transactional
 public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
@@ -24,6 +27,11 @@ public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     * Retrieves all supplier companies.
+     *
+     * @return A list of SupplierCompanyDTO objects representing all supplier companies.
+     */
     public List<SupplierCompanyDTO> getAllSupplierCompanies() {
         List<SupplierCompany> companies = supplierCompanyRepository.findAll();
         return companies.stream()
@@ -31,6 +39,12 @@ public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Converts a SupplierCompany entity to its DTO representation.
+     *
+     * @param company The SupplierCompany entity to be converted.
+     * @return The corresponding SupplierCompanyDTO object.
+     */
     private SupplierCompanyDTO convertToDTO(SupplierCompany company) {
         return modelMapper.map(company, SupplierCompanyDTO.class);
     }
@@ -41,6 +55,12 @@ public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
         return modelMapper.map(savedCompany, SupplierCompanyDTO.class);
     }
 
+    /**
+     * Saves a new SupplierCompany.
+     *
+     * @param supplierCompanyDTO The DTO containing information about the SupplierCompany to be saved.
+     * @return The DTO representation of the saved SupplierCompany.
+     */
     public SupplierCompanyDTO updateSupplierCompanyById(long id, SupplierCompanyDTO updatedCompanyDTO) {
         Optional<SupplierCompany> optionalCompany = supplierCompanyRepository.findById(id);
         if (optionalCompany.isPresent()) {
@@ -62,7 +82,12 @@ public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
             throw new NotFoundException("Supplier Company not found with id: " + id);
         }
     }
-
+    /**
+     * Deletes a SupplierCompany by its ID.
+     *
+     * @param id The ID of the SupplierCompany to be deleted.
+     * @throws NotFoundException If no SupplierCompany is found with the given ID.
+     */
     public void deleteSupplierCompanyById(long id) {
         Optional<SupplierCompany> optionalCompany = supplierCompanyRepository.findById(id);
         if (optionalCompany.isPresent()) {
@@ -72,6 +97,13 @@ public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
         }
     }
 
+    /**
+     * Retrieves a SupplierCompany by its ID.
+     *
+     * @param id The ID of the SupplierCompany to retrieve.
+     * @return The SupplierCompanyDTO representing the retrieved SupplierCompany.
+     * @throws NotFoundException If no SupplierCompany is found with the given ID.
+     */
     public SupplierCompanyDTO getSupplierCompanyById(long id) {
         SupplierCompany company = supplierCompanyRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Supplier Company not found with id: " + id));
