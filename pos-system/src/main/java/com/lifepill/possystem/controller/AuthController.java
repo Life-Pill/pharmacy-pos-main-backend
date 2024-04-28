@@ -74,7 +74,6 @@ public class AuthController {
             cookie.setMaxAge(24 * 60 * 60); // Set the cookie's expiration time in seconds (24 hours)
             cookie.setPath("/"); // Set the cookie's path to root ("/") to make it accessible from any path
             response.addCookie(cookie);
-            System.out.println(cookie);
 
             authResponse.setMessage("Successfully logged in."); // Set the success message
 
