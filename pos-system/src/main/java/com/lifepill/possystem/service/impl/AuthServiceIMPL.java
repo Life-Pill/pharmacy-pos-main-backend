@@ -20,8 +20,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -104,11 +102,12 @@ public class AuthServiceIMPL implements AuthService {
     }
 
     /**
-     * Authenticates an employer.
+     * Retrieves the details of an employer for authentication purposes.
+     * This method retrieves the details of the employer with the given username and constructs
+     * an authentication response DTO containing the employer details.
      *
-     * @param request The authentication request containing employer credentials.
-     * @return The authentication response containing the generated JWT token.
-     * @throws AuthenticationException If authentication fails due to incorrect credentials.
+     * @param username The username of the employer.
+     * @return An EmployerAuthDetailsResponseDTO containing the details of the employer.
      */
     @Override
     public EmployerAuthDetailsResponseDTO getEmployerDetails(String username) {
@@ -142,6 +141,5 @@ public class AuthServiceIMPL implements AuthService {
             return false; // User is not authenticated
         }
     }*/
-
 
 }
