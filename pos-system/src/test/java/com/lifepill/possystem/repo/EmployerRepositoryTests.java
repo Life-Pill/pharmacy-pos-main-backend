@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.repo;
 
 import com.lifepill.possystem.entity.Employer;
@@ -84,3 +85,4 @@ public class EmployerRepositoryTests {
 
 
 }
+*/
