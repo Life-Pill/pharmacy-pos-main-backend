@@ -48,9 +48,13 @@ public class ItemServiceIMPL implements ItemService {
     @Autowired
     private SupplierRepository supplierRepository;
 
-  /*  @Autowired
-    private  SupplierRepository supplierRepository;*/
-
+    /**
+     * Saves a new item based on the provided item save request DTO.
+     *
+     * @param itemSaveRequestDTO The DTO containing the details of the item to be saved.
+     * @return A message indicating the success of the save operation.
+     * @throws EntityDuplicationException If an item with the same ID already exists.
+     */
     @Override
     public String saveItems(ItemSaveRequestDTO itemSaveRequestDTO) {
         Item item = modelMapper.map(itemSaveRequestDTO, Item.class);
@@ -62,6 +66,12 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Retrieves all items from the database.
+     *
+     * @return A list of DTOs representing all items.
+     * @throws NotFoundException If no items are found or they are out of stock.
+     */
     @Override
     public List<ItemGetAllResponseDTO> getAllItems() {
         List<Item> getAllItems = itemRepository.findAll();
@@ -105,6 +115,13 @@ public class ItemServiceIMPL implements ItemService {
     }
 
 
+    /**
+     * Retrieves items by name and stock status.
+     *
+     * @param itemName The name of the item to search for.
+     * @return A list of DTOs representing items matching the search criteria.
+     * @throws NotFoundException If no items are found.
+     */
     @Override
     public List<ItemGetResponseDTO> getItemByNameAndStock(String itemName) {
         List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
@@ -120,6 +137,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Retrieves items by stock status.
+     *
+     * @param activeStatus The stock status to filter by.
+     * @return A list of DTOs representing items with the specified stock status.
+     * @throws NotFoundException If no items are found.
+     */
     @Override
     public List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus) {
         List<Item> item = itemRepository.findAllByStockEquals(activeStatus);
@@ -135,6 +159,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Retrieves items by barcode.
+     *
+     * @param itemBarCode The barcode of the item to search for.
+     * @return A list of DTOs representing items with the specified barcode.
+     * @throws NotFoundException If no items are found.
+     */
     @Override
     public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
         List<Item> item = itemRepository.findAllByItemBarCodeEquals(itemBarCode);
@@ -150,7 +181,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-
+    /**
+     * Updates an existing item based on the provided update DTO.
+     *
+     * @param itemUpdateDTO The DTO containing the updated details of the item.
+     * @return A message indicating the success of the update operation.
+     * @throws NotFoundException If the item to be updated is not found.
+     */
     @Override
     public String updateItem(ItemUpdateDTO itemUpdateDTO) {
         if (itemRepository.existsById(itemUpdateDTO.getItemId())) {
@@ -187,6 +224,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Deletes an item with the specified ID.
+     *
+     * @param itemId The ID of the item to be deleted.
+     * @return A message indicating the success of the delete operation.
+     * @throws NotFoundException If the item to be deleted is not found.
+     */
     @Override
     public String deleteItem(long itemId) {
         if (itemRepository.existsById(itemId)) {
