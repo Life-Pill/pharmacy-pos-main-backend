@@ -232,9 +232,55 @@ public class AuthControllerTest {
     }
 
    // testAuthenticationExceptionHandling
+    @Test
+    void testAuthenticationExceptionHandling() {
+        // Prepare test data
+        AuthenticationRequestDTO request = new AuthenticationRequestDTO();
+
+        // Mock the service method to throw an AuthenticationException
+        when(authService.authenticate(request)).thenThrow(new AuthenticationException("Incorrect username or password"));
+
+        // Call the controller method
+        ResponseEntity<?> responseEntity = authController.authenticate(request, response);
+
+        // Assertions
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode()); // Check for correct HTTP status code
+        assertNotNull(responseEntity.getBody()); // Ensure response body is not null
+
+        // Verify that no cookie is added to the response
+        verify(response, never()).addCookie(any());
+
+        // Assert the error message in the response body
+        assertEquals("Authentication failed: Incorrect username or password",
+                ((StandardResponse) responseEntity.getBody()).getMessage());
+    }
 
    // testTestEndpoint
+    @Test
+    void testTestEndpoint() {
+        // Call the controller method
+        String response = authController.test();
+
+        // Assert the response message
+        assertEquals("Authenticated", response);
+    }
 
    // testRegisterEndpoint
+    @Test
+    void testRegisterEndpoint() {
+        // Prepare test data
+        RegisterRequestDTO registerRequest = new RegisterRequestDTO();
+        AuthenticationResponseDTO authResponse = new AuthenticationResponseDTO();
+
+        // Mock the service method to return the authentication response
+        when(authService.register(registerRequest)).thenReturn(authResponse);
+
+        // Call the controller method
+        ResponseEntity<AuthenticationResponseDTO> responseEntity = authController.register(registerRequest);
+
+        // Assertions
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode()); // Check for correct HTTP status code
+        assertEquals(authResponse, responseEntity.getBody()); // Ensure the response body is correct
+    }
 
 }
