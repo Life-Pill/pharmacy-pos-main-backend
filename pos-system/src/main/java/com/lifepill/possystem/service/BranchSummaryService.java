@@ -1,5 +1,6 @@
 package com.lifepill.possystem.service;
 
+import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 
 import java.util.Date;
@@ -55,4 +56,10 @@ public interface BranchSummaryService {
      * @return A list of PharmacyBranchResponseDTO containing the summary of sales for the given year.
      */
     List<PharmacyBranchResponseDTO> getYearlySummary(int year);
+    /**
+     * Retrieves total details of all pharmacy branches.
+     *
+     * @return AllPharmacySummaryResponseDTO containing total sales, total orders, total employees, and total branches.
+     */
+    AllPharmacySummaryResponseDTO getAllPharmacySummary();
 }

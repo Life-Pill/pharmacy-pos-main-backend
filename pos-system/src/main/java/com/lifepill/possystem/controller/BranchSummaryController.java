@@ -1,5 +1,6 @@
 package com.lifepill.possystem.controller;
 
+import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.service.BranchSummaryService;
 import com.lifepill.possystem.util.StandardResponse;
@@ -43,8 +44,8 @@ public class BranchSummaryController {
      * @param branchId The ID of the branch
      * @return ResponseEntity containing StandardResponse with status 201 (SUCCESS) and PharmacyBranchResponseDTO
      */
-    @GetMapping(path ="/sales-summary/{id}")
-    public ResponseEntity<StandardResponse> getBranchSalesById(@PathVariable(value = "id") long branchId){
+    @GetMapping(path = "/sales-summary/{id}")
+    public ResponseEntity<StandardResponse> getBranchSalesById(@PathVariable(value = "id") long branchId) {
 
         PharmacyBranchResponseDTO pharmacyBranchResponseDTO = branchSummaryService.getBranchSalesById(branchId);
         return new ResponseEntity<StandardResponse>(
@@ -60,7 +61,7 @@ public class BranchSummaryController {
      * @return List of PharmacyBranchResponseDTO containing pharmacy data for the selected date.
      */
     @GetMapping("/pharmacy-summary-by-date/")
-    public  ResponseEntity<StandardResponse> getPharmacyDataByDate(
+    public ResponseEntity<StandardResponse> getPharmacyDataByDate(
             @RequestParam("date")
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
         List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService.getPharmacyDataByDate(date);
@@ -124,5 +125,18 @@ public class BranchSummaryController {
         );
     }
 
-
+    /**
+     * Retrieves total details of all pharmacy branches.
+     *
+     * @return ResponseEntity containing StandardResponse with status 200 (OK) and AllPharmacySummaryResponseDTO
+     */
+    @GetMapping("/all-branches-summary")
+    public ResponseEntity getAllPharmacySummary() {
+        // Call service method to retrieve total details of all pharmacy branches
+        AllPharmacySummaryResponseDTO summary = branchSummaryService.getAllPharmacySummary();
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(200, "OK", summary),
+                HttpStatus.OK
+        );
+    }
 }
