@@ -199,6 +199,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Updates the recent PIN of an employer.
+     *
+     * @param employerRecentPinUpdateDTO The DTO containing the employer ID and the new PIN.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateRecentPin(EmployerRecentPinUpdateDTO employerRecentPinUpdateDTO) {
         if (employerRepository.existsById(employerRecentPinUpdateDTO.getEmployerId())){
@@ -215,6 +222,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Updates the bank account details of an employer.
+     *
+     * @param employerUpdateBankAccountDTO The DTO containing the updated bank account details.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateEmployerBankAccountDetails(EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO) {
         long cashierId = employerUpdateBankAccountDTO.getEmployerId();
@@ -255,7 +269,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
-
+    /**
+     * Retrieves an employer by their ID.
+     *
+     * @param employerId The ID of the employer to retrieve.
+     * @return The DTO representing the employer.
+     * @throws NotFoundException If no employer is found with the specified ID.
+     */
     @Override
     public EmployerDTO getEmployerById(long employerId) {
         if (employerRepository.existsById(employerId)){
@@ -267,31 +287,18 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Retrieves an employer by their ID along with their image.
+     *
+     * @param employerId The ID of the employer to retrieve.
+     * @return The DTO representing the employer with their image.
+     * @throws NotFoundException If no employer is found with the specified ID.
+     */
     @Override
     public EmployerDTO getEmployerByIdWithImage(long employerId) {
         if (employerRepository.existsById(employerId)){
             Employer employer = employerRepository.getReferenceById(employerId);
 
-/*             can use mappers to easily below that task
-            EmployerDTO employerDTO = new EmployerDTO(
-                    employer.getCashierId(),
-                    employer.getCashierNicName(),
-                    employer.getCashierFirstName(),
-                    employer.getCashierLastName(),
-                    employer.getCashierPassword(),
-                    employer.getCashierEmail(),
-                    employer.getCashierPhone(),
-                    employer.getCashierAddress(),
-                    employer.getCashierSalary(),
-                    employer.getCashierNic(),
-                    employer.isActiveStatus(),
-                    employer.getGender(),
-                    employer.getDateOfBirth(),
-                    employer.getRole(),
-                    employer.getPin(),
-                    employer.getProfileImage()
-                    //(Order) employer.getOrders()
-            );*/
             EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
 
             return employerDTO;
@@ -300,12 +307,25 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Retrieves the image data associated with an employer.
+     *
+     * @param employerId The ID of the employer whose image data is to be retrieved.
+     * @return The byte array representing the image data, or null if no image is found.
+     */
     @Override
     public byte[] getImageData(long employerId) {
         Optional<Employer> branchOptional = employerRepository.findById(employerId);
         return branchOptional.map(com.lifepill.possystem.entity.Employer::getProfileImage).orElse(null);
     }
 
+    /**
+     * Deletes an employer with the specified ID.
+     *
+     * @param employerId The ID of the employer to be deleted.
+     * @return A message indicating the successful deletion of the employer.
+     * @throws NotFoundException If no employer is found with the specified ID.
+     */
     @Override
     public String deleteEmployer(long employerId) {
         if (employerRepository.existsById(employerId)){
