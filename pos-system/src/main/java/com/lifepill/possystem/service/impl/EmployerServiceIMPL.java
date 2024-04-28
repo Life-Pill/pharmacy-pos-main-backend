@@ -43,8 +43,14 @@ public class EmployerServiceIMPL implements EmployerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
+    /**
+     * Saves an employer with image.
+     *
+     * @param employerDTO The employer data transfer object.
+     * @return A message indicating the success of the operation.
+     * @throws EntityDuplicationException If the employer already exists.
+     * @throws NotFoundException         If the associated branch is not found.
+     */
     @Override
     public String saveEmployer(EmployerDTO employerDTO){
         // check if the cashier already exists email or id
@@ -67,7 +73,14 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
-
+    /**
+     * Saves an employer without image.
+     *
+     * @param employerWithoutImageDTO The employer data transfer object without an image.
+     * @return A message indicating the success of the operation.
+     * @throws EntityDuplicationException If the employer already exists.
+     * @throws NotFoundException         If the associated branch is not found.
+     */
     @Override
     public String saveEmployerWithoutImage(EmployerWithoutImageDTO employerWithoutImageDTO) {
         // check if the employer already exists email or id
@@ -92,59 +105,14 @@ public class EmployerServiceIMPL implements EmployerService {
 
         }
     }
-
-   /* @Override
-    public String updateCashier(EmployerUpdateDTO cashierUpdateDTO) {
-        if (cashierRepo.existsById(cashierUpdateDTO.getCashierId())){
-            Employer cashier = cashierRepo.getReferenceById(cashierUpdateDTO.getCashierId());
-
-            cashier.setCashierNicName(cashierUpdateDTO.getCashierNicName());
-            cashier.setCashierEmail(cashierUpdateDTO.getCashierEmail());
-            cashier.setCashierNic(cashierUpdateDTO.getCashierNic());
-            cashier.setCashierPhone(cashierUpdateDTO.getCashierPhone());
-            cashier.setRole(cashierUpdateDTO.getRole());
-            cashier.setCashierSalary(cashierUpdateDTO.getCashierSalary());
-
-            cashierRepo.save(cashier);
-
-            System.out.println(cashier);
-
-            return "UPDATED CUSTOMER";
-        }else {
-            throw new NotFoundException("No data found for that id");
-        }
-    }*/
-/*
-
-    @Override
-    public String updateEmployer(Long employerId, EmployerAllDetailsUpdateDTO employerAllDetailsUpdateDTO) {
-        // Check if the cashier exists
-        Employer existingEmployer = employerRepository.findById(employerId)
-                .orElseThrow(() -> new NotFoundException("Employer not found with ID: " + employerId));
-
-        // Check if the email is already associated with another cashier
-        if (!existingEmployer.getEmployerEmail().equals(employerAllDetailsUpdateDTO.getEmployerEmail()) &&
-                employerRepository.existsAllByEmployerEmail(employerAllDetailsUpdateDTO.getEmployerEmail())) {
-            throw new EntityDuplicationException("Email already exists");
-        }
-
-        // Map updatedCashierDTO to existingEmployer
-        modelMapper.map(employerAllDetailsUpdateDTO, existingEmployer);
-
-        // If the branch ID is provided, update the branch
-        if (employerAllDetailsUpdateDTO.getBranchId() != 0) {
-            Branch branch = branchRepository.findById(employerAllDetailsUpdateDTO.getBranchId())
-                    .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + employerAllDetailsUpdateDTO.getBranchId()));
-            existingEmployer.setBranch(branch);
-        }
-
-        // Save the updated cashier
-        employerRepository.save(existingEmployer);
-
-        return "Employer updated successfully";
-    }
-*/
-
+    /**
+     * Updates details of an employer.
+     *
+     * @param employerId                The ID of the employer to update.
+     * @param employerAllDetailsUpdateDTO The DTO containing updated employer details.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateEmployer(Long employerId, EmployerAllDetailsUpdateDTO employerAllDetailsUpdateDTO) {
         // Check if the employer exists
@@ -180,8 +148,13 @@ public class EmployerServiceIMPL implements EmployerService {
         return "Employer updated successfully";
     }
 
-
-
+    /**
+     * Updates account details of an employer.
+     *
+     * @param employerUpdateAccountDetailsDTO The DTO containing updated employer account details.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateEmployerAccountDetails(EmployerUpdateAccountDetailsDTO employerUpdateAccountDetailsDTO) {
         if (employerRepository.existsById(employerUpdateAccountDetailsDTO.getEmployerId())){
@@ -203,6 +176,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Updates the password of an employer.
+     *
+     * @param employerPasswordResetDTO The DTO containing the employer ID and the new password.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateEmployerPassword(EmployerPasswordResetDTO employerPasswordResetDTO) {
         if (employerRepository.existsById(employerPasswordResetDTO.getEmployerId())){
@@ -219,6 +199,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Updates the recent PIN of an employer.
+     *
+     * @param employerRecentPinUpdateDTO The DTO containing the employer ID and the new PIN.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateRecentPin(EmployerRecentPinUpdateDTO employerRecentPinUpdateDTO) {
         if (employerRepository.existsById(employerRecentPinUpdateDTO.getEmployerId())){
@@ -235,6 +222,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Updates the bank account details of an employer.
+     *
+     * @param employerUpdateBankAccountDTO The DTO containing the updated bank account details.
+     * @return A message indicating the success of the operation.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public String updateEmployerBankAccountDetails(EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO) {
         long cashierId = employerUpdateBankAccountDTO.getEmployerId();
@@ -275,7 +269,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
-
+    /**
+     * Retrieves an employer by their ID.
+     *
+     * @param employerId The ID of the employer to retrieve.
+     * @return The DTO representing the employer.
+     * @throws NotFoundException If no employer is found with the specified ID.
+     */
     @Override
     public EmployerDTO getEmployerById(long employerId) {
         if (employerRepository.existsById(employerId)){
@@ -287,31 +287,18 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Retrieves an employer by their ID along with their image.
+     *
+     * @param employerId The ID of the employer to retrieve.
+     * @return The DTO representing the employer with their image.
+     * @throws NotFoundException If no employer is found with the specified ID.
+     */
     @Override
     public EmployerDTO getEmployerByIdWithImage(long employerId) {
         if (employerRepository.existsById(employerId)){
             Employer employer = employerRepository.getReferenceById(employerId);
 
-/*             can use mappers to easily below that task
-            EmployerDTO employerDTO = new EmployerDTO(
-                    employer.getCashierId(),
-                    employer.getCashierNicName(),
-                    employer.getCashierFirstName(),
-                    employer.getCashierLastName(),
-                    employer.getCashierPassword(),
-                    employer.getCashierEmail(),
-                    employer.getCashierPhone(),
-                    employer.getCashierAddress(),
-                    employer.getCashierSalary(),
-                    employer.getCashierNic(),
-                    employer.isActiveStatus(),
-                    employer.getGender(),
-                    employer.getDateOfBirth(),
-                    employer.getRole(),
-                    employer.getPin(),
-                    employer.getProfileImage()
-                    //(Order) employer.getOrders()
-            );*/
             EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
 
             return employerDTO;
@@ -320,12 +307,25 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Retrieves the image data associated with an employer.
+     *
+     * @param employerId The ID of the employer whose image data is to be retrieved.
+     * @return The byte array representing the image data, or null if no image is found.
+     */
     @Override
     public byte[] getImageData(long employerId) {
         Optional<Employer> branchOptional = employerRepository.findById(employerId);
         return branchOptional.map(com.lifepill.possystem.entity.Employer::getProfileImage).orElse(null);
     }
 
+    /**
+     * Deletes an employer with the specified ID.
+     *
+     * @param employerId The ID of the employer to be deleted.
+     * @return A message indicating the successful deletion of the employer.
+     * @throws NotFoundException If no employer is found with the specified ID.
+     */
     @Override
     public String deleteEmployer(long employerId) {
         if (employerRepository.existsById(employerId)){
@@ -336,6 +336,13 @@ public class EmployerServiceIMPL implements EmployerService {
             throw new NotFoundException("No employer found for that id");
         }
     }
+
+    /**
+     * Retrieves all employer bank account details.
+     *
+     * @return A list of DTOs containing employer bank account details.
+     * @throws NotFoundException If no employer bank details are found.
+     */
     @Override
     public List<EmployerUpdateBankAccountDTO> getAllEmployerBankDetails() {
         List<EmployerBankDetails> getAllCashiersBankDetails = cashierBankDetailsRepo.findAll();
@@ -361,8 +368,12 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
-
-
+    /**
+     * Retrieves all employers.
+     *
+     * @return A list of DTOs containing employer details.
+     * @throws NotFoundException If no employers are found.
+     */
     @Override
     public List<EmployerDTO> getAllEmployer() {
         List<Employer> getAllEmployers = employerRepository.findAll();
@@ -370,25 +381,6 @@ public class EmployerServiceIMPL implements EmployerService {
         if (getAllEmployers.size() > 0){
             List<EmployerDTO> employerDTOList = new ArrayList<>();
             for (Employer employer : getAllEmployers){
-/*                EmployerDTO employerDTO = new EmployerDTO(
-                        employer.getCashierId(),
-                        employer.getCashierNicName(),
-                        employer.getCashierFirstName(),
-                        employer.getCashierLastName(),
-                        employer.getCashierPassword(),
-                        employer.getCashierEmail(),
-                        employer.getCashierPhone(),
-                        employer.getCashierAddress(),
-                        employer.getCashierSalary(),
-                        employer.getCashierNic(),
-                        employer.isActiveStatus(),
-                        employer.getGender(),
-                        employer.getDateOfBirth(),
-                        employer.getRole(),
-                        employer.getPin(),
-                        employer.getProfileImage()
-                      // (Order) employer.getOrders()
-                );*/
                 EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
                 employerDTOList.add(employerDTO);
             }
@@ -398,32 +390,19 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
-
+    /**
+     * Retrieves all employers with the specified active state.
+     *
+     * @param activeState The active state of the employers to retrieve.
+     * @return A list of DTOs containing employer details.
+     * @throws NotFoundException If no employers are found with the specified active state.
+     */
     @Override
     public List<EmployerDTO> getAllEmployerByActiveState(boolean activeState) {
         List<Employer> getAllEmployers = employerRepository.findByIsActiveStatusEquals(activeState);
         if (getAllEmployers.size() > 0){
             List<EmployerDTO> employerDTOList = new ArrayList<>();
             for (Employer employer : getAllEmployers){
-/*                EmployerDTO employerDTO = new EmployerDTO(
-                        employer.getCashierId(),
-                        employer.getCashierNicName(),
-                        employer.getCashierFirstName(),
-                        employer.getCashierLastName(),
-                        employer.getCashierPassword(),
-                        employer.getCashierEmail(),
-                        employer.getCashierPhone(),
-                        employer.getCashierAddress(),
-                        employer.getCashierSalary(),
-                        employer.getCashierNic(),
-                        employer.isActiveStatus(),
-                        employer.getGender(),
-                        employer.getDateOfBirth(),
-                        employer.getRole(),
-                        employer.getPin(),
-                        employer.getProfileImage()
-                      //  (Order) employer.getOrders()
-                );*/
                 EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
                 employerDTOList.add(employerDTO);
             }
@@ -434,6 +413,14 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Updates the bank account details of an employer identified by the provided cashier ID.
+     *
+     * @param cashierId                    The ID of the employer/cashier.
+     * @param cashierUpdateBankAccountDTO  DTO containing the updated bank account details.
+     * @return                             A message indicating the success of the operation.
+     * @throws NotFoundException          If the employer with the specified ID is not found.
+     */
     @Override
     public String updateEmployerBankAccountDetailsByCashierId(long cashierId, EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
         // Fetch the Employer entity by cashierId
@@ -453,14 +440,11 @@ public class EmployerServiceIMPL implements EmployerService {
             newBankDetails.setMonthlyPaymentStatus(cashierUpdateBankAccountDTO.isMonthlyPaymentStatus());
             newBankDetails.setEmployerId(cashierId);
 
-
             // Save the new EmployerBankDetails entity
             EmployerBankDetails savedBankDetails = cashierBankDetailsRepo.save(newBankDetails);
 
             // Update the employer_bank_details_id in the employer entity
             employer.setEmployerBankDetails(savedBankDetails);
-
-
 
             // Save the updated employer entity
             employerRepository.save(employer);
@@ -471,6 +455,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Retrieves a list of employers associated with the specified branch ID.
+     *
+     * @param branchId  The ID of the branch.
+     * @return          A list of EmployerDTO objects representing the employers associated with the branch.
+     * @throws NotFoundException  If the branch with the specified ID is not found.
+     */
     @Override
     public List<EmployerDTO> getAllEmployerByBranchId(long branchId) {
         // Retrieve the branch by its ID
@@ -488,6 +479,12 @@ public class EmployerServiceIMPL implements EmployerService {
         return employerDTOS;
     }
 
+    /**
+     * Retrieves a list of employers with the specified role.
+     *
+     * @param role  The role of the employers to retrieve.
+     * @return      A list of EmployerDTO objects representing the employers with the specified role.
+     */
     @Override
     public List<EmployerDTO> getAllEmployerByRole(Role role) {
         List<Employer> employers = employerRepository.findAllByRole(role);
@@ -497,6 +494,13 @@ public class EmployerServiceIMPL implements EmployerService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves an employer by their username (email).
+     *
+     * @param username  The username (email) of the employer to retrieve.
+     * @return          An EmployerDTO object representing the employer with the specified username,
+     *                  or null if no employer is found with the given username.
+     */
     @Override
     public EmployerDTO getEmployerByUsername(String username) {
         Optional<Employer> employer = employerRepository.findByEmployerEmail(username);
@@ -507,5 +511,4 @@ public class EmployerServiceIMPL implements EmployerService {
             return null; // Or throw an exception, or return a default DTO
         }
     }
-
 }

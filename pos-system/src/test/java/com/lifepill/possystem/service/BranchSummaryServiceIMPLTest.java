@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.BranchDTO;
+import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Employer;
@@ -29,7 +30,6 @@ import static org.mockito.Mockito.*;
  * Unit tests for BranchSummaryServiceIMPL class.
  */
 public class BranchSummaryServiceIMPLTest {
-
     @Mock
     private BranchRepository branchRepository;
 
@@ -44,6 +44,7 @@ public class BranchSummaryServiceIMPLTest {
 
     @InjectMocks
     private BranchSummaryServiceIMPL branchSummaryService;
+
 
     @BeforeEach
     void setUp() {
@@ -141,5 +142,23 @@ public class BranchSummaryServiceIMPLTest {
         // Assert
         assertNotNull(responseDTO);
         assertEquals(100.0, responseDTO.getSales());
+    }
+
+    @Test
+    void testGetAllPharmacySummary() {
+        // Mock repository responses
+        when(orderRepository.getTotalSales()).thenReturn(1000.0);
+        when(orderRepository.count()).thenReturn(50L);
+        when(employerRepository.count()).thenReturn(20L);
+        when(branchRepository.count()).thenReturn(10L);
+
+        // Call service method
+        AllPharmacySummaryResponseDTO responseDTO = branchSummaryService.getAllPharmacySummary();
+
+        // Assert results
+        assertEquals(1000.0, responseDTO.getTotalSales());
+        assertEquals(50, responseDTO.getTotalOrders());
+        assertEquals(20, responseDTO.getTotalEmployees());
+        assertEquals(10, responseDTO.getTotalBranches());
     }
 }

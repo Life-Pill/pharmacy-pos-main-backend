@@ -1,5 +1,7 @@
 package com.lifepill.possystem.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.service.BranchSummaryService;
 import com.lifepill.possystem.util.StandardResponse;
@@ -9,7 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +22,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 /**
  * Unit tests for BranchSummaryController class.
@@ -29,9 +38,11 @@ public class BranchSummaryControllerTest {
     @InjectMocks
     private BranchSummaryController branchSummaryController;
 
+    private MockMvc mockMvc;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(branchSummaryController).build();
     }
 
     /**

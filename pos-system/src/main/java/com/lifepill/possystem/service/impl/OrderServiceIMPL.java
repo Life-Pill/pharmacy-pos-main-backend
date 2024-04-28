@@ -25,6 +25,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the {@link OrderService} interface that handles order-related operations.
+ */
 @Service
 @Transactional
 public class OrderServiceIMPL implements OrderService {
@@ -49,6 +52,7 @@ public class OrderServiceIMPL implements OrderService {
 
     /**
      * Adds an order to the system.
+     *
      * @param requestOrderSaveDTO The DTO containing order details.
      * @return A message indicating the result of the operation.
      * */
@@ -68,12 +72,10 @@ public class OrderServiceIMPL implements OrderService {
         orderRepository.save(order);
 
         if (orderRepository.existsById(order.getOrderId())){
-
             List<OrderDetails> orderDetails = modelMapper.
                     map(requestOrderSaveDTO.getOrderDetails(), new TypeToken<List<OrderDetails>>(){}
                             .getType()
                     );
-
             for (int i=0;i<orderDetails.size();i++){
                 orderDetails.get(i).setOrders(order);
                 orderDetails.get(i).setItems(itemRepository
@@ -82,17 +84,21 @@ public class OrderServiceIMPL implements OrderService {
                         )
                 );
             }
-
             if (!orderDetails.isEmpty()){
                 orderDetailsRepo.saveAll(orderDetails);
             }
-
             savePaymentDetails(requestOrderSaveDTO.getPaymentDetails(), order);
             return "saved";
         }
         return "Order saved successfully";
     }
 
+    /**
+     * Saves payment details for an order.
+     *
+     * @param paymentDetailsDTO The DTO containing payment details.
+     * @param order             The order for which the payment is made.
+     */
     private void savePaymentDetails(RequestPaymentDetailsDTO paymentDetailsDTO, Order order) {
         PaymentDetails paymentDetails = new PaymentDetails();
         paymentDetails.setPaymentMethod(paymentDetailsDTO.getPaymentMethod());
@@ -105,6 +111,13 @@ public class OrderServiceIMPL implements OrderService {
         paymentRepository.save(paymentDetails);
     }
 
+    /**
+     * Checks the stock availability of items in the order.
+     *
+     * @param requestOrderSaveDTO The DTO containing the order details.
+     * @throws InsufficientItemQuantityException if an item in the order does not have enough quantity.
+     * @throws NotFoundException                if an item in the order is not found in the database.
+     */
     private void checkItemStock(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
             Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
@@ -122,6 +135,12 @@ public class OrderServiceIMPL implements OrderService {
         }
     }
 
+    /**
+     * Updates the quantities of items in the database after an order is placed.
+     *
+     * @param requestOrderSaveDTO The DTO containing the order details.
+     * @throws NotFoundException if an item in the order is not found in the database.
+     */
     private void updateItemQuantities(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
             Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());

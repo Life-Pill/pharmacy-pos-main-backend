@@ -1,6 +1,7 @@
 package com.lifepill.possystem.config;
 
 
+import com.lifepill.possystem.entity.Employer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -79,18 +80,15 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
     /**
      * Extracts the username from the provided JWT token.
      *
-     * @param token JWT token
-     * @return Username extracted from the token
+     * @param token The JWT token from which the username will be extracted.
+     * @return The username extracted from the token.
      */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-    }
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
     }
 
     /**
@@ -101,8 +99,21 @@ public class JwtService {
      * @param <T>            Type of the resolved claim
      * @return Resolved claim
      */
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    /**
+     * Validates whether a JWT token is valid for the given user.
+     *
+     * @param token       The JWT token to be validated.
+     * @param userDetails The UserDetails object representing the user.
+     * @return True if the token is valid for the user, false otherwise.
+     */
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()));
     }
+
 }

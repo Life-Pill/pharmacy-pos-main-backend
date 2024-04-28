@@ -48,9 +48,13 @@ public class ItemServiceIMPL implements ItemService {
     @Autowired
     private SupplierRepository supplierRepository;
 
-  /*  @Autowired
-    private  SupplierRepository supplierRepository;*/
-
+    /**
+     * Saves a new item based on the provided item save request DTO.
+     *
+     * @param itemSaveRequestDTO The DTO containing the details of the item to be saved.
+     * @return A message indicating the success of the save operation.
+     * @throws EntityDuplicationException If an item with the same ID already exists.
+     */
     @Override
     public String saveItems(ItemSaveRequestDTO itemSaveRequestDTO) {
         Item item = modelMapper.map(itemSaveRequestDTO, Item.class);
@@ -62,6 +66,12 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Retrieves all items from the database.
+     *
+     * @return A list of DTOs representing all items.
+     * @throws NotFoundException If no items are found or they are out of stock.
+     */
     @Override
     public List<ItemGetAllResponseDTO> getAllItems() {
         List<Item> getAllItems = itemRepository.findAll();
@@ -105,6 +115,13 @@ public class ItemServiceIMPL implements ItemService {
     }
 
 
+    /**
+     * Retrieves items by name and stock status.
+     *
+     * @param itemName The name of the item to search for.
+     * @return A list of DTOs representing items matching the search criteria.
+     * @throws NotFoundException If no items are found.
+     */
     @Override
     public List<ItemGetResponseDTO> getItemByNameAndStock(String itemName) {
         List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
@@ -120,6 +137,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Retrieves items by stock status.
+     *
+     * @param activeStatus The stock status to filter by.
+     * @return A list of DTOs representing items with the specified stock status.
+     * @throws NotFoundException If no items are found.
+     */
     @Override
     public List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus) {
         List<Item> item = itemRepository.findAllByStockEquals(activeStatus);
@@ -135,6 +159,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Retrieves items by barcode.
+     *
+     * @param itemBarCode The barcode of the item to search for.
+     * @return A list of DTOs representing items with the specified barcode.
+     * @throws NotFoundException If no items are found.
+     */
     @Override
     public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
         List<Item> item = itemRepository.findAllByItemBarCodeEquals(itemBarCode);
@@ -150,7 +181,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-
+    /**
+     * Updates an existing item based on the provided update DTO.
+     *
+     * @param itemUpdateDTO The DTO containing the updated details of the item.
+     * @return A message indicating the success of the update operation.
+     * @throws NotFoundException If the item to be updated is not found.
+     */
     @Override
     public String updateItem(ItemUpdateDTO itemUpdateDTO) {
         if (itemRepository.existsById(itemUpdateDTO.getItemId())) {
@@ -187,6 +224,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Deletes an item with the specified ID.
+     *
+     * @param itemId The ID of the item to be deleted.
+     * @return A message indicating the success of the delete operation.
+     * @throws NotFoundException If the item to be deleted is not found.
+     */
     @Override
     public String deleteItem(long itemId) {
         if (itemRepository.existsById(itemId)) {
@@ -198,8 +242,15 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-
-    // paginated 7/2:27
+    /**
+     * Retrieves items by stock status with pagination.
+     *
+     * @param activeStatus The stock status to filter by.
+     * @param page         The page number.
+     * @param size         The number of items per page.
+     * @return A paginated response containing items with the specified stock status.
+     * @throws NotFoundException If no items are found.
+     */
     @Override
     public PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size) {
         Page<Item> items = itemRepository.findAllByStockEquals(activeStatus, PageRequest.of(page, size));
@@ -215,6 +266,14 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+
+    /**
+     * Retrieves items by name and status using MapStruct for mapping.
+     *
+     * @param itemName The name of the item to search for.
+     * @return A list of DTOs representing items with the specified name and stock status.
+     * @throws NotFoundException If no items are found.
+     */
     @Override
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
         List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
@@ -227,20 +286,12 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-
- /*   @Override
-    public List<ItemGetResponseDTO> getItemByActiveStatusLazy(boolean activeStatus) {
-        List<Item> items = itemRepo.findAlByActiveStatusEquals(activeStatus);
-        if (!items.isEmpty()){
-            List<ItemGetResponseDTO> itemGetResponseDTOS = itemMapper.entityListToDTOList(items);
-
-            return itemGetResponseDTOS;
-        }else {
-            throw new NotFoundException("Not found");
-        }
-    }*/
-
-
+    /**
+     * Saves a new item category.
+     *
+     * @param categoryDTO The DTO containing the details of the category to be saved.
+     * @return A message indicating the success of the save operation.
+     */
     @Override
     public String saveCategory(ItemCategoryDTO categoryDTO) {
         // Convert DTO to entity and save the category
@@ -249,28 +300,13 @@ public class ItemServiceIMPL implements ItemService {
         return "Category saved successfully";
     }
 
-   /* @Override
-    public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
-        // Check if category exists
-        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
-                .orElseGet(() -> {
-                    // If category doesn't exist, create a new one
-                    ItemCategory newCategory = new ItemCategory();
-                    // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
-                    //  newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
-                    // Save the new category
-                    itemCategoryRepository.save(newCategory);
-                    return newCategory;
-                });
-
-        // Now, associate the item with the category
-        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
-        item.setItemCategory(category);
-        itemRepo.save(item);
-        return "Item saved successfully with category";
-    }
-    */
-
+    /**
+     * Saves an item with its associated category and supplier.
+     *
+     * @param itemSaveRequestCategoryDTO The DTO containing the details of the item and its associated category and supplier.
+     * @return A message indicating the success of the save operation.
+     * @throws NotFoundException If the associated category or supplier is not found.
+     */
     @Override
     public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
         // Check if category exists
@@ -297,32 +333,12 @@ public class ItemServiceIMPL implements ItemService {
         return "Item saved successfully with category and supplier";
     }
 
-  /*  @Override
-    public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
-        // Check if category exists
-        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
-                .orElseGet(() -> {
-                    // If category doesn't exist, create a new one
-                    ItemCategory newCategory = new ItemCategory();
-                    // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
-                    // newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
-                    // Save the new category
-                    itemCategoryRepository.save(newCategory);
-                    return newCategory;
-                });
-
-        // Check if supplier exists
-        Supplier supplier = supplierRepository.findById(itemSaveRequestCategoryDTO.getSupplierId())
-                .orElseThrow(() -> new IllegalArgumentException("Supplier not found"));
-
-        // Now, associate the item with the category and supplier
-        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
-        item.setItemCategory(category);
-        item.setSupplier(supplier);
-        itemRepo.save(item);
-        return "Item saved successfully with category and supplier";
-    }*/
-
+    /**
+     * Retrieves all item categories.
+     *
+     * @return A list of DTOs representing all item categories.
+     * @throws NotFoundException If no categories are found.
+     */
     @Override
     public List<ItemCategoryDTO> getAllCategories() {
         List<ItemCategory> categories = itemCategoryRepository.findAll();
@@ -335,7 +351,14 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-
+    /**
+     * Updates the details of an existing item category.
+     *
+     * @param categoryId The ID of the category to be updated.
+     * @param categoryDTO The DTO containing the updated details of the category.
+     * @return A message indicating the success of the update operation.
+     * @throws NotFoundException If the category to be updated is not found.
+     */
     @Override
     public String updateCategoryDetails(long categoryId, ItemCategoryDTO categoryDTO) {
         // Check if the category exists
@@ -357,6 +380,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Deletes a category with the specified ID.
+     *
+     * @param categoryId The ID of the category to be deleted.
+     * @return A message indicating the success of the delete operation.
+     * @throws NotFoundException If the category to be deleted is not found.
+     */
     @Override
     public String deleteCategory(long categoryId) {
         // Check if the category exists
@@ -377,6 +407,4 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("Category not found");
         }
     }
-
-
 }

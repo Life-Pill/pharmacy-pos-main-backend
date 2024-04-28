@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.BranchDTO;
+import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Employer;
@@ -158,34 +159,34 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
     @Override
     public List<PharmacyBranchResponseDTO> getPharmacyDataByTimePeriod(Date startDate, Date endDate) {
 
-            // Fetch all orders within the given time period from the repository
-            List<Order> ordersForPeriod = orderRepository.findByOrderDateBetween(startDate, endDate);
+        // Fetch all orders within the given time period from the repository
+        List<Order> ordersForPeriod = orderRepository.findByOrderDateBetween(startDate, endDate);
 
-            // Group orders by branchId and calculate total sales and count of orders for each branch
-            Map<Long, Double> branchSalesMap = ordersForPeriod.stream()
-                    .collect(Collectors.groupingBy(
-                            Order::getBranchId, Collectors.summingDouble(Order::getTotal))
-                    );
-            Map<Long, Long> branchOrdersCountMap = ordersForPeriod.stream()
-                    .collect(Collectors.groupingBy(
-                            Order::getBranchId, Collectors.counting())
-                    );
+        // Group orders by branchId and calculate total sales and count of orders for each branch
+        Map<Long, Double> branchSalesMap = ordersForPeriod.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.summingDouble(Order::getTotal))
+                );
+        Map<Long, Long> branchOrdersCountMap = ordersForPeriod.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.counting())
+                );
 
-            // Retrieve additional branch and manager details
-            List<PharmacyBranchResponseDTO> pharmacyData = branchSalesMap.entrySet().stream().map(entry -> {
-                Long branchId = entry.getKey();
-                Double sales = entry.getValue();
+        // Retrieve additional branch and manager details
+        List<PharmacyBranchResponseDTO> pharmacyData = branchSalesMap.entrySet().stream().map(entry -> {
+            Long branchId = entry.getKey();
+            Double sales = entry.getValue();
 
-                Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
-                //fetch manager details based on branchId
-                String manager = getManagerForBranch(branchId);
-                //fetch branch details based on branchId
-                BranchDTO branchDTO = getBranchDetails(branchId);
-                return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
-            }).collect(Collectors.toList());
+            Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
+            //fetch manager details based on branchId
+            String manager = getManagerForBranch(branchId);
+            //fetch branch details based on branchId
+            BranchDTO branchDTO = getBranchDetails(branchId);
+            return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
+        }).collect(Collectors.toList());
 
-            logger.info("Fetched all branches with sales information successfully.");
-            return pharmacyData;
+        logger.info("Fetched all branches with sales information successfully.");
+        return pharmacyData;
     }
 
 
@@ -246,42 +247,65 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
     @Override
     public List<PharmacyBranchResponseDTO> getYearlySummary(int year) {
 
-            // Fetch all orders for the given year from the repository
-            List<Order> ordersForYear = orderRepository.findByOrderDateBetween(
-                    // Start of the given year
-                    DateUtils.truncate(new Date(year - 1900, 0, 1), Calendar.YEAR),
-                    // End of the given year
-                    DateUtils.addMilliseconds(
-                            DateUtils.ceiling(new Date(year - 1900, 0, 1), Calendar.YEAR),
-                            -1
-                    )
-            );
+        // Fetch all orders for the given year from the repository
+        List<Order> ordersForYear = orderRepository.findByOrderDateBetween(
+                // Start of the given year
+                DateUtils.truncate(new Date(year - 1900, 0, 1), Calendar.YEAR),
+                // End of the given year
+                DateUtils.addMilliseconds(
+                        DateUtils.ceiling(new Date(year - 1900, 0, 1), Calendar.YEAR),
+                        -1
+                )
+        );
 
-            // Group orders by branchId and calculate total sales and count of orders for each branch
-            Map<Long, Double> branchSalesMap = ordersForYear.stream()
-                    .collect(Collectors.groupingBy(
-                            Order::getBranchId, Collectors.summingDouble(Order::getTotal))
-                    );
-            Map<Long, Long> branchOrdersCountMap = ordersForYear.stream()
-                    .collect(Collectors.groupingBy(
-                            Order::getBranchId, Collectors.counting())
-                    );
+        // Group orders by branchId and calculate total sales and count of orders for each branch
+        Map<Long, Double> branchSalesMap = ordersForYear.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.summingDouble(Order::getTotal))
+                );
+        Map<Long, Long> branchOrdersCountMap = ordersForYear.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId, Collectors.counting())
+                );
 
-            // Retrieve additional branch and manager details
-            List<PharmacyBranchResponseDTO> pharmacyData = branchSalesMap.entrySet().stream().map(entry -> {
-                Long branchId = entry.getKey();
-                Double sales = entry.getValue();
+        // Retrieve additional branch and manager details
+        List<PharmacyBranchResponseDTO> pharmacyData = branchSalesMap.entrySet().stream().map(entry -> {
+            Long branchId = entry.getKey();
+            Double sales = entry.getValue();
 
-                Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
-                //fetch manager details based on branchId
-                String manager = getManagerForBranch(branchId);
-                //fetch branch details based on branchId
-                BranchDTO branchDTO = getBranchDetails(branchId);
-                return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
-            }).collect(Collectors.toList());
+            Integer orders = branchOrdersCountMap.getOrDefault(branchId, 0L).intValue();
+            //fetch manager details based on branchId
+            String manager = getManagerForBranch(branchId);
+            //fetch branch details based on branchId
+            BranchDTO branchDTO = getBranchDetails(branchId);
+            return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
+        }).collect(Collectors.toList());
 
-            logger.info("Fetched all branches with sales information successfully.");
-            return pharmacyData;
+        logger.info("Fetched all branches with sales information successfully.");
+        return pharmacyData;
+    }
+
+    /**
+     * Retrieves total details of all pharmacy branches.
+     *
+     * @return AllPharmacySummaryResponseDTO containing total sales, total orders, total employees, and total branches.
+     */
+    @Override
+    public AllPharmacySummaryResponseDTO getAllPharmacySummary() {
+        // Fetch total sales
+        Double totalSales = orderRepository.getTotalSales();
+
+        // Fetch total orders
+        Long totalOrders = orderRepository.count();
+
+        // Fetch total employees
+        Long totalEmployees = employerRepository.count();
+
+        // Fetch total branches
+        Long totalBranches = branchRepository.count();
+
+        // Create and return AllPharmacySummaryResponseDTO
+        return new AllPharmacySummaryResponseDTO(totalSales, totalOrders.intValue(), totalEmployees.intValue(), totalBranches.intValue());
     }
 
 
@@ -292,7 +316,7 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
      * @return The manager's first name or "No Manager Assigned" if no manager is found.
      */
     private String getManagerForBranch(Long branchId) {
-    // Implement methods to fetch manager details and branch details based on branchId
+        // Implement methods to fetch manager details and branch details based on branchId
         // Find the manager for the given branch ID with the role "MANAGER"
         Employer manager = employerRepository.findByBranch_BranchIdAndRole(branchId, Role.MANAGER);
 
@@ -323,6 +347,4 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             throw new NotFoundException("No Branch found for that id");
         }
     }
-
-
 }

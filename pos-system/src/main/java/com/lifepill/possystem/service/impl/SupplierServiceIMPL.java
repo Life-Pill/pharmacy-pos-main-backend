@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the SupplierService interface providing operations related to suppliers.
+ */
 @Service
 @Transactional
 public class SupplierServiceIMPL implements SupplierService {
@@ -28,10 +31,15 @@ public class SupplierServiceIMPL implements SupplierService {
     @Autowired
     private SupplierCompanyRepository supplierCompanyRepository;
 
-
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     * Retrieves all suppliers.
+     *
+     * @return A list of SupplierDTO objects representing all suppliers.
+     * @throws NotFoundException If no suppliers are found.
+     */
     public List<SupplierDTO> getAllSuppliers() {
         List<Supplier> getAllSuppliers = supplierRepository.findAll();
 
@@ -47,6 +55,14 @@ public class SupplierServiceIMPL implements SupplierService {
         }
     }
 
+    /**
+     * Saves a new supplier or updates an existing one.
+     *
+     * @param supplierDTO The DTO containing supplier details to be saved.
+     * @return The saved or updated SupplierDTO object.
+     * @throws EntityDuplicationException If a supplier with the same ID or email already exists.
+     * @throws NotFoundException         If the associated supplier company is not found with the provided ID.
+     */
     public SupplierDTO saveSupplier(SupplierDTO supplierDTO) {
         if (supplierRepository.existsById(supplierDTO.getSupplierId()) || supplierRepository.existsAllBySupplierEmail(supplierDTO.getSupplierEmail())) {
             throw new EntityDuplicationException("Supplier already exists");
@@ -69,6 +85,14 @@ public class SupplierServiceIMPL implements SupplierService {
         }
     }
 
+    /**
+     * Updates an existing supplier by ID with the provided details.
+     *
+     * @param id                The ID of the supplier to be updated.
+     * @param updatedSupplierDTO The DTO containing updated supplier details.
+     * @return The updated SupplierDTO object.
+     * @throws NotFoundException If no supplier is found with the given ID.
+     */
     public SupplierDTO updateSupplierById(long id, SupplierDTO updatedSupplierDTO) {
         Optional<Supplier> optionalSupplier = supplierRepository.findById(id);
         if (optionalSupplier.isPresent()) {
@@ -89,6 +113,12 @@ public class SupplierServiceIMPL implements SupplierService {
         }
     }
 
+    /**
+     * Deletes a supplier by ID.
+     *
+     * @param id The ID of the supplier to be deleted.
+     * @throws NotFoundException If no supplier is found with the given ID.
+     */
     public void deleteSupplierById(long id) {
         Optional<Supplier> optionalSupplier = supplierRepository.findById(id);
         if (optionalSupplier.isPresent()) {
@@ -98,11 +128,16 @@ public class SupplierServiceIMPL implements SupplierService {
         }
     }
 
+    /**
+     * Retrieves a supplier by ID.
+     *
+     * @param id The ID of the supplier to retrieve.
+     * @return The supplier DTO corresponding to the given ID.
+     * @throws NotFoundException If no supplier is found with the given ID.
+     */
     public SupplierDTO getSupplierById(long id) {
         Supplier supplier = supplierRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Supplier not found with id: " + id));
         return modelMapper.map(supplier, SupplierDTO.class);
     }
-
-
 }
