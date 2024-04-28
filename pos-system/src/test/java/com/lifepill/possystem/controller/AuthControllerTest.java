@@ -1,6 +1,5 @@
 package com.lifepill.possystem.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lifepill.possystem.dto.requestDTO.AuthenticationRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.RegisterRequestDTO;
 import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
@@ -18,12 +17,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
+
+/**
+ * Unit tests for the AuthController class.
+ */
 public class AuthControllerTest {
 
     @Mock
@@ -40,6 +42,10 @@ public class AuthControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
+
+    /**
+     * Tests the register endpoint with a successful registration.
+     */
     @Test
     void testRegister() {
         RegisterRequestDTO registerRequest = new RegisterRequestDTO();
@@ -52,13 +58,18 @@ public class AuthControllerTest {
         assertEquals(authResponse, responseEntity.getBody());
     }
 
+    /**
+     * Tests the test endpoint.
+     */
     @Test
     void testTest() {
         String response = authController.test();
         assertEquals("Authenticated", response);
     }
 
-    //testRegister_Success
+    /**
+     * Tests the authenticate endpoint with successful authentication.
+     */
     @Test
     void testRegister_Success() {
         RegisterRequestDTO registerRequest = new RegisterRequestDTO();
@@ -71,7 +82,9 @@ public class AuthControllerTest {
         assertEquals(authResponse, responseEntity.getBody());
     }
 
-    //testAuthenticate_Success
+    /**
+     * Tests the authenticate endpoint with successful authentication.
+     */
     @Test
     void testAuthenticate_Success() {
         // Prepare test data
@@ -97,7 +110,9 @@ public class AuthControllerTest {
     }
 
 
-    // testAuthenticate_Failure
+    /**
+     * Tests the authenticate endpoint with authentication failure due to incorrect credentials.
+     */
     @Test
     void testAuthenticate_Failure() {
         // Prepare test data
@@ -123,7 +138,9 @@ public class AuthControllerTest {
                 ((StandardResponse) responseEntity.getBody()).getMessage());
     }
 
-    // testCookieSetOnAuthenticate
+    /**
+     * Tests whether the access token is correctly set as a cookie in the response when authenticating.
+     */
     @Test
     void testCookieSetOnAuthenticate() {
         // Prepare test data
@@ -141,7 +158,11 @@ public class AuthControllerTest {
         verify(response, times(1)).addCookie(any());
     }
 
-   // testEmployerDetailsRetrievalOnAuthenticate
+    /**
+     * Tests the retrieval of employer details during authentication.
+     * It verifies whether the controller correctly handles the authentication request,
+     * retrieves employer details, sets them in the response body, and adds a cookie.
+     */
    @Test
    void testEmployerDetailsRetrievalOnAuthenticate() {
        // Prepare test data
@@ -179,7 +200,12 @@ public class AuthControllerTest {
    }
 
 
-    // testInvalidCredentialsOnAuthenticate
+    /**
+     * Tests the scenario where invalid credentials are provided during authentication.
+     * It simulates the case where the authentication service throws an AuthenticationException
+     * due to incorrect username or password, and verifies that the controller returns
+     * an unauthorized status with an appropriate error message in the response body.
+     */
     @Test
     void testInvalidCredentialsOnAuthenticate() {
         // Prepare test data
@@ -205,7 +231,12 @@ public class AuthControllerTest {
                 ((StandardResponse) responseEntity.getBody()).getMessage());
     }
 
-   // testErrorResponseOnAuthenticate
+    /**
+     * Tests the scenario where an error response is returned during authentication.
+     * It simulates the case where the authentication service throws an AuthenticationException
+     * due to incorrect username or password, and verifies that the controller returns
+     * an unauthorized status with an appropriate error message in the response body.
+     */
     @Test
     void testErrorResponseOnAuthenticate() {
         // Prepare test data
@@ -231,7 +262,11 @@ public class AuthControllerTest {
                 ((StandardResponse) responseEntity.getBody()).getMessage());
     }
 
-   // testAuthenticationExceptionHandling
+    /**
+     * Tests the handling of authentication exceptions by the controller.
+     * It simulates the scenario where the authentication service throws an AuthenticationException,
+     * and verifies that the controller returns an unauthorized status with an appropriate error message in the response body.
+     */
     @Test
     void testAuthenticationExceptionHandling() {
         // Prepare test data
@@ -255,7 +290,10 @@ public class AuthControllerTest {
                 ((StandardResponse) responseEntity.getBody()).getMessage());
     }
 
-   // testTestEndpoint
+    /**
+     * Tests the endpoint for testing purposes.
+     * It verifies that the controller method returns the expected response message.
+     */
     @Test
     void testTestEndpoint() {
         // Call the controller method
@@ -265,7 +303,10 @@ public class AuthControllerTest {
         assertEquals("Authenticated", response);
     }
 
-   // testRegisterEndpoint
+    /**
+     * Tests the endpoint for user registration.
+     * It verifies that the controller method returns the expected response status code and body.
+     */
     @Test
     void testRegisterEndpoint() {
         // Prepare test data
@@ -282,5 +323,4 @@ public class AuthControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode()); // Check for correct HTTP status code
         assertEquals(authResponse, responseEntity.getBody()); // Ensure the response body is correct
     }
-
 }
