@@ -1,7 +1,10 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.BranchDTO;
+import com.lifepill.possystem.dto.EmployerDTO;
+import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
 import com.lifepill.possystem.service.BranchService;
+import com.lifepill.possystem.service.EmployerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -25,6 +29,9 @@ class BranchControllerTest {
 
     @Mock
     private BranchService branchService;
+
+    @Mock
+    private EmployerService employerService;
 
     @InjectMocks
     private BranchController branchController;
@@ -58,5 +65,39 @@ class BranchControllerTest {
                 .andExpect(content().bytes(imageData));
     }
 
+    @Test
+    void getBranchById() throws Exception {
+        BranchDTO branchDTO = new BranchDTO();
+        branchDTO.setBranchId(1L);
+        branchDTO.setBranchName("Test Branch");
+        when(branchService.getBranchById(1)).thenReturn(branchDTO);
+        mockMvc.perform(get("/lifepill/v1/branch/get-by-id?id=1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.branchId").value(1))
+                .andExpect(jsonPath("$.branchName").value("Test Branch"));
+    }
 
+    @Test
+    void deleteBranch() throws Exception {
+        when(branchService.deleteBranch(1)).thenReturn("deleted");
+        mockMvc.perform(delete("/lifepill/v1/branch/delete-branch/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("deleted"));
+    }
+
+    @Test
+    void getAllCashiersByBranchId() throws Exception {
+        List<EmployerDTO> employerDTOS = Collections.singletonList(new EmployerDTO());
+        when(employerService.getAllEmployerByBranchId(1)).thenReturn(employerDTOS);
+        mockMvc.perform(get("/lifepill/v1/branch/employer/by-branch/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0]").exists());
+    }
+
+    @Test
+    void testEmployer() throws Exception {
+        mockMvc.perform(get("/lifepill/v1/branch/branch-test"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Branch test successful"));
+    }
 }
