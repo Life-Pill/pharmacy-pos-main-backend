@@ -75,7 +75,7 @@ public class AuthController {
             cookie.setPath("/"); // Set the cookie's path to root ("/") to make it accessible from any path
             response.addCookie(cookie);
 
-            authResponse.setMessage("Successfully logged in."); // Set the success message
+            authResponse.setMessage("Successfully logged in.");
 
             // Create a map or a custom response object to return both authResponse and employerDetails
             Map<String, Object> responseData = new HashMap<>();
