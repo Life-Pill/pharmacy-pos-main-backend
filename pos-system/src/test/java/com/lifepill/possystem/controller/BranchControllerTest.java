@@ -25,6 +25,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Unit tests for the BranchController class.
+ */
 class BranchControllerTest {
 
     @Mock
@@ -38,12 +41,18 @@ class BranchControllerTest {
 
     private MockMvc mockMvc;
 
+    /**
+     * Sets up mock MVC before each test.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(branchController).build();
     }
 
+    /**
+     * Test for saving a branch.
+     */
     @Test
     void saveBranch() throws Exception {
         MockMultipartFile image = new MockMultipartFile("image", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test image".getBytes());
@@ -55,6 +64,9 @@ class BranchControllerTest {
         verify(branchService, times(1)).saveBranch(any(BranchDTO.class), any());
     }
 
+    /**
+     * Test for viewing an image.
+     */
     @Test
     void viewImage() throws Exception {
         byte[] imageData = "test image data".getBytes();
@@ -65,6 +77,9 @@ class BranchControllerTest {
                 .andExpect(content().bytes(imageData));
     }
 
+    /**
+     * Test for getting a branch by its ID.
+     */
     @Test
     void getBranchById() throws Exception {
         BranchDTO branchDTO = new BranchDTO();
@@ -77,6 +92,9 @@ class BranchControllerTest {
                 .andExpect(jsonPath("$.branchName").value("Test Branch"));
     }
 
+    /**
+     * Test for deleting a branch.
+     */
     @Test
     void deleteBranch() throws Exception {
         when(branchService.deleteBranch(1)).thenReturn("deleted");
@@ -85,6 +103,9 @@ class BranchControllerTest {
                 .andExpect(content().string("deleted"));
     }
 
+    /**
+     * Test for getting all cashiers by branch ID.
+     */
     @Test
     void getAllCashiersByBranchId() throws Exception {
         List<EmployerDTO> employerDTOS = Collections.singletonList(new EmployerDTO());
@@ -94,6 +115,9 @@ class BranchControllerTest {
                 .andExpect(jsonPath("$[0]").exists());
     }
 
+    /**
+     * Test for a branch test.
+     */
     @Test
     void testEmployer() throws Exception {
         mockMvc.perform(get("/lifepill/v1/branch/branch-test"))
