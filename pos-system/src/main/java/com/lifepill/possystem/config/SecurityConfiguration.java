@@ -12,8 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.firewall.HttpFirewall;
-import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.web.filter.CorsFilter;
+
 
 import static com.lifepill.possystem.entity.enums.Role.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -30,6 +30,9 @@ public class SecurityConfiguration {
     AuthenticationProvider authenticationProvider;
     @Autowired
     JwtAuthFilter jwtAuthFilter;
+    @Autowired
+    CorsFilter corsFilter;
+
 
     /**
      * Configures security filter chain.
@@ -42,6 +45,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+//                .addFilterBefore(corsFilter, JwtAuthFilter.class)
                 .authorizeHttpRequests(req ->
                         req.antMatchers("/lifepill/v1/auth/**",
                                         "/swagger-ui/index.html#/",
@@ -61,16 +65,26 @@ public class SecurityConfiguration {
                                 //.antMatchers( "/lifepill/v1/admin/**").permitAll()
                                 .antMatchers("/lifepill/v1/cashierNew/**").hasRole(CASHIER.name())
                                // .antMatchers(POST, "/lifepill/v1/cashierNew/**").hasAnyAuthority(CASHIER_CREATE.name(),OWNER_CREATE.name())
-                                .antMatchers("lifepill/v1/branch/**","/lifepill/v1/branch-summary/sales-summary").hasAnyRole(OWNER.name())
-                                .antMatchers("lifepill/v1/employers/**").hasAnyRole(OWNER.name(), MANAGER.name())
-                                .antMatchers("lifepill/v1/cashier/**").hasAnyRole(CASHIER.name(), MANAGER.name(), OWNER.name())
-                                .antMatchers("lifepill/v1/owner/**").hasRole(OWNER.name())
-                                .antMatchers("lifepill/v1/branch-manager/**").hasAnyRole(MANAGER.name(), OWNER.name())
-                                .antMatchers("/lifepill/v1/item-Category/**").hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
-                                .antMatchers("/lifepill/v1/item/**").hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
-                                .antMatchers("/lifepill/v1/order/**").hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
-                                .antMatchers("/lifepill/v1/supplierCompanies/**").hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
-                                .antMatchers("/lifepill/v1/supplier/**").hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
+                                .antMatchers("lifepill/v1/branch/**","/lifepill/v1/branch-summary/sales-summary")
+                                .hasAnyRole(OWNER.name())
+                                .antMatchers("lifepill/v1/employers/**")
+                                .hasAnyRole(OWNER.name(), MANAGER.name())
+                                .antMatchers("lifepill/v1/cashier/**")
+                                .hasAnyRole(CASHIER.name(), MANAGER.name(), OWNER.name())
+                                .antMatchers("lifepill/v1/owner/**")
+                                .hasRole(OWNER.name())
+                                .antMatchers("lifepill/v1/branch-manager/**")
+                                .hasAnyRole(MANAGER.name(), OWNER.name())
+                                .antMatchers("/lifepill/v1/item-Category/**")
+                                .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
+                                .antMatchers("/lifepill/v1/item/**")
+                                .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
+                                .antMatchers("/lifepill/v1/order/**")
+                                .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
+                                .antMatchers("/lifepill/v1/supplierCompanies/**")
+                                .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
+                                .antMatchers("/lifepill/v1/supplier/**")
+                                .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

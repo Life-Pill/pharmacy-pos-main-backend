@@ -2,7 +2,6 @@ package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
-import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
 import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.service.EmployerService;
 import org.junit.jupiter.api.BeforeEach;
