@@ -30,8 +30,6 @@ public class SecurityConfiguration {
     AuthenticationProvider authenticationProvider;
     @Autowired
     JwtAuthFilter jwtAuthFilter;
-    @Autowired
-    CorsFilter corsFilter;
 
 
     /**
@@ -45,7 +43,6 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .addFilterBefore(corsFilter, JwtAuthFilter.class)
                 .authorizeHttpRequests(req ->
                         req.antMatchers("/lifepill/v1/auth/**",
                                         "/swagger-ui/index.html#/",
