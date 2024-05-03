@@ -323,4 +323,5 @@ public class AuthControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode()); // Check for correct HTTP status code
         assertEquals(authResponse, responseEntity.getBody()); // Ensure the response body is correct
     }
+
 }
