@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/lifepill/v1/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5137"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"}, allowCredentials = "true")
 public class AuthController {
 
     private final AuthService authService;
