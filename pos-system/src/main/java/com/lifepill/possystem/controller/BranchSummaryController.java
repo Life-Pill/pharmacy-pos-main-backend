@@ -18,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("lifepill/v1/branch-summary")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000", "http://localhost:5137"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000", "http://localhost:5137"},allowCredentials = "true")
 public class BranchSummaryController {
 
     @Autowired
