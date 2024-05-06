@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    tools {
+        jdk 'Java17'
+        maven 'maven_3_9_6'
+    }
+    stages {
+        stage("Cleanup Workspace") {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage("Checkout from SCM") {
+            steps {
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/Life-Pill/pharmacy-pos-backend'
+            }
+        }
+
+        stage("Build Application") {
+            steps {
+                // Navigate into the pos-system directory
+                dir('pos-system') {
+                    sh "mvn clean package"
+                }
+            }
+        }
+
+        stage("Test Application") {
+            steps {
+                // Navigate into the pos-system directory
+                dir('pos-system') {
+                    sh "mvn test"
+                }
+            }
+        }
+    }
+}
