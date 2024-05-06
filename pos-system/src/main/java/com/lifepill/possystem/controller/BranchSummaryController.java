@@ -32,7 +32,8 @@ public class BranchSummaryController {
      */
     @GetMapping("/sales-summary")
     public ResponseEntity<StandardResponse> getAllBranchesWithSales() {
-        List<PharmacyBranchResponseDTO> allBranchesWithSales = branchSummaryService.getAllBranchesWithSales();
+        List<PharmacyBranchResponseDTO> allBranchesWithSales = branchSummaryService
+                .getAllBranchesWithSales();
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(
                         201,
@@ -47,7 +48,8 @@ public class BranchSummaryController {
      * Retrieves sales summary of a specific branch by its ID.
      *
      * @param branchId The ID of the branch
-     * @return ResponseEntity containing StandardResponse with status 201 (SUCCESS) and PharmacyBranchResponseDTO
+     * @return ResponseEntity containing StandardResponse with status 201 (SUCCESS)
+     * and PharmacyBranchResponseDTO
      */
     @GetMapping(path = "/sales-summary/{id}")
     public ResponseEntity<StandardResponse> getBranchSalesById(
@@ -69,13 +71,15 @@ public class BranchSummaryController {
      * Retrieves all pharmacy data for a selected date.
      *
      * @param date The selected date.
-     * @return List of PharmacyBranchResponseDTO containing pharmacy data for the selected date.
+     * @return List of PharmacyBranchResponseDTO containing pharmacy data
+     * for the selected date.
      */
     @GetMapping("/pharmacy-summary-by-date/")
     public ResponseEntity<StandardResponse> getPharmacyDataByDate(
             @RequestParam("date")
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
-        List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService.getPharmacyDataByDate(date);
+        List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService
+                .getPharmacyDataByDate(date);
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(
                         201,
@@ -118,7 +122,8 @@ public class BranchSummaryController {
      *
      * @param month The month for which to retrieve the summary (1-12).
      * @param year  The year for which to retrieve the summary.
-     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with the summary of sales for the given month.
+     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with
+     * the summary of sales for the given month.
      */
     @GetMapping("/monthly-summary")
     public ResponseEntity<StandardResponse> getMonthlySummary(
@@ -140,7 +145,8 @@ public class BranchSummaryController {
      * Endpoint to retrieve a summary of sales for the given year.
      *
      * @param year The year for which to retrieve the summary.
-     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with the summary of sales for the given year.
+     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with
+     * the summary of sales for the given year.
      */
     @GetMapping("/yearly-summary")
     public ResponseEntity<StandardResponse> getYearlySummary(
@@ -160,7 +166,8 @@ public class BranchSummaryController {
     /**
      * Retrieves total details of all pharmacy branches.
      *
-     * @return ResponseEntity containing StandardResponse with status 200 (OK) and AllPharmacySummaryResponseDTO
+     * @return ResponseEntity containing StandardResponse with status 200 (OK) and
+     * AllPharmacySummaryResponseDTO
      */
     @GetMapping("/all-branches-summary")
     public ResponseEntity getAllPharmacySummary() {

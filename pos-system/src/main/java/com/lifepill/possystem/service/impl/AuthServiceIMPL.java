@@ -55,13 +55,12 @@ public class AuthServiceIMPL implements AuthService {
                 employerRepository.existsAllByEmployerEmail(registerRequest.getEmployerEmail())) {
             throw new EntityDuplicationException("Employer already exists");
         } else {
-            Branch branch = branchRepository.findById(registerRequest.getBranchId())
+            Branch branch = branchRepository.findById(registerRequest.getBranch())
                     .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
-                            + registerRequest.getBranchId()));
+                            + registerRequest.getBranch()));
 
             // Encode the password before saving
             String encodedPassword = passwordEncoder.encode(registerRequest.getEmployerPassword());
-
             var employer = modelMapper.map(registerRequest, Employer.class);
             employer.setBranch(branch);
             employer.setEmployerPassword(encodedPassword); // Set the encoded password
