@@ -1,4 +1,4 @@
-package com.lifepill.possystem.controller;
+package com.lifepill.possystem.dto;
 
 
 import com.lifepill.possystem.entity.EmployerBankDetails;
@@ -20,7 +20,6 @@ public class EmployerWithBankDTO {
     private String employerNicName;
     private String employerFirstName;
     private String employerLastName;
-    private String employerPassword;
     private String employerEmail;
     private String employerPhone;
     private String employerAddress;
@@ -32,7 +31,6 @@ public class EmployerWithBankDTO {
     private Role role;
     private int pin;
     private byte[] profileImage;
-    //private Order order;
 
     private EmployerBankDetails employerBankDetails;
 }

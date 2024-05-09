@@ -1,9 +1,10 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.EmployerDTO;
+import com.lifepill.possystem.dto.EmployerWithBankDTO;
 import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
-import com.lifepill.possystem.entity.enums.Role;
+import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
 /**
@@ -127,25 +126,33 @@ public class EmployerController {
     /**
      * Updates the bank account details of an employer.
      *
-     * @param employerId                  The ID of the employer whose bank account details are to be updated.
-     * @param employerUpdateBankAccountDTO DTO containing updated bank account details of the employer.
-     * @return A string indicating the success of the operation.
+     * @param employerId                    The ID of the employer to update.
+     * @param employerUpdateBankAccountDTO  The DTO containing the updated bank account details.
+     * @return                              ResponseEntity containing the updated employer data along with bank account details,
+     *                                      or an HTTP status indicating the failure if the employer is not found.
      */
-
-    @PutMapping("/updateBankAccountDetails/{employerId}")
+    @PutMapping("/updateEmployerBankAccountDetailsWithId/{employerId}")
     @Transactional
-    public ResponseEntity<StandardResponse> updateEmployerBankAccountDetails(
+    public ResponseEntity<StandardResponse> updateEmployerBankAccountDetailsWithId(
             @PathVariable long employerId,
             @RequestBody EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO
     ) {
-        String message = employerService.updateEmployerBankAccountDetailsByCashierId(
-                employerId, employerUpdateBankAccountDTO
-        );
-        return new ResponseEntity<>(
-                new StandardResponse(201, message, null)
-                , HttpStatus.OK
-        );
+        try {
+            EmployerWithBankDTO employerWithBankDTO = employerService.updateEmployerBankAccountDetails(employerUpdateBankAccountDTO);
+
+
+            return new ResponseEntity<>(
+                    new StandardResponse(201, "SUCCESS", employerWithBankDTO),
+                    HttpStatus.OK
+            );
+        } catch (NotFoundException ex) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, ex.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
     }
+
 
     /**
      * Retrieves an employer along with their bank details.
@@ -153,7 +160,7 @@ public class EmployerController {
      * @return ResponseEntity containing the employer DTO with bank details if found,
      *         or an HTTP status indicating the failure if the employer is not found.
      */
-    @GetMapping("/employer/{employerId}")
+    @GetMapping("/getEmployerWithBankDetails/{employerId}")
     public ResponseEntity<StandardResponse> getEmployerWithBankDetails(@PathVariable long employerId) {
         // Retrieve employer DTO with bank details
         EmployerWithBankDTO employerWithBankDTO = employerService.getEmployerByIdWithBankDetails(employerId);
@@ -168,7 +175,7 @@ public class EmployerController {
         } else {
             // Return an HTTP status indicating the employer is not found
             return new ResponseEntity<>(
-                    new StandardResponse(404, "Employer not found", null),
+                    new StandardResponse(404, "Employer not found", employerWithBankDTO),
                     HttpStatus.NOT_FOUND
             );
         }

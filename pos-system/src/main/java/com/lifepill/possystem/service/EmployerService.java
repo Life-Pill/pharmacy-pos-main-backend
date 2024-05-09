@@ -1,7 +1,8 @@
 package com.lifepill.possystem.service;
 
 
-import com.lifepill.possystem.controller.EmployerWithBankDTO;
+import com.lifepill.possystem.dto.EmployerBankDetailsDTO;
+import com.lifepill.possystem.dto.EmployerWithBankDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
@@ -33,7 +34,7 @@ public interface EmployerService {
 
     String updateRecentPin(EmployerRecentPinUpdateDTO employerRecentPinUpdateDTO);
 
-    String updateEmployerBankAccountDetails(EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO);
+    EmployerWithBankDTO updateEmployerBankAccountDetails(EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO);
 
     List<EmployerUpdateBankAccountDTO> getAllEmployerBankDetails();
 
@@ -50,5 +51,7 @@ public interface EmployerService {
     EmployerDTO getEmployerByUsername(String username);
 
     EmployerWithBankDTO getEmployerByIdWithBankDetails(long employerId);
+
+    EmployerBankDetailsDTO getEmployerBankDetailsById(long employerId);
 
 }
