@@ -502,6 +502,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    /**
+     * Retrieves the bank details of an employer by their ID.
+     *
+     * @param employerId The ID of the employer whose bank details are to be retrieved.
+     * @return EmployerBankDetailsDTO containing the bank details of the specified employer.
+     * @throws EntityNotFoundException if no employer is found with the given ID.
+     */
     @Override
     public EmployerBankDetailsDTO getEmployerBankDetailsById(long employerId) {
         Employer employer = employerRepository.findById(employerId)
@@ -513,6 +520,11 @@ public class EmployerServiceIMPL implements EmployerService {
         return bankDetailsDTO;
     }
 
+    /**
+     * Retrieves a list of employers along with their bank details.
+     *
+     * @return List of EmployerWithBankDTO objects containing details of all employers with their bank details.
+     */
     @Override
     public List<EmployerWithBankDTO> getAllEmployersWithBankDetails() {
         List<EmployerWithBankDTO> employersWithBankDetails = new ArrayList<>();
@@ -534,7 +546,13 @@ public class EmployerServiceIMPL implements EmployerService {
         return employersWithBankDetails;
     }
 
-
+    /**
+     * Retrieves an employer along with their bank details by the employer's ID.
+     *
+     * @param employerId The ID of the employer whose details are to be retrieved.
+     * @return EmployerWithBankDTO containing the details of the specified employer along with their bank details.
+     * @throws NotFoundException if no employer is found with the given ID.
+     */
     public EmployerWithBankDTO getEmployerWithBankDetailsById(long employerId) {
         // Retrieve the employer data by ID
         Employer employerDTO = employerRepository.findById(employerId)
@@ -548,10 +566,8 @@ public class EmployerServiceIMPL implements EmployerService {
         // set branch id
         employerWithBankDTO.setBranchId(branchId);
 
-
         System.out.println(employerWithBankDTO);
 
         return employerWithBankDTO;
     }
-
 }

@@ -49,7 +49,7 @@ public class EmployerController {
      * @return A string indicating the success of the operation.
      */
     @PostMapping("/save-without-image")
-    public  ResponseEntity<StandardResponse> saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
+    public ResponseEntity<StandardResponse> saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
         employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
         return new ResponseEntity<>(
                 new StandardResponse(201, "successfully saved", cashierWithoutImageDTO),
@@ -152,11 +152,11 @@ public class EmployerController {
     /**
      * Updates the bank account details of an employer.
      *
-     * @param employerId                    The ID of the employer to update.
-     * @param employerUpdateBankAccountDTO  The DTO containing the updated bank account details.
-     * @return                              ResponseEntity containing the updated employer data
-     *                                      along with bank account details,
-     *                                      or an HTTP status indicating the failure if the employer is not found.
+     * @param employerId                   The ID of the employer to update.
+     * @param employerUpdateBankAccountDTO The DTO containing the updated bank account details.
+     * @return ResponseEntity containing the updated employer data
+     * along with bank account details,
+     * or an HTTP status indicating the failure if the employer is not found.
      */
     @PutMapping("/updateEmployerBankAccountDetailsWithId/{employerId}")
     @Transactional
@@ -275,13 +275,12 @@ public class EmployerController {
         );
     }
 
-
     /**
      * Retrieves bank details of an employer by ID.
      *
      * @param employerId The ID of the employer.
      * @return ResponseEntity containing the bank details of the employer,
-     *         or an HTTP status indicating the failure if the employer is not found.
+     * or an HTTP status indicating the failure if the employer is not found.
      */
     @GetMapping("/bank-details/{employerId}")
     public ResponseEntity<StandardResponse> getEmployerBankDetailsById(@PathVariable long employerId) {
@@ -310,7 +309,7 @@ public class EmployerController {
      * Retrieves all employers with bank details.
      *
      * @return ResponseEntity containing a list of EmployerWithBankDTO objects,
-     *         or an HTTP status indicating the failure if no employers are found.
+     * or an HTTP status indicating the failure if no employers are found.
      */
     @GetMapping("/employers-with-bank-details")
     public ResponseEntity<StandardResponse> getAllEmployersWithBankDetails() {
@@ -325,18 +324,16 @@ public class EmployerController {
         }
     }
 
-
     /**
      * Retrieves an employer along with bank details by ID.
      *
      * @param employerId The ID of the employer.
      * @return ResponseEntity containing the employer data along with bank details,
-     *         or an HTTP status indicating the failure if the employer is not found.
+     * or an HTTP status indicating the failure if the employer is not found.
      */
     @GetMapping("/with-bank-details/{employerId}")
-  public EmployerWithBankDTO getEmployerWithBankDetailsById(@PathVariable long employerId) {
+    public EmployerWithBankDTO getEmployerWithBankDetailsById(@PathVariable long employerId) {
         EmployerWithBankDTO employerWithBankDTO = employerService.getEmployerWithBankDetailsById(employerId);
         return employerWithBankDTO;
     }
-
 }
