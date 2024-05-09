@@ -9,7 +9,6 @@ public class EmployerBankDetailsMapper {
         // Map fields from EmployerBankDetails to EmployerBankDetailsDTO
         EmployerBankDetailsDTO dto = new EmployerBankDetailsDTO();
         dto.setBankName(employerBankDetails.getBankName());
-        // Map other fields...
         return dto;
     }
 
@@ -17,8 +16,6 @@ public class EmployerBankDetailsMapper {
 
         EmployerBankDetails entity = new EmployerBankDetails();
         entity.setBankName(dto.getBankName());
-        // Map other fields...
-
         return entity;
     }
 }

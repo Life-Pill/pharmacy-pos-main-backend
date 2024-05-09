@@ -9,6 +9,7 @@ import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
+import com.lifepill.possystem.util.mappers.EmployerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,9 @@ public class EmployerController {
 
     @Autowired
     private EmployerService employerService;
+
+    @Autowired
+    private EmployerMapper employerMapper;
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
@@ -105,7 +109,10 @@ public class EmployerController {
      */
     @PutMapping("/update/{employerId}")
     @Transactional
-    public String updateEmployer(@PathVariable Long employerId, @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO) {
+    public String updateEmployer(
+            @PathVariable Long employerId,
+            @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO
+    ) {
         String message = employerService.updateEmployer(employerId, cashierAllDetailsUpdateDTO);
         return message;
     }
@@ -130,7 +137,8 @@ public class EmployerController {
      *
      * @param employerId                    The ID of the employer to update.
      * @param employerUpdateBankAccountDTO  The DTO containing the updated bank account details.
-     * @return                              ResponseEntity containing the updated employer data along with bank account details,
+     * @return                              ResponseEntity containing the updated employer data
+     *                                      along with bank account details,
      *                                      or an HTTP status indicating the failure if the employer is not found.
      */
     @PutMapping("/updateEmployerBankAccountDetailsWithId/{employerId}")
@@ -140,34 +148,24 @@ public class EmployerController {
             @RequestBody EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO
     ) {
         try {
-            EmployerWithBankDTO employerWithBankDTO = employerService.updateEmployerBankAccountDetails(employerUpdateBankAccountDTO);
-            EmployerBankDetailsDTO bankDetailsDTO = employerService.getEmployerBankDetailsById(employerId);
-            employerWithBankDTO.setEmployerBankDetails(mapBankDetailsDTOToEntity(bankDetailsDTO)); // Map DTO to Entity
-            return ResponseEntity.ok(new StandardResponse(201, "SUCCESS", employerWithBankDTO));
+            EmployerWithBankDTO employerWithBankDTO = employerService
+                    .updateEmployerBankAccountDetails(employerUpdateBankAccountDTO);
+            EmployerBankDetailsDTO bankDetailsDTO = employerService
+                    .getEmployerBankDetailsById(employerId);
+            employerWithBankDTO.setEmployerBankDetails(
+                    employerMapper.mapBankDetailsDTOToEntity(bankDetailsDTO)
+            ); // Utilize the mapper// Map DTO to Entity
+            return ResponseEntity.ok(
+                    new StandardResponse(
+                            201, "SUCCESS", employerWithBankDTO)
+            );
         } catch (NotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new StandardResponse(404, ex.getMessage(), null));
+                    .body(
+                            new StandardResponse(404, ex.getMessage(), null)
+                    );
         }
     }
-
-    // Utility method to map BankDetailsDTO to EmployerBankDetails Entity
-    private EmployerBankDetails mapBankDetailsDTOToEntity(EmployerBankDetailsDTO bankDetailsDTO) {
-        if (bankDetailsDTO == null) {
-            return null;
-        }
-        EmployerBankDetails employerBankDetails = new EmployerBankDetails();
-        employerBankDetails.setBankName(bankDetailsDTO.getBankName());
-        employerBankDetails.setBankBranchName(bankDetailsDTO.getBankBranchName());
-        employerBankDetails.setBankAccountNumber(bankDetailsDTO.getBankAccountNumber());
-        employerBankDetails.setEmployerDescription(bankDetailsDTO.getEmployerDescription());
-        employerBankDetails.setMonthlyPayment(bankDetailsDTO.getMonthlyPayment());
-        employerBankDetails.setMonthlyPaymentStatus(bankDetailsDTO.getMonthlyPaymentStatus());
-        employerBankDetails.setEmployerId(bankDetailsDTO.getEmployerId());
-        employerBankDetails.setEmployerBankDetailsId(bankDetailsDTO.getEmployerBankDetailsId());
-        return employerBankDetails;
-    }
-
-
 
     /**
      * Retrieves an employer along with their bank details.
