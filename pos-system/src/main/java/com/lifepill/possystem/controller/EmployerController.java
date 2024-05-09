@@ -117,7 +117,9 @@ public class EmployerController {
      */
     @PutMapping("/updateAccountDetails")
     @Transactional
-    public String updateEmployerAccountDetails(@RequestBody EmployerUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO) {
+    public String updateEmployerAccountDetails(
+            @RequestBody EmployerUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO
+    ) {
         String message = employerService.updateEmployerAccountDetails(cashierUpdateAccountDetailsDTO);
         return message;
     }
@@ -126,19 +128,51 @@ public class EmployerController {
      * Updates the bank account details of an employer.
      *
      * @param employerId                  The ID of the employer whose bank account details are to be updated.
-     * @param cashierUpdateBankAccountDTO DTO containing updated bank account details of the employer.
+     * @param employerUpdateBankAccountDTO DTO containing updated bank account details of the employer.
      * @return A string indicating the success of the operation.
      */
+
     @PutMapping("/updateBankAccountDetails/{employerId}")
     @Transactional
-    public String updateEmployerBankAccountDetails(
+    public ResponseEntity<StandardResponse> updateEmployerBankAccountDetails(
             @PathVariable long employerId,
-            @RequestBody EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO
+            @RequestBody EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO
     ) {
         String message = employerService.updateEmployerBankAccountDetailsByCashierId(
-                employerId, cashierUpdateBankAccountDTO
+                employerId, employerUpdateBankAccountDTO
         );
-        return message;
+        return new ResponseEntity<>(
+                new StandardResponse(201, message, null)
+                , HttpStatus.OK
+        );
+    }
+
+    /**
+     * Retrieves an employer along with their bank details.
+     * @param employerId The ID of the employer to retrieve.
+     * @return ResponseEntity containing the employer DTO with bank details if found,
+     *         or an HTTP status indicating the failure if the employer is not found.
+     */
+    @GetMapping("/employer/{employerId}")
+    public ResponseEntity<StandardResponse> getEmployerWithBankDetails(@PathVariable long employerId) {
+        // Retrieve employer DTO with bank details
+        EmployerDTO employerDTO = employerService.getEmployerByIdWithBankDetails(employerId);
+
+        // Check if the employer exists
+        if (employerDTO != null) {
+            // Return the employer DTO with bank details
+            return new ResponseEntity<>(
+                    new StandardResponse(201, "SUCCESS", employerDTO),
+                    HttpStatus.OK
+            );
+        } else {
+            // Return an HTTP status indicating the employer is not found
+            return new ResponseEntity<>(
+                    new StandardResponse(404, "Employer not found", null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
     }
 
     /**

@@ -31,7 +31,6 @@ public class SecurityConfiguration {
     @Autowired
     JwtAuthFilter jwtAuthFilter;
 
-
     /**
      * Configures security filter chain.
      *

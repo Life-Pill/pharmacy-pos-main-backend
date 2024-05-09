@@ -8,6 +8,7 @@ import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.exception.EntityDuplicationException;
+import com.lifepill.possystem.exception.EntityNotFoundException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerBankDetailsRepository;
@@ -511,4 +512,14 @@ public class EmployerServiceIMPL implements EmployerService {
             return null; // Or throw an exception, or return a default DTO
         }
     }
+
+    @Override
+    public EmployerDTO getEmployerByIdWithBankDetails(long employerId) {
+        Employer employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new EntityNotFoundException("Employer not found with id: " + employerId));
+
+        return modelMapper.map(employer, EmployerDTO.class);
+    }
+
+
 }
