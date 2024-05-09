@@ -242,7 +242,6 @@ public class EmployerServiceIMPL implements EmployerService {
             // Check if the employer already has bank details
             EmployerBankDetails existingBankDetails = cashierBankDetailsRepo.findById(employerId).orElse(null);
 
-            System.out.println(existingBankDetails);
 
             if (existingBankDetails != null) {
                 // Update existing bank details
@@ -287,7 +286,9 @@ public class EmployerServiceIMPL implements EmployerService {
             employerWithBankDTO.setPin(employer.getPin());
 
             Employer employerBankDetailsId = employerRepository.getReferenceById(employerId);
-            System.out.println(employerBankDetailsId.getEmployerBankDetails());
+
+            employerWithBankDTO.setEmployerBankDetails(employerBankDetailsId.getEmployerBankDetails());
+          //  System.out.println(employerBankDetailsId.getEmployerBankDetails());
 
             return employerWithBankDTO;
         } else {

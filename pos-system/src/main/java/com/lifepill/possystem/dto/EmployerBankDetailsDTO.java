@@ -19,5 +19,5 @@ public class EmployerBankDetailsDTO {
     private double monthlyPayment;
     private Boolean monthlyPaymentStatus;
     private long employerId;
-    private Set<Employer> employers;
+//    private Set<Employer> employers;
 }

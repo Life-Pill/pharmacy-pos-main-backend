@@ -1,9 +1,11 @@
 package com.lifepill.possystem.controller;
 
+import com.lifepill.possystem.dto.EmployerBankDetailsDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.EmployerWithBankDTO;
 import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
+import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
@@ -139,19 +141,32 @@ public class EmployerController {
     ) {
         try {
             EmployerWithBankDTO employerWithBankDTO = employerService.updateEmployerBankAccountDetails(employerUpdateBankAccountDTO);
-
-
-            return new ResponseEntity<>(
-                    new StandardResponse(201, "SUCCESS", employerWithBankDTO),
-                    HttpStatus.OK
-            );
+            EmployerBankDetailsDTO bankDetailsDTO = employerService.getEmployerBankDetailsById(employerId);
+            employerWithBankDTO.setEmployerBankDetails(mapBankDetailsDTOToEntity(bankDetailsDTO)); // Map DTO to Entity
+            return ResponseEntity.ok(new StandardResponse(201, "SUCCESS", employerWithBankDTO));
         } catch (NotFoundException ex) {
-            return new ResponseEntity<>(
-                    new StandardResponse(404, ex.getMessage(), null),
-                    HttpStatus.NOT_FOUND
-            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new StandardResponse(404, ex.getMessage(), null));
         }
     }
+
+    // Utility method to map BankDetailsDTO to EmployerBankDetails Entity
+    private EmployerBankDetails mapBankDetailsDTOToEntity(EmployerBankDetailsDTO bankDetailsDTO) {
+        if (bankDetailsDTO == null) {
+            return null;
+        }
+        EmployerBankDetails employerBankDetails = new EmployerBankDetails();
+        employerBankDetails.setBankName(bankDetailsDTO.getBankName());
+        employerBankDetails.setBankBranchName(bankDetailsDTO.getBankBranchName());
+        employerBankDetails.setBankAccountNumber(bankDetailsDTO.getBankAccountNumber());
+        employerBankDetails.setEmployerDescription(bankDetailsDTO.getEmployerDescription());
+        employerBankDetails.setMonthlyPayment(bankDetailsDTO.getMonthlyPayment());
+        employerBankDetails.setMonthlyPaymentStatus(bankDetailsDTO.getMonthlyPaymentStatus());
+        employerBankDetails.setEmployerId(bankDetailsDTO.getEmployerId());
+        employerBankDetails.setEmployerBankDetailsId(bankDetailsDTO.getEmployerBankDetailsId());
+        return employerBankDetails;
+    }
+
 
 
     /**
