@@ -39,5 +39,4 @@ public class EmployerBankDetails
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employerBankDetails")
     private Set<Employer> employers;
 
-
 }

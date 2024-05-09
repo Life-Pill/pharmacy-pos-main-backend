@@ -306,5 +306,37 @@ public class EmployerController {
         }
     }
 
+    /**
+     * Retrieves all employers with bank details.
+     *
+     * @return ResponseEntity containing a list of EmployerWithBankDTO objects,
+     *         or an HTTP status indicating the failure if no employers are found.
+     */
+    @GetMapping("/employers-with-bank-details")
+    public ResponseEntity<StandardResponse> getAllEmployersWithBankDetails() {
+        List<EmployerWithBankDTO> allEmployersWithBankDetails = employerService.getAllEmployersWithBankDetails();
+        if (allEmployersWithBankDetails != null && !allEmployersWithBankDetails.isEmpty()) {
+            return ResponseEntity.ok(
+                    new StandardResponse(200, "SUCCESS", allEmployersWithBankDetails)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new StandardResponse(404, "No employers found", null));
+        }
+    }
+
+
+    /**
+     * Retrieves an employer along with bank details by ID.
+     *
+     * @param employerId The ID of the employer.
+     * @return ResponseEntity containing the employer data along with bank details,
+     *         or an HTTP status indicating the failure if the employer is not found.
+     */
+    @GetMapping("/with-bank-details/{employerId}")
+  public EmployerWithBankDTO getEmployerWithBankDetailsById(@PathVariable long employerId) {
+        EmployerWithBankDTO employerWithBankDTO = employerService.getEmployerWithBankDetailsById(employerId);
+        return employerWithBankDTO;
+    }
 
 }

@@ -513,4 +513,45 @@ public class EmployerServiceIMPL implements EmployerService {
         return bankDetailsDTO;
     }
 
+    @Override
+    public List<EmployerWithBankDTO> getAllEmployersWithBankDetails() {
+        List<EmployerWithBankDTO> employersWithBankDetails = new ArrayList<>();
+
+        // Fetch all employers from the database
+        List<Employer> employers = employerRepository.findAll();
+
+        // Iterate through each employer and retrieve their bank details
+        for (Employer employer : employers) {
+            EmployerBankDetails bankDetails = cashierBankDetailsRepo.findByEmployerId(employer.getEmployerId());
+
+            // Map the employer and bank details to DTOs by model mappers
+            EmployerWithBankDTO employerWithBankDTO = modelMapper.map(employer, EmployerWithBankDTO.class);
+
+            // Add the employer with bank details DTO to the list
+            employersWithBankDetails.add(employerWithBankDTO);
+        }
+
+        return employersWithBankDetails;
+    }
+
+
+    public EmployerWithBankDTO getEmployerWithBankDetailsById(long employerId) {
+        // Retrieve the employer data by ID
+        Employer employerDTO = employerRepository.findById(employerId)
+                .orElseThrow(() -> new NotFoundException("Employer not found for ID: " + employerId));
+        // get branch id
+        long branchId = employerDTO.getBranch().getBranchId();
+
+        // Map the employer and bank details to DTOs
+        EmployerWithBankDTO employerWithBankDTO = modelMapper.map(employerDTO, EmployerWithBankDTO.class);
+
+        // set branch id
+        employerWithBankDTO.setBranchId(branchId);
+
+
+        System.out.println(employerWithBankDTO);
+
+        return employerWithBankDTO;
+    }
+
 }

@@ -52,5 +52,7 @@ public interface EmployerService {
 
     EmployerBankDetailsDTO getEmployerBankDetailsById(long employerId);
 
+    List<EmployerWithBankDTO> getAllEmployersWithBankDetails();
 
+    EmployerWithBankDTO getEmployerWithBankDetailsById(long employerId);
 }
