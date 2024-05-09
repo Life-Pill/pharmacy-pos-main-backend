@@ -44,9 +44,12 @@ public class EmployerController {
      * @return A string indicating the success of the operation.
      */
     @PostMapping("/save-without-image")
-    public String saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
+    public  ResponseEntity<StandardResponse> saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
         employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
-        return "saved";
+        return new ResponseEntity<>(
+                new StandardResponse(201, "successfully saved", cashierWithoutImageDTO),
+                HttpStatus.CREATED
+        );
     }
 
     /**
@@ -58,7 +61,7 @@ public class EmployerController {
      * @throws IOException If an I/O error occurs.
      */
     @PostMapping("/save-with-image")
-    public String saveEmployerWithImage(
+    public ResponseEntity<StandardResponse> saveEmployerWithImage(
             @ModelAttribute EmployerDTO employerDTO,
             @RequestParam("file") MultipartFile file
     )
@@ -72,7 +75,10 @@ public class EmployerController {
         }
         // Save the cashier along with the profile photo
         employerService.saveEmployer(employerDTO);
-        return "saved";
+        return new ResponseEntity<>(
+                new StandardResponse(201, "successfully saved", employerDTO),
+                HttpStatus.CREATED
+        );
     }
 
     /**
@@ -109,12 +115,15 @@ public class EmployerController {
      */
     @PutMapping("/update/{employerId}")
     @Transactional
-    public String updateEmployer(
+    public ResponseEntity<StandardResponse> updateEmployer(
             @PathVariable Long employerId,
             @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO
     ) {
         String message = employerService.updateEmployer(employerId, cashierAllDetailsUpdateDTO);
-        return message;
+        return new ResponseEntity<>(
+                new StandardResponse(201, message, null),
+                HttpStatus.OK
+        );
     }
 
     /**
@@ -125,11 +134,14 @@ public class EmployerController {
      */
     @PutMapping("/updateAccountDetails")
     @Transactional
-    public String updateEmployerAccountDetails(
+    public ResponseEntity<StandardResponse> updateEmployerAccountDetails(
             @RequestBody EmployerUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO
     ) {
         String message = employerService.updateEmployerAccountDetails(cashierUpdateAccountDetailsDTO);
-        return message;
+        return new ResponseEntity<>(
+                new StandardResponse(201, message, null),
+                HttpStatus.OK
+        );
     }
 
     /**
@@ -235,9 +247,12 @@ public class EmployerController {
      * @return A string indicating the success of the operation.
      */
     @DeleteMapping(path = "/delete-employerId/{id}")
-    public String deleteEmployer(@PathVariable(value = "id") int employerId) {
+    public ResponseEntity<StandardResponse> deleteEmployer(@PathVariable(value = "id") int employerId) {
         String deleted = employerService.deleteEmployer(employerId);
-        return deleted;
+        return new ResponseEntity<>(
+                new StandardResponse(201, deleted, null),
+                HttpStatus.OK
+        );
     }
 
     /**
