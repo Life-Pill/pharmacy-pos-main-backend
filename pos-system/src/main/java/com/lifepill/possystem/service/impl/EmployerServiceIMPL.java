@@ -288,7 +288,7 @@ public class EmployerServiceIMPL implements EmployerService {
             Employer employerBankDetailsId = employerRepository.getReferenceById(employerId);
 
             employerWithBankDTO.setEmployerBankDetails(employerBankDetailsId.getEmployerBankDetails());
-          //  System.out.println(employerBankDetailsId.getEmployerBankDetails());
+            //  System.out.println(employerBankDetailsId.getEmployerBankDetails());
 
             return employerWithBankDTO;
         } else {
@@ -310,7 +310,7 @@ public class EmployerServiceIMPL implements EmployerService {
             EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
             return employerDTO;
         }else {
-           throw  new NotFoundException("No employer found for that id");
+            throw  new NotFoundException("No employer found for that id");
         }
     }
 
@@ -440,7 +440,7 @@ public class EmployerServiceIMPL implements EmployerService {
             }
             return employerDTOList;
         }else {
-           // throw new RuntimeException("No Employer Found");
+            // throw new RuntimeException("No Employer Found");
             throw new NotFoundException("No Employer Found");
         }
     }
@@ -503,19 +503,6 @@ public class EmployerServiceIMPL implements EmployerService {
     }
 
     @Override
-    public EmployerWithBankDTO getEmployerByIdWithBankDetails(long employerId) {
-        Employer employer = employerRepository.findById(employerId)
-                .orElseThrow(() -> new EntityNotFoundException("Employer not found with id: " + employerId));
-
-        EmployerBankDetails bankDetails = employer.getEmployerBankDetails();
-
-        EmployerWithBankDTO employerWithBankDTO = modelMapper.map(employer, EmployerWithBankDTO.class);
-        employerWithBankDTO.setEmployerBankDetails(bankDetails);
-
-        return employerWithBankDTO;
-    }
-
-    @Override
     public EmployerBankDetailsDTO getEmployerBankDetailsById(long employerId) {
         Employer employer = employerRepository.findById(employerId)
                 .orElseThrow(() -> new EntityNotFoundException("Employer not found with id: " + employerId));
@@ -525,6 +512,5 @@ public class EmployerServiceIMPL implements EmployerService {
 
         return bankDetailsDTO;
     }
-
 
 }

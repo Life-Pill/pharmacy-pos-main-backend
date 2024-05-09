@@ -50,8 +50,7 @@ public interface EmployerService {
 
     EmployerDTO getEmployerByUsername(String username);
 
-    EmployerWithBankDTO getEmployerByIdWithBankDetails(long employerId);
-
     EmployerBankDetailsDTO getEmployerBankDetailsById(long employerId);
+
 
 }
