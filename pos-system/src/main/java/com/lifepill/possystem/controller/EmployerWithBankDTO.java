@@ -1,4 +1,5 @@
-package com.lifepill.possystem.dto;
+package com.lifepill.possystem.controller;
+
 
 import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.entity.enums.Gender;
@@ -13,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class EmployerDTO {
+public class EmployerWithBankDTO {
     private long employerId;
     private long branchId;
     private String employerNicName;
@@ -33,4 +34,5 @@ public class EmployerDTO {
     private byte[] profileImage;
     //private Order order;
 
+    private EmployerBankDetails employerBankDetails;
 }

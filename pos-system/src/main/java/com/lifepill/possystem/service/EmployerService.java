@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service;
 
 
+import com.lifepill.possystem.controller.EmployerWithBankDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
@@ -48,6 +49,6 @@ public interface EmployerService {
 
     EmployerDTO getEmployerByUsername(String username);
 
-    EmployerDTO getEmployerByIdWithBankDetails(long employerId);
+    EmployerWithBankDTO getEmployerByIdWithBankDetails(long employerId);
 
 }

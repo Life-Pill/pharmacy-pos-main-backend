@@ -156,13 +156,13 @@ public class EmployerController {
     @GetMapping("/employer/{employerId}")
     public ResponseEntity<StandardResponse> getEmployerWithBankDetails(@PathVariable long employerId) {
         // Retrieve employer DTO with bank details
-        EmployerDTO employerDTO = employerService.getEmployerByIdWithBankDetails(employerId);
+        EmployerWithBankDTO employerWithBankDTO = employerService.getEmployerByIdWithBankDetails(employerId);
 
         // Check if the employer exists
-        if (employerDTO != null) {
+        if (employerWithBankDTO != null) {
             // Return the employer DTO with bank details
             return new ResponseEntity<>(
-                    new StandardResponse(201, "SUCCESS", employerDTO),
+                    new StandardResponse(201, "SUCCESS", employerWithBankDTO),
                     HttpStatus.OK
             );
         } else {

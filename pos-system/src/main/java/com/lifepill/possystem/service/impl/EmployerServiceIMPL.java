@@ -1,5 +1,6 @@
 package com.lifepill.possystem.service.impl;
 
+import com.lifepill.possystem.controller.EmployerWithBankDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
@@ -514,11 +515,11 @@ public class EmployerServiceIMPL implements EmployerService {
     }
 
     @Override
-    public EmployerDTO getEmployerByIdWithBankDetails(long employerId) {
+    public EmployerWithBankDTO getEmployerByIdWithBankDetails(long employerId) {
         Employer employer = employerRepository.findById(employerId)
                 .orElseThrow(() -> new EntityNotFoundException("Employer not found with id: " + employerId));
 
-        return modelMapper.map(employer, EmployerDTO.class);
+        return modelMapper.map(employer, EmployerWithBankDTO.class);
     }
 
 
