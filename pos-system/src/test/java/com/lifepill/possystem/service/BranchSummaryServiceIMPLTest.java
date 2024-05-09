@@ -38,13 +38,11 @@ public class BranchSummaryServiceIMPLTest {
     @Mock
     private ModelMapper modelMapper;
 
-
     @Mock
     private OrderRepository orderRepository;
 
     @InjectMocks
     private BranchSummaryServiceIMPL branchSummaryService;
-
 
     @BeforeEach
     void setUp() {
@@ -62,7 +60,6 @@ public class BranchSummaryServiceIMPLTest {
         mockOrder1.setBranchId(3L);
         mockOrder1.setTotal(100.0);
         mockOrders.add(mockOrder1);
-
 
         // Mocking repository calls
         when(orderRepository.findAll()).thenReturn(mockOrders);

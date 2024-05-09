@@ -95,6 +95,10 @@ public class AuthServiceIMPL implements AuthService {
                     .orElseThrow(() -> new AuthenticationException("User not found"));
             String jwtToken = jwtService.generateToken(user);
 
+            System.out.println(user.getBranch().getBranchId());
+
+
+
             // Return the authentication response containing the token
             return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
         } catch (org.springframework.security.core.AuthenticationException e) {
@@ -116,10 +120,17 @@ public class AuthServiceIMPL implements AuthService {
         // Retrieve employer details DTO using EmployerService
         EmployerDTO employerDTO = employerService.getEmployerByUsername(username);
 
+        var user = employerRepository.findByEmployerEmail(username)
+                .orElseThrow(() -> new AuthenticationException("User not found"));
+
+
+        // set branch id
+        employerDTO.setBranchId(user.getBranch().getBranchId());
         // Convert EmployerDTO to EmployerAuthDetailsResponseDTO using ModelMapper
         EmployerAuthDetailsResponseDTO employerDetailsResponseDTO = modelMapper
                 .map(employerDTO, EmployerAuthDetailsResponseDTO.class);
 
+        System.out.println("Branch ID retrieved: " + employerDTO.getBranchId());
         employerDetailsResponseDTO.setActiveStatus(true);
 
     /*    // Set activeStatus based on whether the user is logged in or not
@@ -132,6 +143,7 @@ public class AuthServiceIMPL implements AuthService {
         return employerDetailsResponseDTO;
 
     }
+
 /*    private boolean isLoggedIn(String username) {
         // Retrieve the currently authenticated user from Spring Security context
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

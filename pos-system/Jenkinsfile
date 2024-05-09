@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+    tools {
+        jdk 'Java17'
+        maven 'maven_3_9_6'
+    }
+    stages {
+        stage("Cleanup Workspace") {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage("Checkout from SCM") {
+            steps {
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/Life-Pill/pharmacy-pos-backend'
+            }
+        }
+
+        stage("Build Application") {
+            steps {
+                dir('pos-system') {
+                    sh "mvn clean package"
+                }
+            }
+        }
+
+        stage("Dockerize and Push to Docker Hub") {
+            steps {
+                script {
+                    def dockerImage = docker.build("pramithamj/pos-system:latest", "-f Dockerfile .")
+                    dockerImage.push()
+                }
+            }
+        }
+
+        stage("Download and Run Docker Image") {
+            steps {
+                script {
+                    docker.image('pramithamje/pos-system:latest').pull()
+                    docker.run("pramithamj/pos-system:latest", "-p 8081:8081", "--name pos-system-container")
+                }
+            }
+        }
+
+        stage("Unit Tests") {
+            steps {
+                dir('pos-system') {
+                    sh "mvn test"
+                }
+            }
+        }
+        stage("Code Quality Checks") {
+            steps {
+                 // Execute SonarQube analysis
+                 withSonarQubeEnv('SonarQube') {
+                    dir('pos-system') {
+                        sh "mvn sonar:sonar"
+                    }
+                }
+            }
+        }
+
+        stage("Stop and Remove Docker Container") {
+            steps {
+                script {
+                    docker.stop("pos-system-container")
+                    docker.removeContainer("pos-system-container")
+                }
+            }
+        }
+    }
+}

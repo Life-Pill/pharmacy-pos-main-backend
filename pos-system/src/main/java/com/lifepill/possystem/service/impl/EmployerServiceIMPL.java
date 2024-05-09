@@ -1,5 +1,7 @@
 package com.lifepill.possystem.service.impl;
 
+import com.lifepill.possystem.dto.EmployerBankDetailsDTO;
+import com.lifepill.possystem.dto.EmployerWithBankDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
@@ -8,6 +10,7 @@ import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.exception.EntityDuplicationException;
+import com.lifepill.possystem.exception.EntityNotFoundException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerBankDetailsRepository;
@@ -226,18 +229,19 @@ public class EmployerServiceIMPL implements EmployerService {
      * Updates the bank account details of an employer.
      *
      * @param employerUpdateBankAccountDTO The DTO containing the updated bank account details.
-     * @return A message indicating the success of the operation.
+     * @return A DTO containing the updated employer data along with bank account details.
      * @throws NotFoundException If the employer with the given ID is not found.
      */
     @Override
-    public String updateEmployerBankAccountDetails(EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO) {
-        long cashierId = employerUpdateBankAccountDTO.getEmployerId();
+    public EmployerWithBankDTO updateEmployerBankAccountDetails(EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO) {
+        long employerId = employerUpdateBankAccountDTO.getEmployerId();
 
-        if (employerRepository.existsById(cashierId)) {
-            Employer employer = employerRepository.getReferenceById(cashierId);
+        if (employerRepository.existsById(employerId)) {
+            Employer employer = employerRepository.getReferenceById(employerId);
 
             // Check if the employer already has bank details
-            EmployerBankDetails existingBankDetails = cashierBankDetailsRepo.findById(cashierId).orElse(null);
+            EmployerBankDetails existingBankDetails = cashierBankDetailsRepo.findById(employerId).orElse(null);
+
 
             if (existingBankDetails != null) {
                 // Update existing bank details
@@ -252,7 +256,7 @@ public class EmployerServiceIMPL implements EmployerService {
             } else {
                 // Create new bank details if not present
                 EmployerBankDetails newBankDetails = new EmployerBankDetails();
-               // newBankDetails.setCashierId(cashierId);
+                //   newBankDetails.setEmployer(employer);
                 newBankDetails.setBankName(employerUpdateBankAccountDTO.getBankName());
                 newBankDetails.setBankBranchName(employerUpdateBankAccountDTO.getBankBranchName());
                 newBankDetails.setBankAccountNumber(employerUpdateBankAccountDTO.getBankAccountNumber());
@@ -263,9 +267,32 @@ public class EmployerServiceIMPL implements EmployerService {
                 cashierBankDetailsRepo.save(newBankDetails);
             }
 
-            return "Successfully updated employer bank account details";
+            // Return employer data along with bank account details
+            EmployerWithBankDTO employerWithBankDTO = new EmployerWithBankDTO();
+            employerWithBankDTO.setEmployerId(employerId);
+            employerWithBankDTO.setEmployerNic(employer.getEmployerNic());
+            employerWithBankDTO.setEmployerPhone(employer.getEmployerPhone());
+            employerWithBankDTO.setEmployerEmail(employer.getEmployerEmail());
+            employerWithBankDTO.setEmployerSalary(employer.getEmployerSalary());
+            employerWithBankDTO.setRole(employer.getRole());
+            employerWithBankDTO.setEmployerFirstName(employer.getEmployerFirstName());
+            employerWithBankDTO.setEmployerLastName(employer.getEmployerLastName());
+            employerWithBankDTO.setGender(employer.getGender());
+            employerWithBankDTO.setEmployerAddress(employer.getEmployerAddress());
+            employerWithBankDTO.setDateOfBirth(employer.getDateOfBirth());
+            employerWithBankDTO.setBranchId(employer.getBranch().getBranchId());
+            employerWithBankDTO.setProfileImage(employer.getProfileImage());
+            employerWithBankDTO.setEmployerNicName(employer.getEmployerNicName());
+            employerWithBankDTO.setPin(employer.getPin());
+
+            Employer employerBankDetailsId = employerRepository.getReferenceById(employerId);
+
+            employerWithBankDTO.setEmployerBankDetails(employerBankDetailsId.getEmployerBankDetails());
+          //  System.out.println(employerBankDetailsId.getEmployerBankDetails());
+
+            return employerWithBankDTO;
         } else {
-            throw new NotFoundException("No data found for that id");
+            throw new NotFoundException("No data found for that employer ID");
         }
     }
 
@@ -317,6 +344,11 @@ public class EmployerServiceIMPL implements EmployerService {
     public byte[] getImageData(long employerId) {
         Optional<Employer> branchOptional = employerRepository.findById(employerId);
         return branchOptional.map(com.lifepill.possystem.entity.Employer::getProfileImage).orElse(null);
+    }
+
+    @Override
+    public String updateEmployerBankAccountDetailsByCashierId(long employerId, EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO) {
+        return "";
     }
 
     /**
@@ -414,48 +446,6 @@ public class EmployerServiceIMPL implements EmployerService {
     }
 
     /**
-     * Updates the bank account details of an employer identified by the provided cashier ID.
-     *
-     * @param cashierId                    The ID of the employer/cashier.
-     * @param cashierUpdateBankAccountDTO  DTO containing the updated bank account details.
-     * @return                             A message indicating the success of the operation.
-     * @throws NotFoundException          If the employer with the specified ID is not found.
-     */
-    @Override
-    public String updateEmployerBankAccountDetailsByCashierId(long cashierId, EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO) {
-        // Fetch the Employer entity by cashierId
-        Employer employer = employerRepository.findById(cashierId).orElse(null);
-
-        // Check if the Employer entity exists
-        if (employer != null) {
-            // Create a new EmployerBankDetails entity
-            EmployerBankDetails newBankDetails = new EmployerBankDetails();
-
-            // Set attributes with data from cashierUpdateBankAccountDTO
-            newBankDetails.setBankName(cashierUpdateBankAccountDTO.getBankName());
-            newBankDetails.setBankBranchName(cashierUpdateBankAccountDTO.getBankBranchName());
-            newBankDetails.setBankAccountNumber(cashierUpdateBankAccountDTO.getBankAccountNumber());
-            newBankDetails.setEmployerDescription(cashierUpdateBankAccountDTO.getEmployerDescription());
-            newBankDetails.setMonthlyPayment(cashierUpdateBankAccountDTO.getMonthlyPayment());
-            newBankDetails.setMonthlyPaymentStatus(cashierUpdateBankAccountDTO.isMonthlyPaymentStatus());
-            newBankDetails.setEmployerId(cashierId);
-
-            // Save the new EmployerBankDetails entity
-            EmployerBankDetails savedBankDetails = cashierBankDetailsRepo.save(newBankDetails);
-
-            // Update the employer_bank_details_id in the employer entity
-            employer.setEmployerBankDetails(savedBankDetails);
-
-            // Save the updated employer entity
-            employerRepository.save(employer);
-
-            return "Employer bank account details created successfully.";
-        } else {
-            return "Employer not found.";
-        }
-    }
-
-    /**
      * Retrieves a list of employers associated with the specified branch ID.
      *
      * @param branchId  The ID of the branch.
@@ -511,4 +501,30 @@ public class EmployerServiceIMPL implements EmployerService {
             return null; // Or throw an exception, or return a default DTO
         }
     }
+
+    @Override
+    public EmployerWithBankDTO getEmployerByIdWithBankDetails(long employerId) {
+        Employer employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new EntityNotFoundException("Employer not found with id: " + employerId));
+
+        EmployerBankDetails bankDetails = employer.getEmployerBankDetails();
+
+        EmployerWithBankDTO employerWithBankDTO = modelMapper.map(employer, EmployerWithBankDTO.class);
+        employerWithBankDTO.setEmployerBankDetails(bankDetails);
+
+        return employerWithBankDTO;
+    }
+
+    @Override
+    public EmployerBankDetailsDTO getEmployerBankDetailsById(long employerId) {
+        Employer employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new EntityNotFoundException("Employer not found with id: " + employerId));
+
+        EmployerBankDetails bankDetails = employer.getEmployerBankDetails();
+        EmployerBankDetailsDTO bankDetailsDTO = modelMapper.map(bankDetails, EmployerBankDetailsDTO.class);
+
+        return bankDetailsDTO;
+    }
+
+
 }

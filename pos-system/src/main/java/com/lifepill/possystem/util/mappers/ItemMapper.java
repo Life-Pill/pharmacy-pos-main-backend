@@ -13,6 +13,7 @@ import java.util.List;
 public interface ItemMapper {
     // itemList ----> ItemResponseDTO
     List<ItemGetResponseDTO> entityListToDTOList(List<Item> items);
+
     List<ItemGetAllResponseDTO> entityListAllItemToDTO(List<Item> items);
 
     //Page<Item> items ---> List<ItemGetResponseDTO> list;

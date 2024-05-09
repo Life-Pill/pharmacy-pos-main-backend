@@ -1,23 +1,25 @@
 package com.lifepill.possystem.controller;
 
+import com.lifepill.possystem.dto.EmployerBankDetailsDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
+import com.lifepill.possystem.dto.EmployerWithBankDTO;
 import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
-import com.lifepill.possystem.entity.enums.Role;
+import com.lifepill.possystem.entity.EmployerBankDetails;
+import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
+import com.lifepill.possystem.util.mappers.EmployerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
 /**
@@ -30,6 +32,9 @@ public class EmployerController {
     @Autowired
     private EmployerService employerService;
 
+    @Autowired
+    private EmployerMapper employerMapper;
+
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
     /**
@@ -39,9 +44,12 @@ public class EmployerController {
      * @return A string indicating the success of the operation.
      */
     @PostMapping("/save-without-image")
-    public String saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
+    public  ResponseEntity<StandardResponse> saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
         employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
-        return "saved";
+        return new ResponseEntity<>(
+                new StandardResponse(201, "successfully saved", cashierWithoutImageDTO),
+                HttpStatus.CREATED
+        );
     }
 
     /**
@@ -53,7 +61,7 @@ public class EmployerController {
      * @throws IOException If an I/O error occurs.
      */
     @PostMapping("/save-with-image")
-    public String saveEmployerWithImage(
+    public ResponseEntity<StandardResponse> saveEmployerWithImage(
             @ModelAttribute EmployerDTO employerDTO,
             @RequestParam("file") MultipartFile file
     )
@@ -67,7 +75,10 @@ public class EmployerController {
         }
         // Save the cashier along with the profile photo
         employerService.saveEmployer(employerDTO);
-        return "saved";
+        return new ResponseEntity<>(
+                new StandardResponse(201, "successfully saved", employerDTO),
+                HttpStatus.CREATED
+        );
     }
 
     /**
@@ -104,9 +115,15 @@ public class EmployerController {
      */
     @PutMapping("/update/{employerId}")
     @Transactional
-    public String updateEmployer(@PathVariable Long employerId, @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO) {
+    public ResponseEntity<StandardResponse> updateEmployer(
+            @PathVariable Long employerId,
+            @RequestBody EmployerAllDetailsUpdateDTO cashierAllDetailsUpdateDTO
+    ) {
         String message = employerService.updateEmployer(employerId, cashierAllDetailsUpdateDTO);
-        return message;
+        return new ResponseEntity<>(
+                new StandardResponse(201, message, null),
+                HttpStatus.OK
+        );
     }
 
     /**
@@ -117,28 +134,77 @@ public class EmployerController {
      */
     @PutMapping("/updateAccountDetails")
     @Transactional
-    public String updateEmployerAccountDetails(@RequestBody EmployerUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO) {
+    public ResponseEntity<StandardResponse> updateEmployerAccountDetails(
+            @RequestBody EmployerUpdateAccountDetailsDTO cashierUpdateAccountDetailsDTO
+    ) {
         String message = employerService.updateEmployerAccountDetails(cashierUpdateAccountDetailsDTO);
-        return message;
+        return new ResponseEntity<>(
+                new StandardResponse(201, message, null),
+                HttpStatus.OK
+        );
     }
 
     /**
      * Updates the bank account details of an employer.
      *
-     * @param employerId                  The ID of the employer whose bank account details are to be updated.
-     * @param cashierUpdateBankAccountDTO DTO containing updated bank account details of the employer.
-     * @return A string indicating the success of the operation.
+     * @param employerId                    The ID of the employer to update.
+     * @param employerUpdateBankAccountDTO  The DTO containing the updated bank account details.
+     * @return                              ResponseEntity containing the updated employer data
+     *                                      along with bank account details,
+     *                                      or an HTTP status indicating the failure if the employer is not found.
      */
-    @PutMapping("/updateBankAccountDetails/{employerId}")
+    @PutMapping("/updateEmployerBankAccountDetailsWithId/{employerId}")
     @Transactional
-    public String updateEmployerBankAccountDetails(
+    public ResponseEntity<StandardResponse> updateEmployerBankAccountDetailsWithId(
             @PathVariable long employerId,
-            @RequestBody EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO
+            @RequestBody EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO
     ) {
-        String message = employerService.updateEmployerBankAccountDetailsByCashierId(
-                employerId, cashierUpdateBankAccountDTO
-        );
-        return message;
+        try {
+            EmployerWithBankDTO employerWithBankDTO = employerService
+                    .updateEmployerBankAccountDetails(employerUpdateBankAccountDTO);
+            EmployerBankDetailsDTO bankDetailsDTO = employerService
+                    .getEmployerBankDetailsById(employerId);
+            employerWithBankDTO.setEmployerBankDetails(
+                    employerMapper.mapBankDetailsDTOToEntity(bankDetailsDTO)
+            ); // Utilize the mapper// Map DTO to Entity
+            return ResponseEntity.ok(
+                    new StandardResponse(
+                            201, "SUCCESS", employerWithBankDTO)
+            );
+        } catch (NotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(
+                            new StandardResponse(404, ex.getMessage(), null)
+                    );
+        }
+    }
+
+    /**
+     * Retrieves an employer along with their bank details.
+     * @param employerId The ID of the employer to retrieve.
+     * @return ResponseEntity containing the employer DTO with bank details if found,
+     *         or an HTTP status indicating the failure if the employer is not found.
+     */
+    @GetMapping("/getEmployerWithBankDetails/{employerId}")
+    public ResponseEntity<StandardResponse> getEmployerWithBankDetails(@PathVariable long employerId) {
+        // Retrieve employer DTO with bank details
+        EmployerWithBankDTO employerWithBankDTO = employerService.getEmployerByIdWithBankDetails(employerId);
+
+        // Check if the employer exists
+        if (employerWithBankDTO != null) {
+            // Return the employer DTO with bank details
+            return new ResponseEntity<>(
+                    new StandardResponse(201, "SUCCESS", employerWithBankDTO),
+                    HttpStatus.OK
+            );
+        } else {
+            // Return an HTTP status indicating the employer is not found
+            return new ResponseEntity<>(
+                    new StandardResponse(404, "Employer not found", employerWithBankDTO),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
     }
 
     /**
@@ -181,9 +247,12 @@ public class EmployerController {
      * @return A string indicating the success of the operation.
      */
     @DeleteMapping(path = "/delete-employerId/{id}")
-    public String deleteEmployer(@PathVariable(value = "id") int employerId) {
+    public ResponseEntity<StandardResponse> deleteEmployer(@PathVariable(value = "id") int employerId) {
         String deleted = employerService.deleteEmployer(employerId);
-        return deleted;
+        return new ResponseEntity<>(
+                new StandardResponse(201, deleted, null),
+                HttpStatus.OK
+        );
     }
 
     /**

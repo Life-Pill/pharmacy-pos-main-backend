@@ -25,7 +25,7 @@ public class BranchSummaryController {
     private BranchSummaryService branchSummaryService;
 
     /**
-     * Retrieves all branches along with their sales summary.
+     * gti checkouRetrieves all branches along with their sales summary.
      *
      * @return ResponseEntity containing StandardResponse with status 201 (SUCCESS)
      * and list of PharmacyBranchResponseDTO
@@ -34,7 +34,11 @@ public class BranchSummaryController {
     public ResponseEntity<StandardResponse> getAllBranchesWithSales() {
         List<PharmacyBranchResponseDTO> allBranchesWithSales = branchSummaryService.getAllBranchesWithSales();
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(201, "SUCCESS", allBranchesWithSales),
+                new StandardResponse(
+                        201,
+                        "SUCCESS",
+                        allBranchesWithSales
+                ),
                 HttpStatus.OK
         );
     }
@@ -46,11 +50,17 @@ public class BranchSummaryController {
      * @return ResponseEntity containing StandardResponse with status 201 (SUCCESS) and PharmacyBranchResponseDTO
      */
     @GetMapping(path = "/sales-summary/{id}")
-    public ResponseEntity<StandardResponse> getBranchSalesById(@PathVariable(value = "id") long branchId) {
-
-        PharmacyBranchResponseDTO pharmacyBranchResponseDTO = branchSummaryService.getBranchSalesById(branchId);
+    public ResponseEntity<StandardResponse> getBranchSalesById(
+            @PathVariable(value = "id") long branchId
+    ) {
+        PharmacyBranchResponseDTO pharmacyBranchResponseDTO = branchSummaryService
+                .getBranchSalesById(branchId);
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(201, "SUCCESS", pharmacyBranchResponseDTO),
+                new StandardResponse(
+                        201,
+                        "SUCCESS",
+                        pharmacyBranchResponseDTO
+                ),
                 HttpStatus.OK
         );
     }
@@ -67,7 +77,11 @@ public class BranchSummaryController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
         List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService.getPharmacyDataByDate(date);
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(201, "SUCCESS", pharmacyData),
+                new StandardResponse(
+                        201,
+                        "SUCCESS",
+                        pharmacyData
+                ),
                 HttpStatus.OK
         );
     }
@@ -77,7 +91,9 @@ public class BranchSummaryController {
      *
      * @param startDate The start date of the time period.
      * @param endDate   The end date of the time period.
-     * @return ResponseEntity containing a list of PharmacyBranchResponseDTOs with pharmacy data within the specified time period.
+     * @return ResponseEntity containing a list of
+     * PharmacyBranchResponseDTOs with pharmacy data within
+     * the specified time period.
      */
     @GetMapping("/pharmacy-summary-by-period")
     public ResponseEntity<StandardResponse> getPharmacyDataByTimePeriod(
@@ -85,9 +101,14 @@ public class BranchSummaryController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam("endDate")
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService.getPharmacyDataByTimePeriod(startDate, endDate);
+        List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService
+                .getPharmacyDataByTimePeriod(startDate, endDate);
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(201, "SUCCESS", pharmacyData),
+                new StandardResponse(
+                        201,
+                        "SUCCESS",
+                        pharmacyData
+                ),
                 HttpStatus.OK
         );
     }
@@ -103,9 +124,14 @@ public class BranchSummaryController {
     public ResponseEntity<StandardResponse> getMonthlySummary(
             @RequestParam("month") int month,
             @RequestParam("year") int year) {
-        List<PharmacyBranchResponseDTO> monthlySummary = branchSummaryService.getMonthlySummary(month, year);
+        List<PharmacyBranchResponseDTO> monthlySummary = branchSummaryService
+                .getMonthlySummary(month, year);
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(201, "SUCCESS", monthlySummary),
+                new StandardResponse(
+                        201,
+                        "SUCCESS",
+                        monthlySummary
+                ),
                 HttpStatus.OK
         );
     }
@@ -119,9 +145,14 @@ public class BranchSummaryController {
     @GetMapping("/yearly-summary")
     public ResponseEntity<StandardResponse> getYearlySummary(
             @RequestParam("year") int year) {
-        List<PharmacyBranchResponseDTO> yearlySummary = branchSummaryService.getYearlySummary(year);
+        List<PharmacyBranchResponseDTO> yearlySummary = branchSummaryService
+                .getYearlySummary(year);
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(201, "SUCCESS", yearlySummary),
+                new StandardResponse(
+                        201,
+                        "SUCCESS",
+                        yearlySummary
+                ),
                 HttpStatus.OK
         );
     }
@@ -136,7 +167,11 @@ public class BranchSummaryController {
         // Call service method to retrieve total details of all pharmacy branches
         AllPharmacySummaryResponseDTO summary = branchSummaryService.getAllPharmacySummary();
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200, "OK", summary),
+                new StandardResponse(
+                        200,
+                        "OK",
+                        summary
+                ),
                 HttpStatus.OK
         );
     }

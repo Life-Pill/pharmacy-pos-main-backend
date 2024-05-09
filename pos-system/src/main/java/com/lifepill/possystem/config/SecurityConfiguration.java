@@ -31,7 +31,6 @@ public class SecurityConfiguration {
     @Autowired
     JwtAuthFilter jwtAuthFilter;
 
-
     /**
      * Configures security filter chain.
      *
@@ -58,12 +57,11 @@ public class SecurityConfiguration {
                                         "/v3/api-docs"
                                 ).permitAll()
                                 .antMatchers("lifepill/v1/branch-summary/**")
-                                .hasAnyRole(OWNER.name())
+                                .hasRole(OWNER.name())
                                 //.antMatchers("/lifepill/v1/admin/**").hasAnyRole(OWNER_READ.name(), CASHIER.name())
                                 .antMatchers("/lifepill/v1/admin/**").hasRole(OWNER.name())
                                 //.antMatchers( "/lifepill/v1/admin/**").permitAll()
                                 .antMatchers("/lifepill/v1/cashierNew/**").hasRole(CASHIER.name())
-                               // .antMatchers(POST, "/lifepill/v1/cashierNew/**").hasAnyAuthority(CASHIER_CREATE.name(),OWNER_CREATE.name())
                                 .antMatchers("lifepill/v1/branch/**","/lifepill/v1/branch-summary/sales-summary")
                                 .hasAnyRole(OWNER.name())
                                 .antMatchers("lifepill/v1/employers/**")
