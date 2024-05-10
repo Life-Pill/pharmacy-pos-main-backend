@@ -288,7 +288,7 @@ public class EmployerServiceIMPL implements EmployerService {
             Employer employerBankDetailsId = employerRepository.getReferenceById(employerId);
 
             employerWithBankDTO.setEmployerBankDetails(employerBankDetailsId.getEmployerBankDetails());
-          //  System.out.println(employerBankDetailsId.getEmployerBankDetails());
+            //  System.out.println(employerBankDetailsId.getEmployerBankDetails());
 
             return employerWithBankDTO;
         } else {
@@ -310,7 +310,7 @@ public class EmployerServiceIMPL implements EmployerService {
             EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
             return employerDTO;
         }else {
-           throw  new NotFoundException("No employer found for that id");
+            throw  new NotFoundException("No employer found for that id");
         }
     }
 
@@ -440,7 +440,7 @@ public class EmployerServiceIMPL implements EmployerService {
             }
             return employerDTOList;
         }else {
-           // throw new RuntimeException("No Employer Found");
+            // throw new RuntimeException("No Employer Found");
             throw new NotFoundException("No Employer Found");
         }
     }
@@ -502,19 +502,13 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
-    @Override
-    public EmployerWithBankDTO getEmployerByIdWithBankDetails(long employerId) {
-        Employer employer = employerRepository.findById(employerId)
-                .orElseThrow(() -> new EntityNotFoundException("Employer not found with id: " + employerId));
-
-        EmployerBankDetails bankDetails = employer.getEmployerBankDetails();
-
-        EmployerWithBankDTO employerWithBankDTO = modelMapper.map(employer, EmployerWithBankDTO.class);
-        employerWithBankDTO.setEmployerBankDetails(bankDetails);
-
-        return employerWithBankDTO;
-    }
-
+    /**
+     * Retrieves the bank details of an employer by their ID.
+     *
+     * @param employerId The ID of the employer whose bank details are to be retrieved.
+     * @return EmployerBankDetailsDTO containing the bank details of the specified employer.
+     * @throws EntityNotFoundException if no employer is found with the given ID.
+     */
     @Override
     public EmployerBankDetailsDTO getEmployerBankDetailsById(long employerId) {
         Employer employer = employerRepository.findById(employerId)
@@ -526,5 +520,54 @@ public class EmployerServiceIMPL implements EmployerService {
         return bankDetailsDTO;
     }
 
+    /**
+     * Retrieves a list of employers along with their bank details.
+     *
+     * @return List of EmployerWithBankDTO objects containing details of all employers with their bank details.
+     */
+    @Override
+    public List<EmployerWithBankDTO> getAllEmployersWithBankDetails() {
+        List<EmployerWithBankDTO> employersWithBankDetails = new ArrayList<>();
 
+        // Fetch all employers from the database
+        List<Employer> employers = employerRepository.findAll();
+
+        // Iterate through each employer and retrieve their bank details
+        for (Employer employer : employers) {
+            EmployerBankDetails bankDetails = cashierBankDetailsRepo.findByEmployerId(employer.getEmployerId());
+
+            // Map the employer and bank details to DTOs by model mappers
+            EmployerWithBankDTO employerWithBankDTO = modelMapper.map(employer, EmployerWithBankDTO.class);
+
+            // Add the employer with bank details DTO to the list
+            employersWithBankDetails.add(employerWithBankDTO);
+        }
+
+        return employersWithBankDetails;
+    }
+
+    /**
+     * Retrieves an employer along with their bank details by the employer's ID.
+     *
+     * @param employerId The ID of the employer whose details are to be retrieved.
+     * @return EmployerWithBankDTO containing the details of the specified employer along with their bank details.
+     * @throws NotFoundException if no employer is found with the given ID.
+     */
+    public EmployerWithBankDTO getEmployerWithBankDetailsById(long employerId) {
+        // Retrieve the employer data by ID
+        Employer employerDTO = employerRepository.findById(employerId)
+                .orElseThrow(() -> new NotFoundException("Employer not found for ID: " + employerId));
+        // get branch id
+        long branchId = employerDTO.getBranch().getBranchId();
+
+        // Map the employer and bank details to DTOs
+        EmployerWithBankDTO employerWithBankDTO = modelMapper.map(employerDTO, EmployerWithBankDTO.class);
+
+        // set branch id
+        employerWithBankDTO.setBranchId(branchId);
+
+        System.out.println(employerWithBankDTO);
+
+        return employerWithBankDTO;
+    }
 }

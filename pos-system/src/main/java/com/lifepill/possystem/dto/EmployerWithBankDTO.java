@@ -13,7 +13,9 @@ import java.util.Date;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 public class EmployerWithBankDTO {
     private long employerId;
     private long branchId;
