@@ -1,9 +1,5 @@
 package com.lifepill.possystem.cucumber;
 
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-
 import com.lifepill.possystem.controller.AuthController;
 import com.lifepill.possystem.dto.requestDTO.AuthenticationRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.RegisterRequestDTO;
@@ -11,6 +7,9 @@ import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.EmployerAuthDetailsResponseDTO;
 import com.lifepill.possystem.exception.AuthenticationException;
 import com.lifepill.possystem.service.AuthService;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
