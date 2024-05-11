@@ -244,6 +244,35 @@ public class CashierControllerTests {
         assertThrows(NotFoundException.class, () -> cashierController.updateEmployerPassword(resetDTO));
     }
 
+    @Test
+    public void testUpdateEmployerPassword_InvalidEmployerId() {
+        // Test for invalid employer ID during password update
 
+        // Arrange
+        EmployerPasswordResetDTO resetDTO = new EmployerPasswordResetDTO();
+        resetDTO.setEmployerId(1L);
+        resetDTO.setEmployerPassword("newPassword");
 
+        Mockito.when(employerService.updateEmployerPassword(Mockito.any(EmployerPasswordResetDTO.class))
+        ).thenThrow(new NotFoundException("Employer not found"));
+
+        // Act and Assert
+        assertThrows(NotFoundException.class, () -> cashierController.updateEmployerPassword(resetDTO));
+    }
+
+    @Test
+    public void testUpdateRecentPin_InvalidEmployerId() {
+        // Test for invalid employer ID during recent PIN update
+
+        // Arrange
+        EmployerRecentPinUpdateDTO pinUpdateDTO = new EmployerRecentPinUpdateDTO();
+        pinUpdateDTO.setEmployerId(1L);
+        pinUpdateDTO.setPin(1234);
+
+        Mockito.when(employerService.updateRecentPin(Mockito.any(EmployerRecentPinUpdateDTO.class))
+        ).thenThrow(new NotFoundException("Employer not found"));
+
+        // Act and Assert
+        assertThrows(NotFoundException.class, () -> cashierController.updateRecentPin(pinUpdateDTO));
+    }
 }
