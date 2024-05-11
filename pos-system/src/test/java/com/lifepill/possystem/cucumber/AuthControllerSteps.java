@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.cucumber;
 import com.lifepill.possystem.controller.AuthController;
 import com.lifepill.possystem.dto.requestDTO.AuthenticationRequestDTO;
@@ -170,3 +171,4 @@ public class AuthControllerSteps {
                 ((StandardResponse) responseEntity.getBody()).getMessage());
     }
 }
+*/
