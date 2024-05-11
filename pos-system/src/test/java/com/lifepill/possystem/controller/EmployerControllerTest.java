@@ -18,10 +18,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.any;
@@ -42,7 +44,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testUpdateEmployer_Success() {
-        // Test case 3: Updating employer details successfully
         // Setup
         long employerId = 1;
         EmployerAllDetailsUpdateDTO employerAllDetailsUpdateDTO = new EmployerAllDetailsUpdateDTO();
@@ -59,7 +60,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testGetEmployerById_Success() {
-        // Test case 4: Retrieving employer by ID successfully
         // Setup
         int employerId = 1;
         EmployerDTO employerDTO = new EmployerDTO();
@@ -76,7 +76,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testViewImage_Success() {
-        // Test case 5: Viewing employer image successfully
         // Setup
         int employerId = 1;
         byte[] imageData = new byte[]{1, 2, 3};
@@ -92,7 +91,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testDeleteEmployer_Success() {
-        // Test case 6: Deleting employer successfully
         // Setup
         int employerId = 1;
         Mockito.when(employerService.deleteEmployer(employerId)).thenReturn("Employer deleted");
@@ -108,7 +106,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testGetAllEmployers_Success() {
-        // Test case 7: Retrieving all employers successfully
         // Setup
         List<EmployerDTO> employerList = Arrays.asList(new EmployerDTO(), new EmployerDTO());
         Mockito.when(employerService.getAllEmployer()).thenReturn(employerList);
@@ -124,7 +121,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testGetAllEmployerByActiveState_Success() {
-        // Test case 8: Retrieving all employers by active state successfully
         // Setup
         boolean activeState = true;
         List<EmployerDTO> employerList = Arrays.asList(new EmployerDTO(), new EmployerDTO());
@@ -140,7 +136,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testGetAllEmployerBankDetails_Success() {
-        // Test case 9: Retrieving all employer bank details successfully
         // Setup
         List<EmployerUpdateBankAccountDTO> bankDetailsList = Arrays.asList(new EmployerUpdateBankAccountDTO(), new EmployerUpdateBankAccountDTO());
         Mockito.when(employerService.getAllEmployerBankDetails()).thenReturn(bankDetailsList);
@@ -156,7 +151,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testGetEmployerBankDetailsById_Success() {
-        // Test case 10: Retrieving employer bank details by ID successfully
         // Setup
         long employerId = 1;
         EmployerBankDetailsDTO bankDetailsDTO = new EmployerBankDetailsDTO();
@@ -173,7 +167,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testGetAllEmployersWithBankDetails_Success() {
-        // Test case 11: Retrieving all employers with bank details successfully
         // Setup
         List<EmployerWithBankDTO> employerWithBankList = Arrays.asList(new EmployerWithBankDTO(), new EmployerWithBankDTO());
         Mockito.when(employerService.getAllEmployersWithBankDetails()).thenReturn(employerWithBankList);
@@ -189,7 +182,6 @@ public class EmployerControllerTest {
 
     @Test
     public void testGetEmployerWithBankDetailsById_Success() {
-        // Test case 12: Retrieving employer with bank details by ID successfully
         // Setup
         long employerId = 1;
         EmployerWithBankDTO employerWithBankDTO = new EmployerWithBankDTO();
@@ -201,6 +193,68 @@ public class EmployerControllerTest {
         // Assertion
         assertNotNull(result);
         assertEquals(employerWithBankDTO, result);
+    }
+
+    @Test
+    public void testSaveEmployerWithoutImage_Failure() {
+        // Setup
+        EmployerWithoutImageDTO employerWithoutImageDTO = new EmployerWithoutImageDTO();
+        Mockito.when(employerService.saveEmployerWithoutImage(employerWithoutImageDTO)).thenThrow(new NotFoundException("Employer not found"));
+
+        // Test
+        assertThrows(NotFoundException.class, () -> employerController.saveCashierWithoutImage(employerWithoutImageDTO));
+
+    }
+
+    @Test
+    public void testGetEmployerById_NotFound() {
+        // Setup
+        int employerId = 1;
+        Mockito.when(employerService.getEmployerById(employerId)).thenReturn(null);
+
+        // Test
+        EmployerDTO result = employerController.getEmployerById(employerId);
+
+        // Assertion
+        assertNull(result);
+    }
+
+    @Test
+    public void testViewImage_NotFound() {
+        // Setup
+        int employerId = 1;
+        Mockito.when(employerService.getImageData(employerId)).thenReturn(null);
+
+        // Test
+        ResponseEntity<byte[]> response = employerController.viewImage(employerId);
+
+        // Assertion
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteEmployer_NotFound() {
+
+        // Setup
+        int employerId = 1;
+        Mockito.when(employerService.deleteEmployer(employerId)).thenThrow(new NotFoundException("Employer not found"));
+
+        // Test
+        assertThrows(NotFoundException.class, () -> employerController.deleteEmployer(employerId));
+    }
+
+    @Test
+    public void testGetAllEmployerByActiveState_EmptyList() {
+        // Setup
+        boolean activeState = true;
+        Mockito.when(employerService.getAllEmployerByActiveState(activeState)).thenReturn(Collections.emptyList());
+
+        // Test
+        List<EmployerDTO> result = employerController.getAllEmployerByActiveState(activeState);
+
+        // Assertion
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 
 }
