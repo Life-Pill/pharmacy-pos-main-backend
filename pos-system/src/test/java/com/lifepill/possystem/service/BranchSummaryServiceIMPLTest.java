@@ -44,6 +44,9 @@ public class BranchSummaryServiceIMPLTest {
     @InjectMocks
     private BranchSummaryServiceIMPL branchSummaryService;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -141,6 +144,9 @@ public class BranchSummaryServiceIMPLTest {
         assertEquals(100.0, responseDTO.getSales());
     }
 
+    /**
+     * Test get all pharmacy summary.
+     */
     @Test
     void testGetAllPharmacySummary() {
         // Mock repository responses

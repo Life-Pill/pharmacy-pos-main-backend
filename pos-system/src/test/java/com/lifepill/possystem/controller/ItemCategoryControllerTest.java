@@ -17,6 +17,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Item category controller test.
+ */
 class ItemCategoryControllerTest {
 
     @Mock
@@ -25,11 +28,17 @@ class ItemCategoryControllerTest {
     @InjectMocks
     private ItemCategoryController itemCategoryController;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Test get all categories.
+     */
     @Test
     void testGetAllCategories() {
         // Arrange
@@ -48,6 +57,9 @@ class ItemCategoryControllerTest {
         assertEquals(categories, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test get all categories success.
+     */
     @Test
     void testGetAllCategories_Success() {
         // Arrange
@@ -66,6 +78,9 @@ class ItemCategoryControllerTest {
         assertEquals(categories, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test get all categories no categories.
+     */
     @Test
     void testGetAllCategories_NoCategories() {
         // Arrange
@@ -81,6 +96,9 @@ class ItemCategoryControllerTest {
         assertEquals(0, ((List<?>) responseEntity.getBody().getData()).size());
     }
 
+    /**
+     * Test update category details category not found.
+     */
     @Test
     void testUpdateCategoryDetails_CategoryNotFound() {
         // Arrange
@@ -93,6 +111,9 @@ class ItemCategoryControllerTest {
         assertThrows(RuntimeException.class, () -> itemCategoryController.updateCategoryDetails(categoryId, categoryDTO), expectedMessage);
     }
 
+    /**
+     * Test delete category category not found.
+     */
     @Test
     void testDeleteCategory_CategoryNotFound() {
         // Arrange
@@ -104,6 +125,9 @@ class ItemCategoryControllerTest {
         assertThrows(RuntimeException.class, () -> itemCategoryController.deleteCategory(categoryId), expectedMessage);
     }
 
+    /**
+     * Test delete category category with associated items.
+     */
     @Test
     void testDeleteCategory_CategoryWithAssociatedItems() {
         // Arrange
@@ -115,6 +139,9 @@ class ItemCategoryControllerTest {
         assertThrows(IllegalStateException.class, () -> itemCategoryController.deleteCategory(categoryId), expectedMessage);
     }
 
+    /**
+     * Test save category.
+     */
     @Test
     void testSaveCategory() {
         // Arrange
@@ -131,6 +158,9 @@ class ItemCategoryControllerTest {
        // assertEquals(expectedMessage, responseEntity.getBody().getMessage());
     }
 
+    /**
+     * Test save category category already exists.
+     */
     @Test
     void testSaveCategory_CategoryAlreadyExists() {
         // Arrange
@@ -142,6 +172,9 @@ class ItemCategoryControllerTest {
         assertThrows(IllegalStateException.class, () -> itemCategoryController.saveCategory(categoryDTO), expectedMessage);
     }
 
+    /**
+     * Test update category details.
+     */
     @Test
     void testUpdateCategoryDetails() {
         // Arrange
@@ -158,6 +191,9 @@ class ItemCategoryControllerTest {
         assertEquals(200, responseEntity.getBody().getCode());
     }
 
+    /**
+     * Test delete category.
+     */
     @Test
     void testDeleteCategory() {
         // Arrange

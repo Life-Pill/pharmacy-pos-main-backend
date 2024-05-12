@@ -23,6 +23,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+/**
+ * The type Item controller test.
+ */
 class ItemControllerTest {
 
     @Mock
@@ -31,11 +34,17 @@ class ItemControllerTest {
     @InjectMocks
     private ItemController itemController;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Test save item with category.
+     */
     @Test
     void testSaveItemWithCategory() {
         ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO = new ItemSaveRequestCategoryDTO();
@@ -50,6 +59,9 @@ class ItemControllerTest {
         assertEquals(message, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test save item.
+     */
     @Test
     void testSaveItem() {
         ItemSaveRequestDTO itemSaveRequestDTO = new ItemSaveRequestDTO();
@@ -64,6 +76,9 @@ class ItemControllerTest {
         assertEquals(message, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test get all items.
+     */
     @Test
     void testGetAllItems() {
         List<ItemGetAllResponseDTO> itemGetAllResponseDTOS = Arrays.asList(new ItemGetAllResponseDTO(), new ItemGetAllResponseDTO());
@@ -77,6 +92,9 @@ class ItemControllerTest {
         assertEquals(itemGetAllResponseDTOS, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test get item by name and stock.
+     */
     @Test
     void testGetItemByNameAndStock() {
         String itemName = "Item 1";
@@ -88,6 +106,9 @@ class ItemControllerTest {
         assertEquals(itemGetResponseDTOS, result);
     }
 
+    /**
+     * Test get item by bar code.
+     */
     @Test
     void testGetItemByBarCode() {
         String itemBarCode = "123456789";
@@ -99,6 +120,9 @@ class ItemControllerTest {
         assertEquals(itemGetResponseDTOS, result);
     }
 
+    /**
+     * Test get item by name and status bymapstruct.
+     */
     @Test
     void testGetItemByNameAndStatusBymapstruct() {
         String itemName = "Item 1";
@@ -110,6 +134,9 @@ class ItemControllerTest {
         assertEquals(itemGetResponseDTOS, result);
     }
 
+    /**
+     * Test get all item by active status.
+     */
     @Test
     void testGetAllItemByActiveStatus() {
         boolean activeStatus = true;
@@ -124,6 +151,9 @@ class ItemControllerTest {
         assertEquals(itemGetResponseDTOS, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test update item.
+     */
     @Test
     void testUpdateItem() {
         ItemUpdateDTO itemUpdateDTO = new ItemUpdateDTO();
@@ -135,6 +165,9 @@ class ItemControllerTest {
         assertEquals(message, result);
     }
 
+    /**
+     * Test delete item.
+     */
     @Test
     void testDeleteItem() {
         int itemId = 1;
@@ -146,6 +179,9 @@ class ItemControllerTest {
         assertEquals(message, result);
     }
 
+    /**
+     * Test get item by stock status lazy.
+     */
     @Test
     void testGetItemByStockStatusLazy() {
         boolean activeStatus = true;

@@ -17,6 +17,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Employer controller test.
+ */
 class EmployerControllerTest {
 
     @Mock
@@ -25,11 +28,17 @@ class EmployerControllerTest {
     @InjectMocks
     private EmployerController employerController;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Test save cashier without image.
+     */
     @Test
     void testSaveCashierWithoutImage() {
         EmployerWithoutImageDTO employerWithoutImageDTO = new EmployerWithoutImageDTO();
@@ -43,6 +52,9 @@ class EmployerControllerTest {
         assertEquals(employerWithoutImageDTO, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test update employer.
+     */
     @Test
     void testUpdateEmployer() {
         long employerId = 1;
@@ -57,6 +69,9 @@ class EmployerControllerTest {
         assertNull(responseEntity.getBody().getData());
     }
 
+    /**
+     * Test update employer account details.
+     */
     @Test
     void testUpdateEmployerAccountDetails() {
         EmployerUpdateAccountDetailsDTO employerUpdateAccountDetailsDTO = new EmployerUpdateAccountDetailsDTO();
@@ -70,6 +85,9 @@ class EmployerControllerTest {
         assertNull(responseEntity.getBody().getData());
     }
 
+    /**
+     * Test get employer by id.
+     */
     @Test
     void testGetEmployerById() {
         int employerId = 1;
@@ -81,6 +99,9 @@ class EmployerControllerTest {
         assertEquals(employerDTO, result);
     }
 
+    /**
+     * Test delete employer.
+     */
     @Test
     void testDeleteEmployer() {
         int employerId = 1;
@@ -94,6 +115,9 @@ class EmployerControllerTest {
         assertNull(responseEntity.getBody().getData());
     }
 
+    /**
+     * Test get all employers.
+     */
     @Test
     void testGetAllEmployers() {
         List<EmployerDTO> employerDTOList = Arrays.asList(new EmployerDTO(), new EmployerDTO());
@@ -107,6 +131,9 @@ class EmployerControllerTest {
         assertEquals(employerDTOList, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test get all employer by active state.
+     */
     @Test
     void testGetAllEmployerByActiveState() {
         boolean activeState = true;
@@ -118,6 +145,9 @@ class EmployerControllerTest {
         assertEquals(employerDTOList, result);
     }
 
+    /**
+     * Test get all employer bank details.
+     */
     @Test
     void testGetAllEmployerBankDetails() {
         List<EmployerUpdateBankAccountDTO> employerUpdateBankAccountDTOList = Arrays.asList(new EmployerUpdateBankAccountDTO(), new EmployerUpdateBankAccountDTO());

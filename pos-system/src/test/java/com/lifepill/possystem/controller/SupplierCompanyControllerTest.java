@@ -25,6 +25,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * The type Supplier company controller test.
+ */
 class SupplierCompanyControllerTest {
 
     private MockMvc mockMvc;
@@ -37,6 +40,9 @@ class SupplierCompanyControllerTest {
 
     private ObjectMapper objectMapper;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -44,6 +50,11 @@ class SupplierCompanyControllerTest {
         objectMapper = new ObjectMapper();
     }
 
+    /**
+     * Test get all supplier companies.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testGetAllSupplierCompanies() throws Exception {
         List<SupplierCompanyDTO> companies = new ArrayList<>();
@@ -59,6 +70,11 @@ class SupplierCompanyControllerTest {
         verify(supplierCompanyService, times(1)).getAllSupplierCompanies();
     }
 
+    /**
+     * Test save supplier company.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testSaveSupplierCompany() throws Exception {
         SupplierCompanyDTO supplierCompanyDTO = new SupplierCompanyDTO();
@@ -75,6 +91,11 @@ class SupplierCompanyControllerTest {
         verify(supplierCompanyService, times(1)).saveSupplierCompany(any(SupplierCompanyDTO.class));
     }
 
+    /**
+     * Test update supplier company by id.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testUpdateSupplierCompanyById() throws Exception {
         long id = 1L;
@@ -92,6 +113,11 @@ class SupplierCompanyControllerTest {
         verify(supplierCompanyService, times(1)).updateSupplierCompanyById(eq(id), any(SupplierCompanyDTO.class));
     }
 
+    /**
+     * Test delete supplier company by id.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testDeleteSupplierCompanyById() throws Exception {
         long id = 1L;
@@ -102,6 +128,11 @@ class SupplierCompanyControllerTest {
         verify(supplierCompanyService, times(1)).deleteSupplierCompanyById(id);
     }
 
+    /**
+     * Test get supplier company by id.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testGetSupplierCompanyById() throws Exception {
         long id = 1L;
@@ -117,6 +148,11 @@ class SupplierCompanyControllerTest {
     }
 
 
+    /**
+     * Test get all supplier companies empty list.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testGetAllSupplierCompaniesEmptyList() throws Exception {
         when(supplierCompanyService.getAllSupplierCompanies()).thenReturn(new ArrayList<>());
@@ -129,6 +165,11 @@ class SupplierCompanyControllerTest {
     }
 
 
+    /**
+     * Test update supplier company by id not found.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testUpdateSupplierCompanyByIdNotFound() throws Exception {
         long id = 1L;
@@ -145,6 +186,11 @@ class SupplierCompanyControllerTest {
         verify(supplierCompanyService, times(1)).updateSupplierCompanyById(eq(id), any(SupplierCompanyDTO.class));
     }
 
+    /**
+     * Test delete supplier company by id not found.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testDeleteSupplierCompanyByIdNotFound() throws Exception {
         long id = 1L;

@@ -31,6 +31,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Employer service impl test.
+ */
 class EmployerServiceImplTest {
 
     @Mock
@@ -51,11 +54,17 @@ class EmployerServiceImplTest {
     @InjectMocks
     private EmployerServiceIMPL employerService;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Test save employer.
+     */
     @Test
     void testSaveEmployer() {
         EmployerDTO employerDTO = new EmployerDTO();
@@ -72,6 +81,9 @@ class EmployerServiceImplTest {
         verify(employerRepository, times(1)).save(employer);
     }
 
+    /**
+     * Test save employer without image.
+     */
     @Test
     void testSaveEmployerWithoutImage() {
         EmployerWithoutImageDTO employerWithoutImageDTO = new EmployerWithoutImageDTO();
@@ -88,6 +100,9 @@ class EmployerServiceImplTest {
         verify(employerRepository, times(1)).save(employer);
     }
 
+    /**
+     * Test update employer account details.
+     */
     @Test
     void testUpdateEmployerAccountDetails() {
         EmployerUpdateAccountDetailsDTO employerUpdateAccountDetailsDTO = new EmployerUpdateAccountDetailsDTO();
@@ -101,6 +116,9 @@ class EmployerServiceImplTest {
         verify(employerRepository, times(1)).save(employer);
     }
 
+    /**
+     * Test update employer password.
+     */
     @Test
     void testUpdateEmployerPassword() {
         EmployerPasswordResetDTO employerPasswordResetDTO = new EmployerPasswordResetDTO();
@@ -114,6 +132,9 @@ class EmployerServiceImplTest {
         verify(employerRepository, times(1)).save(employer);
     }
 
+    /**
+     * Test update recent pin.
+     */
     @Test
     void testUpdateRecentPin() {
         EmployerRecentPinUpdateDTO employerRecentPinUpdateDTO = new EmployerRecentPinUpdateDTO();

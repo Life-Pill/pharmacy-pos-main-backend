@@ -19,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Supplier controller test.
+ */
 class SupplierControllerTest {
 
     @Mock
@@ -29,6 +32,9 @@ class SupplierControllerTest {
 
     private List<SupplierDTO> supplierDTOs;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -46,6 +52,9 @@ class SupplierControllerTest {
         supplierDTOs.add(supplierDTO2);
     }
 
+    /**
+     * Test get all suppliers successful.
+     */
     @Test
     void testGetAllSuppliersSuccessful() {
         when(supplierService.getAllSuppliers()).thenReturn(supplierDTOs);
@@ -57,6 +66,9 @@ class SupplierControllerTest {
         verify(supplierService, times(1)).getAllSuppliers();
     }
 
+    /**
+     * Test save supplier successful.
+     */
     @Test
     void testSaveSupplierSuccessful() {
         SupplierDTO supplierDTO = new SupplierDTO();
@@ -71,6 +83,9 @@ class SupplierControllerTest {
         verify(supplierService, times(1)).saveSupplier(supplierDTO);
     }
 
+    /**
+     * Test get all suppliers not found.
+     */
     @Test
     void testGetAllSuppliersNotFound() {
         when(supplierService.getAllSuppliers()).thenThrow(NotFoundException.class);
@@ -80,7 +95,9 @@ class SupplierControllerTest {
     }
 
 
-
+    /**
+     * Test save supplier duplicate exception.
+     */
     @Test
     void testSaveSupplierDuplicateException() {
         SupplierDTO supplierDTO = new SupplierDTO();
@@ -91,6 +108,9 @@ class SupplierControllerTest {
         verify(supplierService, times(1)).saveSupplier(supplierDTO);
     }
 
+    /**
+     * Test update supplier by id successful.
+     */
     @Test
     void testUpdateSupplierByIdSuccessful() {
         long supplierId = 1L;
@@ -106,6 +126,9 @@ class SupplierControllerTest {
         verify(supplierService, times(1)).updateSupplierById(supplierId, updatedSupplierDTO);
     }
 
+    /**
+     * Test update supplier by id not found.
+     */
     @Test
     void testUpdateSupplierByIdNotFound() {
         long supplierId = 1L;
@@ -117,6 +140,9 @@ class SupplierControllerTest {
         verify(supplierService, times(1)).updateSupplierById(supplierId, updatedSupplierDTO);
     }
 
+    /**
+     * Test get supplier by id successful.
+     */
     @Test
     void testGetSupplierByIdSuccessful() {
         long supplierId = 1L;
@@ -132,6 +158,9 @@ class SupplierControllerTest {
         verify(supplierService, times(1)).getSupplierById(supplierId);
     }
 
+    /**
+     * Test get supplier by id not found.
+     */
     @Test
     void testGetSupplierByIdNotFound() {
         long supplierId = 1L;
@@ -142,6 +171,9 @@ class SupplierControllerTest {
         verify(supplierService, times(1)).getSupplierById(supplierId);
     }
 
+    /**
+     * Test delete supplier by id successful.
+     */
     @Test
     void testDeleteSupplierByIdSuccessful() {
         long supplierId = 1L;
@@ -152,6 +184,9 @@ class SupplierControllerTest {
         verify(supplierService, times(1)).deleteSupplierById(supplierId);
     }
 
+    /**
+     * Test delete supplier by id not found.
+     */
     @Test
     void testDeleteSupplierByIdNotFound() {
         long supplierId = 1L;

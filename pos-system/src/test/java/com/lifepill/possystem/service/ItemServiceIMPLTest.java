@@ -18,6 +18,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Item service impl test.
+ */
 public class ItemServiceIMPLTest {
 
     @Mock
@@ -26,11 +29,17 @@ public class ItemServiceIMPLTest {
     @InjectMocks
     private ItemServiceIMPL itemService;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
+    /**
+     * Gets item by name and stock item not found exception thrown.
+     */
     @Test
     public void getItemByNameAndStock_ItemNotFound_ExceptionThrown() {
         // Arrange
@@ -42,6 +51,9 @@ public class ItemServiceIMPLTest {
         assertThrows(NotFoundException.class, () -> itemService.getItemByNameAndStock(itemName));
     }
 
+    /**
+     * Gets item by stock status no active items found exception thrown.
+     */
     @Test
     public void getItemByStockStatus_NoActiveItemsFound_ExceptionThrown() {
         // Arrange

@@ -18,7 +18,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
+/**
+ * Unit tests for the BranchManagerController class.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class BranchManagerControllerTest {
 
@@ -28,6 +30,9 @@ public class BranchManagerControllerTest {
     @Mock
     private EmployerService employerService;
 
+    /**
+     * Test for getting all cashiers by branch ID when there are cashiers.
+     */
     @Test
     public void testGetAllCashiersByBranchId() {
         // Mock data
@@ -48,6 +53,9 @@ public class BranchManagerControllerTest {
         assertEquals(mockEmployers, responseEntity.getBody());
     }
 
+    /**
+     * Test for getting all cashiers by branch ID when there are no cashiers.
+     */
     @Test
     public void testGetAllCashiersByBranchIdEmpty() {
         // Mock data
@@ -65,6 +73,9 @@ public class BranchManagerControllerTest {
         assertEquals(mockEmployers, responseEntity.getBody());
     }
 
+    /**
+     * Test for getting all cashiers by branch ID when the result is null.
+     */
     @Test
     public void testGetAllCashiersByBranchIdNull() {
         // Mock data

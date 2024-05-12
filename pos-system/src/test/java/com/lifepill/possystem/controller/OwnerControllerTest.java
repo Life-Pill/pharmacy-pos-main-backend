@@ -20,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+/**
+ * The type Owner controller test.
+ */
 class OwnerControllerTest {
 
     @Mock
@@ -28,11 +31,17 @@ class OwnerControllerTest {
     @InjectMocks
     private OwnerController ownerController;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Test get all employer by role success.
+     */
     @Test
     void testGetAllEmployerByRole_Success() {
         // Arrange
@@ -48,6 +57,9 @@ class OwnerControllerTest {
         assertEquals(ownerDTOs, responseEntity.getBody());
     }
 
+    /**
+     * Test get all employer by role no owners.
+     */
     @Test
     void testGetAllEmployerByRole_NoOwners() {
         // Arrange
@@ -63,6 +75,9 @@ class OwnerControllerTest {
         assertEquals(ownerDTOs, responseEntity.getBody());
     }
 
+    /**
+     * Test get all employer by role invalid role.
+     */
     @Test
     void testGetAllEmployerByRole_InvalidRole() {
         // Arrange
@@ -77,6 +92,9 @@ class OwnerControllerTest {
        // assertEquals(new ArrayList<>(), responseEntity.getBody());
     }
 
+    /**
+     * Test get all employer by role service throws exception.
+     */
     @Test
     void testGetAllEmployerByRole_ServiceThrowsException() {
         // Arrange
@@ -89,6 +107,9 @@ class OwnerControllerTest {
 
     // Add more tests here...
 
+    /**
+     * Test get all employer by role null service response.
+     */
     @Test
     void testGetAllEmployerByRole_NullServiceResponse() {
         // Arrange
@@ -103,6 +124,9 @@ class OwnerControllerTest {
         //assertEquals(new ArrayList<>(), responseEntity.getBody());
     }
 
+    /**
+     * Test get all employer by role empty service response.
+     */
     @Test
     void testGetAllEmployerByRole_EmptyServiceResponse() {
         // Arrange
@@ -118,6 +142,9 @@ class OwnerControllerTest {
         assertEquals(emptyList, responseEntity.getBody());
     }
 
+    /**
+     * Test get all employer by role multiple owners.
+     */
     @Test
     void testGetAllEmployerByRole_MultipleOwners() {
         // Arrange
@@ -134,6 +161,9 @@ class OwnerControllerTest {
         assertEquals(ownerDTOs, responseEntity.getBody());
     }
 
+    /**
+     * Test get all employer by role empty owner list.
+     */
     @Test
     void testGetAllEmployerByRole_EmptyOwnerList() {
         // Arrange

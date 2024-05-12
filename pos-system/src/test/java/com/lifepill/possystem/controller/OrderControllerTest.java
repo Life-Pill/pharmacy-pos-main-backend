@@ -21,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+/**
+ * The type Order controller test.
+ */
 class OrderControllerTest {
 
     @Mock
@@ -29,11 +32,17 @@ class OrderControllerTest {
     @InjectMocks
     private OrderController orderController;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Test save order success.
+     */
     @Test
     void testSaveOrder_Success() {
         // Arrange
@@ -50,6 +59,9 @@ class OrderControllerTest {
 //        assertEquals(expectedMessage, responseEntity.getBody().getMessage());
     }
 
+    /**
+     * Test save order insufficient item quantity.
+     */
     @Test
     void testSaveOrder_InsufficientItemQuantity() {
         // Arrange
@@ -62,6 +74,9 @@ class OrderControllerTest {
         assertEquals(expectedMessage, exception.getMessage());
     }
 
+    /**
+     * Test save order item not found.
+     */
     @Test
     void testSaveOrder_ItemNotFound() {
         // Arrange
