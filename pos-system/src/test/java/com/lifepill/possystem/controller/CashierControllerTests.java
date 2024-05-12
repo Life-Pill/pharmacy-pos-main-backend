@@ -16,6 +16,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * Unit tests for the CashierController class.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class CashierControllerTests {
 
@@ -25,6 +28,9 @@ public class CashierControllerTests {
     @Mock
     private EmployerService employerService;
 
+    /**
+     * Test update employer password.
+     */
     @Test
     public void testUpdateEmployerPassword() {
         // Mock data
@@ -42,6 +48,9 @@ public class CashierControllerTests {
         assertEquals("Password updated successfully", response);
     }
 
+    /**
+     * Test update recent pin.
+     */
     @Test
     public void testUpdateRecentPin() {
         // Mock data
@@ -60,6 +69,9 @@ public class CashierControllerTests {
     }
 
 
+    /**
+     * Test update employer password success.
+     */
     @Test
     public void testUpdateEmployerPassword_Success() {
         // Arrange
@@ -77,6 +89,9 @@ public class CashierControllerTests {
         Assert.assertEquals("Password updated successfully", result);
     }
 
+    /**
+     * Test update recent pin success.
+     */
     @Test
     public void testUpdateRecentPin_Success() {
         // Arrange
@@ -94,6 +109,9 @@ public class CashierControllerTests {
         Assert.assertEquals("Recent PIN updated successfully", result);
     }
 
+    /**
+     * Test update employer password failure.
+     */
     @Test
     public void testUpdateEmployerPassword_Failure() {
         // Arrange
@@ -112,6 +130,9 @@ public class CashierControllerTests {
     }
 
 
+    /**
+     * Test update recent pin valid dto.
+     */
     @Test
     public void testUpdateRecentPin_ValidDTO() {
         // Test for valid DTO during recent PIN update
@@ -132,6 +153,9 @@ public class CashierControllerTests {
 
     }
 
+    /**
+     * Test update employer password empty message.
+     */
     @Test
     public void testUpdateEmployerPassword_EmptyMessage() {
         // Test for empty message after password update
@@ -152,6 +176,9 @@ public class CashierControllerTests {
 
     }
 
+    /**
+     * Test update recent pin empty message.
+     */
     @Test
     public void testUpdateRecentPin_EmptyMessage() {
         // Test for empty message after recent PIN update
@@ -171,6 +198,9 @@ public class CashierControllerTests {
             Assert.assertEquals("", result);
     }
 
+    /**
+     * Test update employer password non empty message.
+     */
     @Test
     public void testUpdateEmployerPassword_NonEmptyMessage() {
         // Test for non-empty message after password update
@@ -191,6 +221,9 @@ public class CashierControllerTests {
 
     }
 
+    /**
+     * Test update recent pin non empty message.
+     */
     @Test
     public void testUpdateRecentPin_NonEmptyMessage() {
         // Test for non-empty message after recent PIN update
@@ -211,6 +244,9 @@ public class CashierControllerTests {
 
     }
 
+    /**
+     * Test update recent pin failure invalid employer id.
+     */
     @Test
     public void testUpdateRecentPin_Failure_InvalidEmployerId() {
         // Test failure with invalid employer ID during recent PIN update
@@ -228,6 +264,9 @@ public class CashierControllerTests {
 
     }
 
+    /**
+     * Test update employer password failure invalid employer id.
+     */
     @Test
     public void testUpdateEmployerPassword_Failure_InvalidEmployerId() {
         // Test failure with invalid employer ID during password update
@@ -244,6 +283,9 @@ public class CashierControllerTests {
         assertThrows(NotFoundException.class, () -> cashierController.updateEmployerPassword(resetDTO));
     }
 
+    /**
+     * Test update employer password invalid employer id.
+     */
     @Test
     public void testUpdateEmployerPassword_InvalidEmployerId() {
         // Test for invalid employer ID during password update
@@ -260,6 +302,9 @@ public class CashierControllerTests {
         assertThrows(NotFoundException.class, () -> cashierController.updateEmployerPassword(resetDTO));
     }
 
+    /**
+     * Test update recent pin invalid employer id.
+     */
     @Test
     public void testUpdateRecentPin_InvalidEmployerId() {
         // Test for invalid employer ID during recent PIN update

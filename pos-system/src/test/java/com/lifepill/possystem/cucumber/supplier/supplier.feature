@@ -1,36 +1,46 @@
 Feature: Supplier Management
 
-  Scenario: Retrieve all suppliers
-    Given the API is running
-    When I request all suppliers
-    Then the response status code should be 200
-    And the response should contain a list of suppliers
+  Scenario: Get all suppliers
+    Given there are suppliers in the system
+    When the user requests to get all suppliers
+    Then the system should return a list of suppliers
+
+  Scenario: Get a supplier by ID
+    Given there is a supplier with ID 1
+    When the user requests to get the supplier with ID 1
+    Then the system should return the supplier with ID 1
 
   Scenario: Save a new supplier
-    Given the API is running
-    And I have a new supplier to save
-    When I save the supplier
-    Then the response status code should be 201
-    And the response should contain the saved supplier
+    Given there is no supplier with email "test@example.com"
+    When the user requests to save a new supplier with email "test@example.com"
+    Then the system should save the new supplier
 
   Scenario: Update an existing supplier
-    Given the API is running
-    And there exists a supplier with ID 1
-    And I have updated details for the supplier
-    When I update the supplier with ID 1
-    Then the response status code should be 200
-    And the response should contain the updated supplier
+    Given there is a supplier with ID 1
+    When the user requests to update the supplier with ID 1
+    Then the system should update the supplier with ID 1
 
-  Scenario: Retrieve a supplier by ID
-    Given the API is running
-    And there exists a supplier with ID 1
-    When I request the supplier with ID 1
-    Then the response status code should be 200
-    And the response should contain the supplier details
+  Scenario: Delete a supplier
+    Given there is a supplier with ID 1
+    When the user requests to delete the supplier with ID 1
+    Then the system should delete the supplier with ID 1
 
-  Scenario: Delete a supplier by ID
-    Given the API is running
-    And there exists a supplier with ID 1
-    When I delete the supplier with ID 1
-    Then the response status code should be 204
-    And the supplier with ID 1 should be deleted
+  Scenario: Get all suppliers when no suppliers exist
+    Given there are no suppliers in the system
+    When the user requests to get all suppliers
+    Then the system should return an empty list of suppliers
+
+  Scenario: Save a new supplier with a duplicate email
+    Given there is a supplier with email "test@example.com"
+    When the user requests to save a new supplier with email "test@example.com"
+    Then the system should throw an EntityDuplicationException
+
+  Scenario: Update a non-existing supplier
+    Given there is no supplier with ID 1
+    When the user requests to update the supplier with ID 1
+    Then the system should throw a NotFoundException
+
+  Scenario: Delete a non-existing supplier
+    Given there is no supplier with ID 1
+    When the user requests to delete the supplier with ID 1
+    Then the system should throw a NotFoundException
