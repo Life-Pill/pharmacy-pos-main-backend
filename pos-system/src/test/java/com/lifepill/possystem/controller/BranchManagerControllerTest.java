@@ -47,4 +47,37 @@ public class BranchManagerControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(mockEmployers, responseEntity.getBody());
     }
+
+    @Test
+    public void testGetAllCashiersByBranchIdEmpty() {
+        // Mock data
+        int branchId = 1;
+        List<EmployerDTO> mockEmployers = Arrays.asList();
+
+        // Mock employerService.getAllEmployerByBranchId to return mockEmployers
+        Mockito.when(employerService.getAllEmployerByBranchId(branchId)).thenReturn(mockEmployers);
+
+        // Call the controller method
+        ResponseEntity<List<EmployerDTO>> responseEntity = branchManagerController.getAllCashiersByBranchId(branchId);
+
+        // Verify the response
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(mockEmployers, responseEntity.getBody());
+    }
+
+    @Test
+    public void testGetAllCashiersByBranchIdNull() {
+        // Mock data
+        int branchId = 1;
+
+        // Mock employerService.getAllEmployerByBranchId to return null
+        Mockito.when(employerService.getAllEmployerByBranchId(branchId)).thenReturn(null);
+
+        // Call the controller method
+        ResponseEntity<List<EmployerDTO>> responseEntity = branchManagerController.getAllCashiersByBranchId(branchId);
+
+        // Verify the response
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(null, responseEntity.getBody());
+    }
 }
