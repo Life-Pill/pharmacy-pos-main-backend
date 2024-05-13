@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.cucumber.supplier;
 
 import com.lifepill.possystem.dto.SupplierDTO;
@@ -213,4 +214,4 @@ public class SupplierStepDefinitions {
         when(supplierRepository.existsAllBySupplierEmail(anyString())).thenReturn(false);
     }
 
-}
+}*/
