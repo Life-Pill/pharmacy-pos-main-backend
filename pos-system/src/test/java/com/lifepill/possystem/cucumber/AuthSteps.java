@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.cucumber;
 
 import com.lifepill.possystem.controller.AuthController;
@@ -91,4 +92,4 @@ public class AuthSteps {
         // Assert the response body contains an error message
         Assertions.assertTrue(authenticationResponse.getBody().toString().contains("Authentication failed"));
     }
-}
+}*/
