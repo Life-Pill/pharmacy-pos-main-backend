@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.repo;
 
 import com.lifepill.possystem.entity.Order;
@@ -19,13 +20,22 @@ class OrderDetailsRepositoryTest {
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
 
-    /*@Test
+    */
+/*@Test
     void testSaveOrderDetails() {
         // Create test data
-        Order order = new Order(*//* Set order details *//*);
+        Order order = new Order(*//*
+*/
+/* Set order details *//*
+*/
+/*);
         order = entityManager.persist(order);
 
-        OrderDetails orderDetails = new OrderDetails(*//* Set order details *//*);
+        OrderDetails orderDetails = new OrderDetails(*//*
+*/
+/* Set order details *//*
+*/
+/*);
         orderDetails.setOrders(order);
         orderDetails = entityManager.persist(orderDetails);
         entityManager.flush();
@@ -39,5 +49,7 @@ class OrderDetailsRepositoryTest {
         assertEquals(orderDetails.getName(), savedOrderDetails.getName());
         assertEquals(orderDetails.getAmount(), savedOrderDetails.getAmount());
         assertEquals(order.getOrderId(), savedOrderDetails.getOrders().getOrderId());
-    }*/
+    }*//*
+
 }
+*/

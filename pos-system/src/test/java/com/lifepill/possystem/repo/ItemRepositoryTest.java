@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.repo;
 
 import com.lifepill.possystem.entity.Item;
@@ -12,11 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 class ItemRepositoryTest {
 
-  /*      @Autowired
+  */
+/*      @Autowired
         private TestEntityManager entityManager;
 
         @Autowired
-        private ItemRepository itemRepository;
+        private ItemRepositogit pullry itemRepository;
 
         @Test
         void testSaveItem() {
@@ -28,5 +30,6 @@ class ItemRepositoryTest {
 
             // Assert result
 
-        }*/
-}
+        }*//*
+
+}*/
