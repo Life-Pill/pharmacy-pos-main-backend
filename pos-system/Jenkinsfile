@@ -1,4 +1,4 @@
-pipeline {
+docker build -t pramithamj/pos-system:latest .pipeline {
     agent any
     tools {
         jdk 'Java17'
