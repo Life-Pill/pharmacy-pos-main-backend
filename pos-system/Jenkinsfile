@@ -1,9 +1,12 @@
-docker build -t pramithamj/pos-system:latest .pipeline {
+pipeline {
     agent any
+
     tools {
         jdk 'Java17'
         maven 'maven_3_9_6'
+        dockerTool 'docker'
     }
+
     stages {
         stage("Cleanup Workspace") {
             steps {
@@ -25,21 +28,38 @@ docker build -t pramithamj/pos-system:latest .pipeline {
             }
         }
 
-        stage("Dockerize and Push to Docker Hub") {
+        stage("Test Application") {
             steps {
-                script {
-                    def dockerImage = docker.build("pramithamj/pos-system:latest", "-f Dockerfile .")
-                    dockerImage.push()
+                dir('pos-system') {
+                    sh "mvn test"
                 }
             }
         }
 
-        stage("Download and Run Docker Image") {
-            steps {
-                script {
-                    docker.image('pramithamje/pos-system:latest').pull()
-                    docker.run("pramithamj/pos-system:latest", "-p 8081:8081", "--name pos-system-container")
+        stage('Build docker image'){
+            steps{
+                dir('pos-system') {
+                    sh 'docker build -t pramithamj/pos-system:latest .'
                 }
+            }
+        }
+
+        stage('Stop and Remove Existing Container') {
+            steps {
+                sh 'docker stop java_container || true'
+                sh 'docker rm java_container || true'
+            }
+        }
+
+        stage('Run Docker container') {
+            steps {
+                sh 'docker run -d --name java_container pramithamj/pos-system:latest'
+            }
+        }
+
+        stage('Check Docker containers') {
+            steps {
+                sh 'docker ps'
             }
         }
 
@@ -50,24 +70,29 @@ docker build -t pramithamj/pos-system:latest .pipeline {
                 }
             }
         }
-        stage("Code Quality Checks") {
-            steps {
-                 // Execute SonarQube analysis
-                 withSonarQubeEnv('SonarQube') {
+        stage("SonarQube Analysis"){
+            steps{
+                withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token', installationName: 'SonarQube') {
                     dir('pos-system') {
                         sh "mvn sonar:sonar"
                     }
                 }
             }
         }
+    }
 
-        stage("Stop and Remove Docker Container") {
-            steps {
-                script {
-                    docker.stop("pos-system-container")
-                    docker.removeContainer("pos-system-container")
-                }
+    post {
+        always {
+            // Clean up Docker resources
+            script {
+                sh 'docker rmi --force pramithamj/pos-system:latest || true'
             }
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
