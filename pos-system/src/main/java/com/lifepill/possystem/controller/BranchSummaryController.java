@@ -25,7 +25,7 @@ public class BranchSummaryController {
     private BranchSummaryService branchSummaryService;
 
     /**
-     * gti checkouRetrieves all branches along with their sales summary.
+     * gti checkRetrieves all branches along with their sales summary.
      *
      * @return ResponseEntity containing StandardResponse with status 201 (SUCCESS)
      * and list of PharmacyBranchResponseDTO

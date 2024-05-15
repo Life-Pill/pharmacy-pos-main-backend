@@ -16,6 +16,7 @@ import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerBankDetailsRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
+import com.lifepill.possystem.util.mappers.EmployerMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +46,8 @@ public class EmployerServiceIMPL implements EmployerService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private EmployerMapper employerMapper;
 
     /**
      * Saves an employer with image.
@@ -87,7 +90,8 @@ public class EmployerServiceIMPL implements EmployerService {
     @Override
     public String saveEmployerWithoutImage(EmployerWithoutImageDTO employerWithoutImageDTO) {
         // check if the employer already exists email or id
-        if (employerRepository.existsById(employerWithoutImageDTO.getEmployerId()) || employerRepository.existsAllByEmployerEmail(employerWithoutImageDTO.getEmployerEmail())) {
+        if (employerRepository.existsById(employerWithoutImageDTO.getEmployerId())
+                || employerRepository.existsAllByEmployerEmail(employerWithoutImageDTO.getEmployerEmail())) {
             throw new EntityDuplicationException("Employer already exists");
         } else {
 
@@ -101,8 +105,18 @@ public class EmployerServiceIMPL implements EmployerService {
             // Set the Branch entity to the Employer
             employer.setBranch(branch);
 
-            // Save the Employer entity
-            employerRepository.save(employer);
+            String savedEmployer = String.valueOf(employerRepository.findByEmployerEmail(employerWithoutImageDTO.getEmployerEmail()));
+            if (savedEmployer != null) {
+                employerRepository.save(employer);
+                long employerId = employer.getEmployerId();
+
+                employerWithoutImageDTO.setEmployerId(employerId);
+
+                System.out.println(employer.getEmployerId());
+
+            } else {
+                throw new NotFoundException("Employer not found after saving");
+            }
             return "Employer Saved";
 
 

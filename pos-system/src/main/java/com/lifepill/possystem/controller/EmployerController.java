@@ -7,6 +7,7 @@ import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
 import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
 import com.lifepill.possystem.util.mappers.EmployerMapper;
@@ -41,6 +42,9 @@ public class EmployerController {
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
+    @Autowired
+    private EmployerRepository employerRepository;
+
     /**
      * Saves an employer without an image.
      *
@@ -50,6 +54,8 @@ public class EmployerController {
     @PostMapping("/save-without-image")
     public ResponseEntity<StandardResponse> saveCashierWithoutImage(@RequestBody EmployerWithoutImageDTO cashierWithoutImageDTO) {
         employerService.saveEmployerWithoutImage(cashierWithoutImageDTO);
+
+        System.out.println(cashierWithoutImageDTO.getEmployerId());
         return new ResponseEntity<>(
                 new StandardResponse(201, "successfully saved", cashierWithoutImageDTO),
                 HttpStatus.CREATED
