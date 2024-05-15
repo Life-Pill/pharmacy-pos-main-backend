@@ -62,7 +62,6 @@ public enum Role {
             OTHER_CREATE
             )
     )
-
     ;
 
     @Getter
