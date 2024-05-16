@@ -44,32 +44,16 @@ public class Branch {
     @Column(name = "branch_created_by")
     private String branchCreatedBy;
 
-/*
-   @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-    //@OneToMany(mappedBy = "branch", fetch = FetchType.EAGER)
-    private Set<Employer> employers;
-*/
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch", fetch = FetchType.EAGER)
     private Set<Employer> employers;
 
+    @ManyToMany
+    @JoinTable(
+            name = "branch_item",
+            joinColumns = @JoinColumn(name = "branch_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id")
+    )
+    private Set<Item> items;
 
-/*    public Branch(int branchId, String branchName, String branchAddress, String branchContact, String branchFax, String branchEmail, String branchDescription, byte[] branchImage, boolean branchStatus, String branchLocation, String branchCreatedOn, String branchCreatedBy) {
-        this.branchId = branchId;
-        this.branchName = branchName;
-        this.branchAddress = branchAddress;
-        this.branchContact = branchContact;
-        this.branchFax = branchFax;
-        this.branchEmail = branchEmail;
-        this.branchDescription = branchDescription;
-        this.branchImage = branchImage;
-        this.branchStatus = branchStatus;
-        this.branchLocation = branchLocation;
-        this.branchCreatedOn = branchCreatedOn;
-        this.branchCreatedBy = branchCreatedBy;
-    }*/
 
-//branch manager
-    //employee count
-    //branch monthly sales
 }
