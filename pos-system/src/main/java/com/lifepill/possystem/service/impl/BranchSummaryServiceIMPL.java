@@ -291,16 +291,16 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         Double totalSales = orderRepository.getTotalSales();
 
         // Fetch total orders
-        Long totalOrders = orderRepository.count();
+        long totalOrders = orderRepository.count();
 
         // Fetch total employees
-        Long totalEmployees = employerRepository.count();
+        long totalEmployees = employerRepository.count();
 
         // Fetch total branches
-        Long totalBranches = branchRepository.count();
+        long totalBranches = branchRepository.count();
 
         // Create and return AllPharmacySummaryResponseDTO
-        return new AllPharmacySummaryResponseDTO(totalSales, totalOrders.intValue(), totalEmployees.intValue(), totalBranches.intValue());
+        return new AllPharmacySummaryResponseDTO(totalSales, (int) totalOrders, (int) totalEmployees, (int) totalBranches);
     }
 
 
