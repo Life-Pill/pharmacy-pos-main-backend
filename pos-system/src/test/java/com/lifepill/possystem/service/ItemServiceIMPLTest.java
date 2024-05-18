@@ -48,7 +48,7 @@ public class ItemServiceIMPLTest {
         when(itemRepository.findAllByItemNameEqualsAndStockEquals(anyString(), anyBoolean())).thenReturn(List.of());
 
         // Act and Assert
-        assertThrows(NotFoundException.class, () -> itemService.getItemByNameAndStock(itemName));
+        assertThrows(NotFoundException.class, () -> itemService.getItemByName(itemName));
     }
 
     /**

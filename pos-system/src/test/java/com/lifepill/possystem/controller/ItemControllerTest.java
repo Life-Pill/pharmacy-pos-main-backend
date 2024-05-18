@@ -99,7 +99,7 @@ class ItemControllerTest {
     void testGetItemByNameAndStock() {
         String itemName = "Item 1";
         List<ItemGetResponseDTO> itemGetResponseDTOS = Arrays.asList(new ItemGetResponseDTO(), new ItemGetResponseDTO());
-        when(itemService.getItemByNameAndStock(itemName)).thenReturn(itemGetResponseDTOS);
+        when(itemService.getItemByName(itemName)).thenReturn(itemGetResponseDTOS);
 
         List<ItemGetResponseDTO> result = itemController.getItemByNameAndStock(itemName);
 
