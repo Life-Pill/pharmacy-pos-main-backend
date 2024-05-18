@@ -16,6 +16,7 @@ import java.util.Date;
 public class ItemSaveRequestCategoryDTO {
 
         private long itemId;
+        private long branchId;
         private String itemName;
         private double sellingPrice;
         private String itemBarCode;

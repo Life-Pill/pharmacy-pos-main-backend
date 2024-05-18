@@ -109,17 +109,12 @@ public class EmployerServiceIMPL implements EmployerService {
             if (savedEmployer != null) {
                 employerRepository.save(employer);
                 long employerId = employer.getEmployerId();
-
                 employerWithoutImageDTO.setEmployerId(employerId);
-
-                System.out.println(employer.getEmployerId());
 
             } else {
                 throw new NotFoundException("Employer not found after saving");
             }
             return "Employer Saved";
-
-
         }
     }
     /**
@@ -556,7 +551,6 @@ public class EmployerServiceIMPL implements EmployerService {
             // Add the employer with bank details DTO to the list
             employersWithBankDetails.add(employerWithBankDTO);
         }
-
         return employersWithBankDetails;
     }
 
@@ -571,6 +565,7 @@ public class EmployerServiceIMPL implements EmployerService {
         // Retrieve the employer data by ID
         Employer employerDTO = employerRepository.findById(employerId)
                 .orElseThrow(() -> new NotFoundException("Employer not found for ID: " + employerId));
+
         // get branch id
         long branchId = employerDTO.getBranch().getBranchId();
 
@@ -579,8 +574,6 @@ public class EmployerServiceIMPL implements EmployerService {
 
         // set branch id
         employerWithBankDTO.setBranchId(branchId);
-
-        System.out.println(employerWithBankDTO);
 
         return employerWithBankDTO;
     }

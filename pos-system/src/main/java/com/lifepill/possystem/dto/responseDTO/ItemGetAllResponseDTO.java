@@ -15,6 +15,7 @@ import java.util.Date;
 @Data
 public class ItemGetAllResponseDTO {
     private long itemId;
+    private long brandId;
     private String itemName;
     private double sellingPrice;
     private String itemBarCode;
@@ -24,7 +25,8 @@ public class ItemGetAllResponseDTO {
     private boolean isDiscounted;
     private String itemManufacture;
     private double itemQuantity;
-//    private String itemCategory;
+    private String itemCategoryName;
+    private long itemCategoryId;
     private boolean isStock;
     private MeasuringUnitType measuringUnitType;
     private Date manufactureDate;

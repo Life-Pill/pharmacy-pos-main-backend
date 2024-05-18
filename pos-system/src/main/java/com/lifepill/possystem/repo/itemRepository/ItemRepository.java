@@ -55,4 +55,8 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
      * @return the list
      */
     List<Item> findAllByItemBarCodeEquals(String itemBarCode);
+
+    List<Item> findAllByItemName(String itemName);
+
+    List<Item> findAllByItemNameAndStock(String itemName, boolean stock);
 }

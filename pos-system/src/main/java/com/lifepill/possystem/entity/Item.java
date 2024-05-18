@@ -14,7 +14,9 @@ import java.util.Set;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@ToString
+@Setter
+@Getter
 @Entity
 @Table(name = "item")
 public class Item {
@@ -109,4 +111,12 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
+
+    // branch id
+    @Column(name = "branch_id")
+    private long branchId;
+
+    @ManyToMany(mappedBy = "items")
+    private Set<Branch> branches;
+
 }

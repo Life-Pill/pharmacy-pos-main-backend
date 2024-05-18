@@ -7,11 +7,13 @@ import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
+import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Item;
 import com.lifepill.possystem.entity.ItemCategory;
 import com.lifepill.possystem.entity.Supplier;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.itemRepository.ItemCategoryRepository;
 import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.repo.supplierRepository.SupplierRepository;
@@ -37,6 +39,9 @@ public class ItemServiceIMPL implements ItemService {
     private ItemRepository itemRepository;
 
     @Autowired
+    private BranchRepository branchRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -58,6 +63,25 @@ public class ItemServiceIMPL implements ItemService {
     @Override
     public String saveItems(ItemSaveRequestDTO itemSaveRequestDTO) {
         Item item = modelMapper.map(itemSaveRequestDTO, Item.class);
+
+        // Check if the item category exists
+        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestDTO.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category not found with ID: "
+                        + itemSaveRequestDTO.getCategoryId())
+                );
+
+        // Check if the item branch exists
+        Branch branch = branchRepository.findById(itemSaveRequestDTO.getBranchId())
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
+                        + itemSaveRequestDTO.getBranchId())
+                );
+
+        // Check if the item supplier exists
+        Supplier supplier = supplierRepository.findById(itemSaveRequestDTO.getSupplierId())
+                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: "
+                        + itemSaveRequestDTO.getSupplierId())
+                );
+
         if (!itemRepository.existsById(item.getItemId())) {
             itemRepository.save(item);
             return item.getItemName() + " Saved Successfull";
@@ -80,8 +104,8 @@ public class ItemServiceIMPL implements ItemService {
             List<ItemGetAllResponseDTO> itemGetAllResponseDTOSList = new ArrayList<>();
             for (Item item : getAllItems) {
                 ItemGetAllResponseDTO itemGetAllResponseDTO = new ItemGetAllResponseDTO(
-
                         item.getItemId(),
+                        item.getBranchId(),
                         item.getItemName(),
                         item.getSellingPrice(),
                         item.getItemBarCode(),
@@ -91,6 +115,8 @@ public class ItemServiceIMPL implements ItemService {
                         item.isDiscounted(),
                         item.getItemManufacture(),
                         item.getItemQuantity(),
+                        item.getItemCategory().getCategoryName(),
+                        item.getItemCategory().getCategoryId(),
                         item.isStock(),
                         item.getMeasuringUnitType(),
                         item.getManufactureDate(),
@@ -104,7 +130,6 @@ public class ItemServiceIMPL implements ItemService {
                         item.isSpecialCondition(),
                         item.getItemImage(),
                         item.getItemDescription()
-
                 );
                 itemGetAllResponseDTOSList.add(itemGetAllResponseDTO);
             }
@@ -123,8 +148,8 @@ public class ItemServiceIMPL implements ItemService {
      * @throws NotFoundException If no items are found.
      */
     @Override
-    public List<ItemGetResponseDTO> getItemByNameAndStock(String itemName) {
-        List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
+    public List<ItemGetResponseDTO> getItemByName(String itemName) {
+        List<Item> items = itemRepository.findAllByItemName(itemName);
         if (!items.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     items,
@@ -153,6 +178,11 @@ public class ItemServiceIMPL implements ItemService {
                     new TypeToken<List<ItemGetResponseDTO>>() {
                     }.getType()
             );
+            // System.out.println(itemGetResponseDTOS);
+            //get responseDTOS getItemCategory.getItemName()
+
+
+
             return itemGetResponseDTOS;
         } else {
             throw new NotFoundException("out of Stock");
@@ -312,6 +342,7 @@ public class ItemServiceIMPL implements ItemService {
         // Check if category exists
         ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
                 .orElseGet(() -> {
+
                     // If category doesn't exist, create a new one
                     ItemCategory newCategory = new ItemCategory();
                     // Set category properties if needed
@@ -323,14 +354,32 @@ public class ItemServiceIMPL implements ItemService {
 
         // Check if supplier exists
         Supplier supplier = supplierRepository.findById(itemSaveRequestCategoryDTO.getSupplierId())
-                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: " + itemSaveRequestCategoryDTO.getSupplierId()));
+                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: "
+                        + itemSaveRequestCategoryDTO.getSupplierId())
+                );
+
+        // Check if branch exists
+         Branch branch = branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
+                        + itemSaveRequestCategoryDTO.getBranchId())
+                );
+
+        itemRepository.findById(itemSaveRequestCategoryDTO.getItemId())
+                .ifPresent(item -> {
+                    throw new EntityDuplicationException("Item already exists with ID: "
+                            + itemSaveRequestCategoryDTO.getItemId());
+                });
 
         // Now, associate the item with the category and supplier
         Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
         item.setItemCategory(category);
         item.setSupplier(supplier); // Ensure the supplier is set
+        item.setBranchId(itemSaveRequestCategoryDTO.getBranchId());
+
         itemRepository.save(item);
         return "Item saved successfully with category and supplier";
+
+        //TODO: Need to get response of real item id now it shows in zero
     }
 
     /**
