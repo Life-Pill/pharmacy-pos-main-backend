@@ -7,6 +7,7 @@ import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerUpdateAccoun
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerUpdateBankAccountDTO;
 import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.service.EmployerService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,12 +24,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("lifepill/v1/branch-manager")
+@AllArgsConstructor
 public class BranchManagerController {
 
-    @Autowired
     private BranchService branchService;
-
-    @Autowired
     private EmployerService employerService;
 
     /**

@@ -9,6 +9,7 @@ import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.helper.SaveImageHelper;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.service.BranchService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,11 +27,10 @@ import java.util.Optional;
  * Service implementation for managing branches.
  */
 @Service
+@AllArgsConstructor
 public class BranchServiceIMPL implements BranchService {
 
-    @Autowired
     private BranchRepository branchRepository;
-    @Autowired
     private ModelMapper modelMapper;
 
     /**

@@ -126,7 +126,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
                 .collect(Collectors.groupingBy(
                         Order::getBranchId, Collectors.summingDouble(Order::getTotal))
                 );
-        logger.info(branchSalesMap.toString() + "branchSalesMap");
         Map<Long, Long> branchOrdersCountMap = ordersForDate.stream()
                 .collect(Collectors.groupingBy(
                         Order::getBranchId, Collectors.counting())
@@ -145,7 +144,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
         }).collect(Collectors.toList());
 
-        logger.info("Fetched all branches with sales information successfully.");
         return pharmacyData;
     }
 
@@ -184,8 +182,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             BranchDTO branchDTO = getBranchDetails(branchId);
             return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
         }).collect(Collectors.toList());
-
-        logger.info("Fetched all branches with sales information successfully.");
         return pharmacyData;
     }
 
@@ -234,7 +230,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
         }).collect(Collectors.toList());
 
-        logger.info("Fetched all branches with sales information successfully.");
         return pharmacyData;
     }
 

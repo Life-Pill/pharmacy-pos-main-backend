@@ -9,6 +9,8 @@ import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.service.ItemService;
 import com.lifepill.possystem.util.StandardResponse;
+import lombok.AllArgsConstructor;
+import org.hibernate.annotations.MapKeyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +23,9 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/lifepill/v1/item")
+@AllArgsConstructor
 public class ItemController {
 
-    @Autowired
     private ItemService itemService;
 
     /**

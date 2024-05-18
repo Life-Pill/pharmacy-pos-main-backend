@@ -11,6 +11,7 @@ import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
 import com.lifepill.possystem.util.mappers.EmployerMapper;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,21 +30,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("lifepill/v1/employers")
+@AllArgsConstructor
 public class EmployerController {
 
-    @Autowired
     private EmployerService employerService;
-
-    @Autowired
     private EmployerMapper employerMapper;
-
-    @Autowired
     private ModelMapper modelMapper;
+    private EmployerRepository employerRepository;
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
-    @Autowired
-    private EmployerRepository employerRepository;
 
     /**
      * Saves an employer without an image.

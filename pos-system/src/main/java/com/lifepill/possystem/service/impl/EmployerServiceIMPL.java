@@ -17,6 +17,7 @@ import com.lifepill.possystem.repo.employerRepository.EmployerBankDetailsReposit
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.mappers.EmployerMapper;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,23 +31,14 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class EmployerServiceIMPL implements EmployerService {
 
-    @Autowired
     private EmployerRepository employerRepository;
-
-    @Autowired
     private EmployerBankDetailsRepository cashierBankDetailsRepo;
-
-    @Autowired
     private BranchRepository branchRepository;
-
-    @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
     private EmployerMapper employerMapper;
 
     /**

@@ -9,6 +9,7 @@ import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.supplierRepository.SupplierCompanyRepository;
 import com.lifepill.possystem.repo.supplierRepository.SupplierRepository;
 import com.lifepill.possystem.service.SupplierService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,15 +24,11 @@ import java.util.Optional;
  */
 @Service
 @Transactional
+@AllArgsConstructor
 public class SupplierServiceIMPL implements SupplierService {
 
-    @Autowired
     private SupplierRepository supplierRepository;
-
-    @Autowired
     private SupplierCompanyRepository supplierCompanyRepository;
-
-    @Autowired
     private ModelMapper modelMapper;
 
     /**

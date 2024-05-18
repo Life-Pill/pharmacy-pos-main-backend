@@ -25,5 +25,4 @@ spring:
         logging:
           level:
             org.springframework.security: TRACE
-app:
-  base-url: http://localhost:8081
+

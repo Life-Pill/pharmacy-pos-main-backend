@@ -3,6 +3,7 @@ package com.lifepill.possystem.controller;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerPasswordResetDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerRecentPinUpdateDTO;
 import com.lifepill.possystem.service.EmployerService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("lifepill/v1/cashier")
+@AllArgsConstructor
 public class CashierController {
 
-    @Autowired
     private EmployerService employerService;
 
     /**

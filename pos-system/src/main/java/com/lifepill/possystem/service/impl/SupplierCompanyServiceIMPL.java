@@ -5,6 +5,7 @@ import com.lifepill.possystem.entity.SupplierCompany;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.supplierRepository.SupplierCompanyRepository;
 import com.lifepill.possystem.service.SupplierCompanyService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,10 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@AllArgsConstructor
 public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
 
-    @Autowired
     private SupplierCompanyRepository supplierCompanyRepository;
-
-    @Autowired
     private ModelMapper modelMapper;
 
     /**
@@ -58,7 +57,7 @@ public class SupplierCompanyServiceIMPL implements SupplierCompanyService {
     /**
      * Saves a new SupplierCompany.
      *
-     * @param supplierCompanyDTO The DTO containing information about the SupplierCompany to be saved.
+     * @param updatedCompanyDTO The DTO containing information about the SupplierCompany to be saved.
      * @return The DTO representation of the saved SupplierCompany.
      */
     public SupplierCompanyDTO updateSupplierCompanyById(long id, SupplierCompanyDTO updatedCompanyDTO) {

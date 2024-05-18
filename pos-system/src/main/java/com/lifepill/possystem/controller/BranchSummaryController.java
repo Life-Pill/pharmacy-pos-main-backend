@@ -4,6 +4,7 @@ import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.service.BranchSummaryService;
 import com.lifepill.possystem.util.StandardResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,9 @@ import java.util.List;
 @RestController
 @RequestMapping("lifepill/v1/branch-summary")
 @CrossOrigin(origins = "http://localhost:5173")
+@AllArgsConstructor
 public class BranchSummaryController {
 
-    @Autowired
     private BranchSummaryService branchSummaryService;
 
     /**

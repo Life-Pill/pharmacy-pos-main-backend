@@ -2,6 +2,7 @@ package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.SupplierDTO;
 import com.lifepill.possystem.service.SupplierService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/lifepill/v1/supplier")
 @CrossOrigin
+@AllArgsConstructor
 public class SupplierController {
 
-    @Autowired
     private SupplierService supplierService;
 
     /**
