@@ -32,13 +32,14 @@ public class ItemController {
      * @param itemSaveRequestCategoryDTO The DTO containing details of the item and its category to be saved.
      * @return ResponseEntity containing a StandardResponse object with a success message.
      */
-    @PostMapping(path = "/save-with-category")
+    @PostMapping(path = "/save-item")
     public ResponseEntity<StandardResponse> saveItemWithCategory(
             @RequestBody ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO
     ) {
         String message = itemService.saveItemWithCategory(itemSaveRequestCategoryDTO);
+
         return new ResponseEntity<>(
-                new StandardResponse(201, "Success", message),
+                new StandardResponse(201, "Successfully Saved Item", message),
                 HttpStatus.CREATED);
     }
 
@@ -48,6 +49,7 @@ public class ItemController {
      * @param itemSaveRequestDTO The DTO containing details of the item to be saved.
      * @return ResponseEntity containing a StandardResponse object with a success message.
      */
+    //TODO: need to improvement don't use saveItems for this use save item
     @PostMapping(path = "/save")
     public ResponseEntity<StandardResponse> saveItem(@RequestBody ItemSaveRequestDTO itemSaveRequestDTO) {
         String message = itemService.saveItems(itemSaveRequestDTO);

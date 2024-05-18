@@ -13,6 +13,7 @@ import java.util.Date;
 @Data
 public class ItemSaveRequestDTO {
     private long itemId;
+    private long branchId;
     private String itemName;
     private double sellingPrice;
     private String itemBarCode;
@@ -22,7 +23,6 @@ public class ItemSaveRequestDTO {
     private boolean isDiscounted;
     private String itemManufacture;
     private double itemQuantity;
-//    private String itemCategory;
     private boolean isStock;
     private MeasuringUnitType measuringUnitType;
     private Date manufactureDate;
@@ -36,4 +36,6 @@ public class ItemSaveRequestDTO {
     private boolean isSpecialCondition;
     private String itemImage;
     private String itemDescription;
+    private long categoryId;
+    private long supplierId;
 }

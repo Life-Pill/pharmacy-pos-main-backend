@@ -63,6 +63,25 @@ public class ItemServiceIMPL implements ItemService {
     @Override
     public String saveItems(ItemSaveRequestDTO itemSaveRequestDTO) {
         Item item = modelMapper.map(itemSaveRequestDTO, Item.class);
+
+        // Check if the item category exists
+        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestDTO.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category not found with ID: "
+                        + itemSaveRequestDTO.getCategoryId())
+                );
+
+        // Check if the item branch exists
+        Branch branch = branchRepository.findById(itemSaveRequestDTO.getBranchId())
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
+                        + itemSaveRequestDTO.getBranchId())
+                );
+
+        // Check if the item supplier exists
+        Supplier supplier = supplierRepository.findById(itemSaveRequestDTO.getSupplierId())
+                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: "
+                        + itemSaveRequestDTO.getSupplierId())
+                );
+
         if (!itemRepository.existsById(item.getItemId())) {
             itemRepository.save(item);
             return item.getItemName() + " Saved Successfull";
@@ -111,7 +130,6 @@ public class ItemServiceIMPL implements ItemService {
                         item.isSpecialCondition(),
                         item.getItemImage(),
                         item.getItemDescription()
-
                 );
                 itemGetAllResponseDTOSList.add(itemGetAllResponseDTO);
             }
@@ -324,6 +342,7 @@ public class ItemServiceIMPL implements ItemService {
         // Check if category exists
         ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
                 .orElseGet(() -> {
+
                     // If category doesn't exist, create a new one
                     ItemCategory newCategory = new ItemCategory();
                     // Set category properties if needed
@@ -339,22 +358,28 @@ public class ItemServiceIMPL implements ItemService {
                         + itemSaveRequestCategoryDTO.getSupplierId())
                 );
 
-        System.out.println(itemSaveRequestCategoryDTO.getBranchId());
-
         // Check if branch exists
          Branch branch = branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
                 .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
                         + itemSaveRequestCategoryDTO.getBranchId())
                 );
 
+        itemRepository.findById(itemSaveRequestCategoryDTO.getItemId())
+                .ifPresent(item -> {
+                    throw new EntityDuplicationException("Item already exists with ID: "
+                            + itemSaveRequestCategoryDTO.getItemId());
+                });
+
         // Now, associate the item with the category and supplier
         Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
         item.setItemCategory(category);
         item.setSupplier(supplier); // Ensure the supplier is set
         item.setBranchId(itemSaveRequestCategoryDTO.getBranchId());
-        System.out.println(itemSaveRequestCategoryDTO.getBranchId());
+
         itemRepository.save(item);
         return "Item saved successfully with category and supplier";
+
+        //TODO: Need to get response of real item id now it shows in zero
     }
 
     /**
