@@ -24,6 +24,5 @@ public class BranchDTO {
     private String branchLocation;
     private String branchCreatedOn;
     private String branchCreatedBy;
-
 }
 

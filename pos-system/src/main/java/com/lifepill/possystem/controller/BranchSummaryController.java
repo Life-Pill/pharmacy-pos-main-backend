@@ -118,7 +118,8 @@ public class BranchSummaryController {
      *
      * @param month The month for which to retrieve the summary (1-12).
      * @param year  The year for which to retrieve the summary.
-     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with the summary of sales for the given month.
+     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with the
+     * summary of sales for the given month.
      */
     @GetMapping("/monthly-summary")
     public ResponseEntity<StandardResponse> getMonthlySummary(
@@ -140,7 +141,8 @@ public class BranchSummaryController {
      * Endpoint to retrieve a summary of sales for the given year.
      *
      * @param year The year for which to retrieve the summary.
-     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with the summary of sales for the given year.
+     * @return ResponseEntity containing a list of PharmacyBranchResponseDTO with the summary of
+     * sales for the given year.
      */
     @GetMapping("/yearly-summary")
     public ResponseEntity<StandardResponse> getYearlySummary(
