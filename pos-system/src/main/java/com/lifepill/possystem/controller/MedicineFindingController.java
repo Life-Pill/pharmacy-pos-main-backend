@@ -1,12 +1,9 @@
 package com.lifepill.possystem.controller;
 
-import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.MedicineGetResponseDTO;
-import com.lifepill.possystem.service.ItemService;
 import com.lifepill.possystem.service.MedicineFindingService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

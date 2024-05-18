@@ -5,6 +5,9 @@ import com.lifepill.possystem.dto.ItemCategoryDTO;
 import com.lifepill.possystem.entity.enums.MeasuringUnitType;
 import lombok.*;
 
+/**
+ * The type Medicine get response dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
