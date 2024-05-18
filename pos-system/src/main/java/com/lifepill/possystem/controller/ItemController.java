@@ -82,7 +82,7 @@ public class ItemController {
      */
     @GetMapping(path = "/get-by-name", params = "itemName")
     public List<ItemGetResponseDTO> getItemByNameAndStock(@RequestParam(value = "itemName") String itemName) {
-        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByNameAndStock(itemName);
+        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByName(itemName);
         return itemDTOS;
     }
 

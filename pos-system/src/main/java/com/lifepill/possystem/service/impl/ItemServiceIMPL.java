@@ -148,7 +148,7 @@ public class ItemServiceIMPL implements ItemService {
      * @throws NotFoundException If no items are found.
      */
     @Override
-    public List<ItemGetResponseDTO> getItemByNameAndStock(String itemName) {
+    public List<ItemGetResponseDTO> getItemByName(String itemName) {
         List<Item> items = itemRepository.findAllByItemName(itemName);
         if (!items.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
