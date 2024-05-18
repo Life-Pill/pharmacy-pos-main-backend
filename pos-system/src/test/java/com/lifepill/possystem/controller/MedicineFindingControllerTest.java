@@ -1,6 +1,5 @@
-package com.lifepill.controller;
+package com.lifepill.possystem.controller;
 
-import com.lifepill.possystem.controller.MedicineFindingController;
 import com.lifepill.possystem.dto.responseDTO.MedicineGetResponseDTO;
 import com.lifepill.possystem.service.MedicineFindingService;
 import com.lifepill.possystem.util.StandardResponse;

@@ -1,4 +1,4 @@
-package serviceIMPL;
+package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.ItemCategoryDTO;
