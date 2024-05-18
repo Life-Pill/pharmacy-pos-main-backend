@@ -80,8 +80,8 @@ public class ItemServiceIMPL implements ItemService {
             List<ItemGetAllResponseDTO> itemGetAllResponseDTOSList = new ArrayList<>();
             for (Item item : getAllItems) {
                 ItemGetAllResponseDTO itemGetAllResponseDTO = new ItemGetAllResponseDTO(
-
                         item.getItemId(),
+                        item.getBranchId(),
                         item.getItemName(),
                         item.getSellingPrice(),
                         item.getItemBarCode(),
@@ -91,6 +91,8 @@ public class ItemServiceIMPL implements ItemService {
                         item.isDiscounted(),
                         item.getItemManufacture(),
                         item.getItemQuantity(),
+                        item.getItemCategory().getCategoryName(),
+                        item.getItemCategory().getCategoryId(),
                         item.isStock(),
                         item.getMeasuringUnitType(),
                         item.getManufactureDate(),
