@@ -1,5 +1,6 @@
 package com.lifepill.possystem.dto.responseDTO;
 
+import com.lifepill.possystem.entity.ItemCategory;
 import com.lifepill.possystem.entity.enums.MeasuringUnitType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,7 @@ import java.util.Date;
 public class ItemGetResponseDTO {
 
     private long itemId;
+    private long branchId;
     private String itemName;
     private double sellingPrice;
     private String itemBarCode;
@@ -26,7 +28,7 @@ public class ItemGetResponseDTO {
     private boolean isDiscounted;
     private String itemManufacture;
     private double itemQuantity;
-//    private String itemCategory;
+    private String itemCategoryName;
     private boolean isStock;
     private MeasuringUnitType measuringUnitType;
     private Date manufactureDate;

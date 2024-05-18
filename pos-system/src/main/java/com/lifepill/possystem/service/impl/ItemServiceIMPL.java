@@ -7,11 +7,13 @@ import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
+import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Item;
 import com.lifepill.possystem.entity.ItemCategory;
 import com.lifepill.possystem.entity.Supplier;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.itemRepository.ItemCategoryRepository;
 import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.repo.supplierRepository.SupplierRepository;
@@ -35,6 +37,9 @@ import java.util.stream.Collectors;
 public class ItemServiceIMPL implements ItemService {
     @Autowired
     private ItemRepository itemRepository;
+
+    @Autowired
+    private BranchRepository branchRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -155,6 +160,11 @@ public class ItemServiceIMPL implements ItemService {
                     new TypeToken<List<ItemGetResponseDTO>>() {
                     }.getType()
             );
+            // System.out.println(itemGetResponseDTOS);
+            //get responseDTOS getItemCategory.getItemName()
+
+
+
             return itemGetResponseDTOS;
         } else {
             throw new NotFoundException("out of Stock");
@@ -325,12 +335,24 @@ public class ItemServiceIMPL implements ItemService {
 
         // Check if supplier exists
         Supplier supplier = supplierRepository.findById(itemSaveRequestCategoryDTO.getSupplierId())
-                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: " + itemSaveRequestCategoryDTO.getSupplierId()));
+                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: "
+                        + itemSaveRequestCategoryDTO.getSupplierId())
+                );
+
+        System.out.println(itemSaveRequestCategoryDTO.getBranchId());
+
+        // Check if branch exists
+         Branch branch = branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
+                        + itemSaveRequestCategoryDTO.getBranchId())
+                );
 
         // Now, associate the item with the category and supplier
         Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
         item.setItemCategory(category);
         item.setSupplier(supplier); // Ensure the supplier is set
+        item.setBranchId(itemSaveRequestCategoryDTO.getBranchId());
+        System.out.println(itemSaveRequestCategoryDTO.getBranchId());
         itemRepository.save(item);
         return "Item saved successfully with category and supplier";
     }
