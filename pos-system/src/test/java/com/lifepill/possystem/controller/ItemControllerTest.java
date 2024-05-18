@@ -55,7 +55,7 @@ class ItemControllerTest {
 
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(201, responseEntity.getBody().getCode());
-        assertEquals("Success", responseEntity.getBody().getMessage());
+        assertEquals("Successfully Saved Item", responseEntity.getBody().getMessage());
         assertEquals(message, responseEntity.getBody().getData());
     }
 
