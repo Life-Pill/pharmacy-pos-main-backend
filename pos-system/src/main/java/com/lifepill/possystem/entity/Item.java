@@ -14,7 +14,9 @@ import java.util.Set;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@ToString
+@Setter
+@Getter
 @Entity
 @Table(name = "item")
 public class Item {

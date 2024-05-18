@@ -149,7 +149,7 @@ public class ItemServiceIMPL implements ItemService {
      */
     @Override
     public List<ItemGetResponseDTO> getItemByNameAndStock(String itemName) {
-        List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
+        List<Item> items = itemRepository.findAllByItemName(itemName);
         if (!items.isEmpty()) {
             List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
                     items,

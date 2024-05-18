@@ -80,8 +80,8 @@ public class ItemController {
      * @param itemName The name of the item to retrieve.
      * @return List of ItemGetResponseDTO containing items with the specified name and stock.
      */
-    @GetMapping(path = "/get-by-name", params = "name")
-    public List<ItemGetResponseDTO> getItemByNameAndStock(@RequestParam(value = "name") String itemName) {
+    @GetMapping(path = "/get-by-name", params = "itemName")
+    public List<ItemGetResponseDTO> getItemByNameAndStock(@RequestParam(value = "itemName") String itemName) {
         List<ItemGetResponseDTO> itemDTOS = itemService.getItemByNameAndStock(itemName);
         return itemDTOS;
     }
