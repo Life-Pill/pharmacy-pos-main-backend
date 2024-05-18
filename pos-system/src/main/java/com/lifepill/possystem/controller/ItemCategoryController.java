@@ -41,7 +41,7 @@ public class ItemCategoryController {
      *
      * @return ResponseEntity containing a StandardResponse object with a list of all item categories.
      */
-    @GetMapping("/category/all")
+    @GetMapping("/all-category")
     public ResponseEntity<StandardResponse> getAllCategories() {
         List<ItemCategoryDTO> categories = itemService.getAllCategories();
         return new ResponseEntity<>(
@@ -57,7 +57,7 @@ public class ItemCategoryController {
      * @param categoryDTO The DTO containing updated details of the category.
      * @return ResponseEntity containing a StandardResponse object with a success message.
      */
-    @PutMapping("/category/update/{categoryId}")
+    @PutMapping("/update/{categoryId}")
     public ResponseEntity<StandardResponse> updateCategoryDetails(
             @PathVariable long categoryId,
             @RequestBody ItemCategoryDTO categoryDTO
@@ -74,7 +74,7 @@ public class ItemCategoryController {
             * @param categoryId The ID of the category to delete.
             * @return ResponseEntity containing a StandardResponse object with a success message.
      * */
-    @DeleteMapping("/category/delete/{categoryId}")
+    @DeleteMapping("/delete/{categoryId}")
     public ResponseEntity<StandardResponse> deleteCategory(@PathVariable long categoryId) {
         String message = itemService.deleteCategory(categoryId);
         return new ResponseEntity<>(
