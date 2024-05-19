@@ -7,6 +7,7 @@ import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 
 import java.util.List;
@@ -36,5 +37,5 @@ public interface ItemService {
 
     String deleteCategory(long categoryId);
 
-    ItemDTO getItemById(int itemId);
+    ItemGetIdResponseDTO getItemById(long itemId);
 }

@@ -5,6 +5,7 @@ import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.service.ItemService;
@@ -191,12 +192,16 @@ public class ItemController {
         );
     }
 
-    // get item by id
+    /**
+     * Saves an item category.
+     *
+     * @return A message indicating the result of the save operation.
+     */
     @GetMapping(path = "/get-item-by-id/{id}")
     public ResponseEntity<StandardResponse> getItemById(@PathVariable(value = "id") int itemId){
-        ItemDTO itemDTO = itemService.getItemById(itemId);
+        ItemGetIdResponseDTO itemGetIdResponseDTO = itemService.getItemById(itemId);
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200,"Success",itemDTO),
+                new StandardResponse(200,"Success",itemGetIdResponseDTO),
                 HttpStatus.OK
         );
     }

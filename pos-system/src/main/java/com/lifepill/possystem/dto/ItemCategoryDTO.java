@@ -1,15 +1,15 @@
 package com.lifepill.possystem.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * The type Item category dto.
  */
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 public class ItemCategoryDTO {
     private long categoryId;
     private String categoryName;
