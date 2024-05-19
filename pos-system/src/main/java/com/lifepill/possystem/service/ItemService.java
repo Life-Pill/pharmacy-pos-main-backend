@@ -38,4 +38,6 @@ public interface ItemService {
     String deleteCategory(long categoryId);
 
     ItemGetIdResponseDTO getItemById(long itemId);
+
+    ItemGetIdResponseDTO getAllDetailsItemById(long itemId);
 }

@@ -197,8 +197,23 @@ public class ItemController {
      *
      * @return A message indicating the result of the save operation.
      */
-    @GetMapping(path = "/get-item-by-id/{id}")
-    public ResponseEntity<StandardResponse> getItemById(@PathVariable(value = "id") int itemId){
+    @GetMapping(path = "/get-item-all-details-by-id/{id}")
+    public ResponseEntity<StandardResponse> getItemAllDetailsById(@PathVariable(value = "id") long itemId){
+        ItemGetIdResponseDTO itemGetIdResponseDTO = itemService.getAllDetailsItemById(itemId);
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(200,"Success",itemGetIdResponseDTO),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * Gets item with category by id.
+     *
+     * @param itemId the item id
+     * @return the item with category by id
+     */
+    @GetMapping(path = "/get-item-details-by-id/{id}")
+    public ResponseEntity<StandardResponse> getItemWithCategoryById(@PathVariable(value = "id") long itemId){
         ItemGetIdResponseDTO itemGetIdResponseDTO = itemService.getItemById(itemId);
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(200,"Success",itemGetIdResponseDTO),

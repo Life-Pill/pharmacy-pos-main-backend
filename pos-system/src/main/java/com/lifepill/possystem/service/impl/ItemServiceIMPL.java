@@ -449,7 +449,7 @@ public class ItemServiceIMPL implements ItemService {
     }
 
     @Override
-    public ItemGetIdResponseDTO getItemById(long itemId) {
+    public ItemGetIdResponseDTO getAllDetailsItemById(long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
 
@@ -469,6 +469,21 @@ public class ItemServiceIMPL implements ItemService {
         SupplierCompany supplierCompany = supplier.getSupplierCompany();
         SupplierCompanyDTO supplierCompanyDTO = modelMapper.map(supplierCompany, SupplierCompanyDTO.class);
         itemGetIdResponseDTO.setSupplierCompanyDTO(supplierCompanyDTO);
+
+        return itemGetIdResponseDTO;
+    }
+
+    @Override
+    public ItemGetIdResponseDTO getItemById(long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
+
+        ItemGetIdResponseDTO itemGetIdResponseDTO = modelMapper.map(item, ItemGetIdResponseDTO.class);
+
+        // Map ItemCategory
+        ItemCategory itemCategory = item.getItemCategory();
+        ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
+        itemGetIdResponseDTO.setItemCategoryDTO(itemCategoryDTO);
 
         return itemGetIdResponseDTO;
     }
