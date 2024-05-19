@@ -14,10 +14,10 @@ import java.util.Set;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Setter
 @Getter
 @Entity
+@Builder
 @Table(name = "item")
 public class Item {
 
@@ -118,5 +118,4 @@ public class Item {
 
     @ManyToMany(mappedBy = "items")
     private Set<Branch> branches;
-
 }
