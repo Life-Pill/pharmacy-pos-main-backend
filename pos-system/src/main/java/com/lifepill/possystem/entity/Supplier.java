@@ -14,8 +14,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity
+@ToString
+@Builder
 @Table(name = "supplier")
 public class Supplier extends BaseEntity {
     @Id
