@@ -1,5 +1,6 @@
 package com.lifepill.possystem.service.impl;
 
+import com.lifepill.possystem.dto.GroupedOrderDetails;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderDetailsSaveDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderSaveDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestPaymentDetailsDTO;
@@ -20,11 +21,13 @@ import com.lifepill.possystem.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -153,16 +156,34 @@ public class OrderServiceIMPL implements OrderService {
 
     public List<OrderResponseDTO> getAllOrdersWithDetails() {
         List<Order> orders = orderRepository.findAll();
-        return orders.stream()
-                .map(order -> {
-                    OrderResponseDTO orderResponseDTO = modelMapper.map(order, OrderResponseDTO.class);
-                    orderResponseDTO.setOrderDetails(modelMapper.map(order.getOrderDetails(),
-                            new TypeToken<List<RequestOrderDetailsSaveDTO>>() {}.getType()));
-                    orderResponseDTO.setPaymentDetails(modelMapper.map(order.getPaymentDetails(),
-                            RequestPaymentDetailsDTO.class));
+        Map<String, List<Order>> groupedOrders = orders.stream()
+                .collect(Collectors.groupingBy(order -> order.getOrderDate() + "-" + order.getBranchId()));
+
+        return groupedOrders.entrySet().stream()
+                .map(entry -> {
+                    List<Order> ordersInGroup = entry.getValue();
+                    Order firstOrder = ordersInGroup.get(0);
+
+                    OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+                    orderResponseDTO.setEmployerId(firstOrder.getEmployer().getEmployerId());
+                    orderResponseDTO.setBranchId(firstOrder.getBranchId());
+                    orderResponseDTO.setOrderDate(firstOrder.getOrderDate());
+                    orderResponseDTO.setTotal(ordersInGroup.stream().mapToDouble(Order::getTotal).sum());
+
+                    List<RequestOrderDetailsSaveDTO> orderDetails = ordersInGroup.stream()
+                            .flatMap(order -> order.getOrderDetails().stream())
+                            .map(orderDetail -> modelMapper.map(orderDetail, RequestOrderDetailsSaveDTO.class))
+                            .collect(Collectors.toList());
+
+                    RequestPaymentDetailsDTO paymentDetails = ordersInGroup.stream()
+                            .filter(order -> order.getPaymentDetails() != null)
+                            .map(order -> modelMapper.map(order.getPaymentDetails(), RequestPaymentDetailsDTO.class))
+                            .findFirst()
+                            .orElse(null);
+
+                    orderResponseDTO.setGroupedOrderDetails(new GroupedOrderDetails(orderDetails, paymentDetails));
                     return orderResponseDTO;
                 })
-                .collect(Collectors.toList()
-                );
+                .collect(Collectors.toList());
     }
 }

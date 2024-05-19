@@ -1,5 +1,6 @@
 package com.lifepill.possystem.dto.responseDTO;
 
+import com.lifepill.possystem.dto.GroupedOrderDetails;
 import com.lifepill.possystem.dto.requestDTO.RequestPaymentDetailsDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderDetailsSaveDTO;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,5 @@ public class OrderResponseDTO {
     private long branchId;
     private Date orderDate;
     private Double total;
-    private List<RequestOrderDetailsSaveDTO> orderDetails;
-    private RequestPaymentDetailsDTO paymentDetails;
+    private GroupedOrderDetails groupedOrderDetails;
 }
