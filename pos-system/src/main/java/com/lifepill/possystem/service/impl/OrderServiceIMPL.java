@@ -3,6 +3,7 @@ package com.lifepill.possystem.service.impl;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderDetailsSaveDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderSaveDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestPaymentDetailsDTO;
+import com.lifepill.possystem.dto.responseDTO.OrderResponseDTO;
 import com.lifepill.possystem.entity.Item;
 import com.lifepill.possystem.entity.Order;
 import com.lifepill.possystem.entity.OrderDetails;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of the {@link OrderService} interface that handles order-related operations.
@@ -74,7 +76,7 @@ public class OrderServiceIMPL implements OrderService {
                 orderDetails.get(i).setOrders(order);
                 orderDetails.get(i).setItems(itemRepository
                         .getById(requestOrderSaveDTO
-                            .getOrderDetails().get(i).getId()
+                            .getOrderDetails().get(i).getItemId()
                         )
                 );
             }
@@ -114,17 +116,17 @@ public class OrderServiceIMPL implements OrderService {
      */
     private void checkItemStock(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
-            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getItemId());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                if (item.getItemQuantity() < orderDetail.getAmount()) {
+                if (item.getItemQuantity() < orderDetail.getItemAmount()) {
                     throw new InsufficientItemQuantityException(
                             "Item " + item.getItemId()
                             + " does not have enough quantity"
                     );
                 }
             } else {
-                throw new NotFoundException("Item not found with ID: " + orderDetail.getId());
+                throw new NotFoundException("Item not found with ID: " + orderDetail.getItemId());
             }
         }
     }
@@ -137,15 +139,30 @@ public class OrderServiceIMPL implements OrderService {
      */
     private void updateItemQuantities(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
-            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getItemId());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                int remainingQuantity = (int) (item.getItemQuantity() - orderDetail.getAmount());
+                int remainingQuantity = (int) (item.getItemQuantity() - orderDetail.getItemAmount());
                 item.setItemQuantity(remainingQuantity);
                 itemRepository.save(item);
             } else {
-                throw new NotFoundException("Item not found with ID: " + orderDetail.getId());
+                throw new NotFoundException("Item not found with ID: " + orderDetail.getItemId());
             }
         }
+    }
+
+    public List<OrderResponseDTO> getAllOrdersWithDetails() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream()
+                .map(order -> {
+                    OrderResponseDTO orderResponseDTO = modelMapper.map(order, OrderResponseDTO.class);
+                    orderResponseDTO.setOrderDetails(modelMapper.map(order.getOrderDetails(),
+                            new TypeToken<List<RequestOrderDetailsSaveDTO>>() {}.getType()));
+                    orderResponseDTO.setPaymentDetails(modelMapper.map(order.getPaymentDetails(),
+                            RequestPaymentDetailsDTO.class));
+                    return orderResponseDTO;
+                })
+                .collect(Collectors.toList()
+                );
     }
 }
