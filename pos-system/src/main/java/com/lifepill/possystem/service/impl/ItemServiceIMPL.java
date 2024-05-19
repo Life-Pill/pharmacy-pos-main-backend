@@ -1,16 +1,17 @@
 package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.ItemCategoryDTO;
+import com.lifepill.possystem.dto.ItemDTO;
+import com.lifepill.possystem.dto.SupplierCompanyDTO;
+import com.lifepill.possystem.dto.SupplierDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
-import com.lifepill.possystem.entity.Branch;
-import com.lifepill.possystem.entity.Item;
-import com.lifepill.possystem.entity.ItemCategory;
-import com.lifepill.possystem.entity.Supplier;
+import com.lifepill.possystem.entity.*;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
@@ -445,5 +446,45 @@ public class ItemServiceIMPL implements ItemService {
         } else {
             throw new NotFoundException("Category not found");
         }
+    }
+
+    @Override
+    public ItemGetIdResponseDTO getAllDetailsItemById(long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
+
+        ItemGetIdResponseDTO itemGetIdResponseDTO = modelMapper.map(item, ItemGetIdResponseDTO.class);
+
+        // Map ItemCategory
+        ItemCategory itemCategory = item.getItemCategory();
+        ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
+        itemGetIdResponseDTO.setItemCategoryDTO(itemCategoryDTO);
+
+        // Map Supplier
+        Supplier supplier = item.getSupplier();
+        SupplierDTO supplierDTO = modelMapper.map(supplier, SupplierDTO.class);
+        itemGetIdResponseDTO.setSupplierDTO(supplierDTO);
+
+        // Map SupplierCompany
+        SupplierCompany supplierCompany = supplier.getSupplierCompany();
+        SupplierCompanyDTO supplierCompanyDTO = modelMapper.map(supplierCompany, SupplierCompanyDTO.class);
+        itemGetIdResponseDTO.setSupplierCompanyDTO(supplierCompanyDTO);
+
+        return itemGetIdResponseDTO;
+    }
+
+    @Override
+    public ItemGetIdResponseDTO getItemById(long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
+
+        ItemGetIdResponseDTO itemGetIdResponseDTO = modelMapper.map(item, ItemGetIdResponseDTO.class);
+
+        // Map ItemCategory
+        ItemCategory itemCategory = item.getItemCategory();
+        ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
+        itemGetIdResponseDTO.setItemCategoryDTO(itemCategoryDTO);
+
+        return itemGetIdResponseDTO;
     }
 }

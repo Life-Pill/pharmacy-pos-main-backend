@@ -5,6 +5,7 @@ import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.service.ItemService;
@@ -187,6 +188,35 @@ public class ItemController {
         PaginatedResponseItemDTO paginatedResponseItemDTO = itemService.getItemByStockStatusWithPaginateed(activeStatus,page,size);
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(200,"Success",paginatedResponseItemDTO),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * Saves an item category.
+     *
+     * @return A message indicating the result of the save operation.
+     */
+    @GetMapping(path = "/get-item-all-details-by-id/{id}")
+    public ResponseEntity<StandardResponse> getItemAllDetailsById(@PathVariable(value = "id") long itemId){
+        ItemGetIdResponseDTO itemGetIdResponseDTO = itemService.getAllDetailsItemById(itemId);
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(200,"Success",itemGetIdResponseDTO),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * Gets item with category by id.
+     *
+     * @param itemId the item id
+     * @return the item with category by id
+     */
+    @GetMapping(path = "/get-item-details-by-id/{id}")
+    public ResponseEntity<StandardResponse> getItemWithCategoryById(@PathVariable(value = "id") long itemId){
+        ItemGetIdResponseDTO itemGetIdResponseDTO = itemService.getItemById(itemId);
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(200,"Success",itemGetIdResponseDTO),
                 HttpStatus.OK
         );
     }

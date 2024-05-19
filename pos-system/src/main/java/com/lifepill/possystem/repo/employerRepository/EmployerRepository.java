@@ -60,7 +60,7 @@ public interface EmployerRepository extends JpaRepository<Employer,Long> {
     Optional<Employer> findByEmployerEmail(String employerEmail);
 
     /**
-     * Find by branch branch id and role employer.
+     * Find by branch id and role employer.
      *
      * @param branchId the branch id
      * @param role     the role
