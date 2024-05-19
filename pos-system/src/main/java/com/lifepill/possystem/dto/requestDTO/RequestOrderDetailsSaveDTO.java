@@ -15,8 +15,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 public class RequestOrderDetailsSaveDTO {
-    private String itemName;
-    private Double itemAmount;
-    private long itemId;
+    private String name; // TODO: Change name to itemName
+    private Double amount; // TODO: Change amount to itemAmount
+    private long id; // TODO: Change id to itemId
 
 }

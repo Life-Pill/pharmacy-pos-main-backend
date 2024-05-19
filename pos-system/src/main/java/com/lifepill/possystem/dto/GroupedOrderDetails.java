@@ -13,4 +13,5 @@ import java.util.List;
 public class GroupedOrderDetails {
     private List<RequestOrderDetailsSaveDTO> orderDetails;
     private RequestPaymentDetailsDTO paymentDetails;
+    private int orderCount;
 }

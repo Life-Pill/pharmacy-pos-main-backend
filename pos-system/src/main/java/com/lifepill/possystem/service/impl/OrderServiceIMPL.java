@@ -79,7 +79,7 @@ public class OrderServiceIMPL implements OrderService {
                 orderDetails.get(i).setOrders(order);
                 orderDetails.get(i).setItems(itemRepository
                         .getById(requestOrderSaveDTO
-                            .getOrderDetails().get(i).getItemId()
+                            .getOrderDetails().get(i).getId()
                         )
                 );
             }
@@ -119,17 +119,17 @@ public class OrderServiceIMPL implements OrderService {
      */
     private void checkItemStock(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
-            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getItemId());
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                if (item.getItemQuantity() < orderDetail.getItemAmount()) {
+                if (item.getItemQuantity() < orderDetail.getAmount()) {
                     throw new InsufficientItemQuantityException(
                             "Item " + item.getItemId()
                             + " does not have enough quantity"
                     );
                 }
             } else {
-                throw new NotFoundException("Item not found with ID: " + orderDetail.getItemId());
+                throw new NotFoundException("Item not found with ID: " + orderDetail.getId());
             }
         }
     }
@@ -142,14 +142,14 @@ public class OrderServiceIMPL implements OrderService {
      */
     private void updateItemQuantities(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
-            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getItemId());
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                int remainingQuantity = (int) (item.getItemQuantity() - orderDetail.getItemAmount());
+                int remainingQuantity = (int) (item.getItemQuantity() - orderDetail.getAmount());
                 item.setItemQuantity(remainingQuantity);
                 itemRepository.save(item);
             } else {
-                throw new NotFoundException("Item not found with ID: " + orderDetail.getItemId());
+                throw new NotFoundException("Item not found with ID: " + orderDetail.getId());
             }
         }
     }
@@ -158,7 +158,12 @@ public class OrderServiceIMPL implements OrderService {
     public List<OrderResponseDTO> getAllOrdersWithDetails() {
         List<Order> orders = orderRepository.findAll();
         Map<String, List<Order>> groupedOrders = orders.stream()
-                .collect(Collectors.groupingBy(order -> order.getOrderDate() + "-" + order.getBranchId() + "-" + order.getEmployer().getEmployerId()));
+                .collect(Collectors.groupingBy(
+                        order -> order.getOrderDate() + "-"
+                                + order.getBranchId() + "-"
+                                + order.getEmployer().getEmployerId()
+                        )
+                );
 
         return groupedOrders.entrySet().stream()
                 .map(entry -> {
@@ -171,18 +176,30 @@ public class OrderServiceIMPL implements OrderService {
                     orderResponseDTO.setOrderDate(firstOrder.getOrderDate());
                     orderResponseDTO.setTotal(ordersInGroup.stream().mapToDouble(Order::getTotal).sum());
 
+
                     List<RequestOrderDetailsSaveDTO> orderDetails = ordersInGroup.stream()
                             .flatMap(order -> order.getOrderDetails().stream())
-                            .map(orderDetail -> modelMapper.map(orderDetail, RequestOrderDetailsSaveDTO.class))
+                            .map(orderDetail -> modelMapper.map(
+                                    orderDetail,
+                                    RequestOrderDetailsSaveDTO.class)
+                            )
                             .collect(Collectors.toList());
+
 
                     RequestPaymentDetailsDTO paymentDetails = ordersInGroup.stream()
                             .filter(order -> order.getPaymentDetails() != null)
-                            .map(order -> modelMapper.map(order.getPaymentDetails(), RequestPaymentDetailsDTO.class))
+                            .map(order -> modelMapper.map(
+                                    order.getPaymentDetails(),
+                                    RequestPaymentDetailsDTO.class)
+                            )
                             .findFirst()
                             .orElse(null);
 
-                    orderResponseDTO.setGroupedOrderDetails(new GroupedOrderDetails(orderDetails, paymentDetails));
+                    int orderCount = ordersInGroup.size();
+
+                    orderResponseDTO.setGroupedOrderDetails(
+                            new GroupedOrderDetails(orderDetails, paymentDetails, orderCount)
+                    );
                     return orderResponseDTO;
                 })
                 .collect(Collectors.toList());

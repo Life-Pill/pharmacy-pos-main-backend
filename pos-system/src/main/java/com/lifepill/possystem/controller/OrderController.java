@@ -47,8 +47,11 @@ public class OrderController{
      * @return A response entity containing a list of all orders.
      */
     @GetMapping("/getAllOrdersWithDetails")
-    public ResponseEntity<List<OrderResponseDTO>> getAllOrdersWithDetails() {
-        List<OrderResponseDTO> orders = orderService.getAllOrdersWithDetails();
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<StandardResponse> getAllOrdersWithDetails() {
+        List<OrderResponseDTO> orderResponseDTOList = orderService.getAllOrdersWithDetails();
+
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(200, "All Orders Retrieved Successfully", orderResponseDTOList),
+                HttpStatus.OK);
     }
 }
