@@ -8,6 +8,7 @@ import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
+import com.lifepill.possystem.dto.responseDTO.ItemGetResponsewithoutSupplierDetailsDTO;
 import com.lifepill.possystem.service.ItemService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.AllArgsConstructor;
@@ -214,9 +215,9 @@ public class ItemController {
      */
     @GetMapping(path = "/get-item-details-by-id/{id}")
     public ResponseEntity<StandardResponse> getItemWithCategoryById(@PathVariable(value = "id") long itemId){
-        ItemGetIdResponseDTO itemGetIdResponseDTO = itemService.getItemById(itemId);
+        ItemGetResponsewithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO = itemService.getItemById(itemId);
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200,"Success",itemGetIdResponseDTO),
+                new StandardResponse(200,"Success",itemGetResponsewithoutSupplierDetailsDTO),
                 HttpStatus.OK
         );
     }

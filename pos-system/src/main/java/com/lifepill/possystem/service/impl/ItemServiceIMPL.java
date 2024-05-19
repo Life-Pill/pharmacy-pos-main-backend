@@ -11,6 +11,7 @@ import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.ItemGetResponsewithoutSupplierDetailsDTO;
 import com.lifepill.possystem.entity.*;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
@@ -455,6 +456,11 @@ public class ItemServiceIMPL implements ItemService {
 
         ItemGetIdResponseDTO itemGetIdResponseDTO = modelMapper.map(item, ItemGetIdResponseDTO.class);
 
+        // Map Item Get All response
+        ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
+        itemGetIdResponseDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
+
+
         // Map ItemCategory
         ItemCategory itemCategory = item.getItemCategory();
         ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
@@ -474,17 +480,22 @@ public class ItemServiceIMPL implements ItemService {
     }
 
     @Override
-    public ItemGetIdResponseDTO getItemById(long itemId) {
+    public ItemGetResponsewithoutSupplierDetailsDTO getItemById(long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
 
-        ItemGetIdResponseDTO itemGetIdResponseDTO = modelMapper.map(item, ItemGetIdResponseDTO.class);
+        ItemGetResponsewithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO =
+                modelMapper.map(item, ItemGetResponsewithoutSupplierDetailsDTO.class);
+
+        // Map Get All Item Response
+        ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
+        itemGetResponsewithoutSupplierDetailsDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
 
         // Map ItemCategory
         ItemCategory itemCategory = item.getItemCategory();
         ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
-        itemGetIdResponseDTO.setItemCategoryDTO(itemCategoryDTO);
+        itemGetResponsewithoutSupplierDetailsDTO.setItemCategoryDTO(itemCategoryDTO);
 
-        return itemGetIdResponseDTO;
+        return itemGetResponsewithoutSupplierDetailsDTO;
     }
 }
