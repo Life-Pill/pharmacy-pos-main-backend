@@ -16,6 +16,7 @@ import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.repo.paymentRepository.PaymentRepository;
 import com.lifepill.possystem.service.OrderService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,23 +31,16 @@ import java.util.Optional;
  */
 @Service
 @Transactional
+@AllArgsConstructor
 public class OrderServiceIMPL implements OrderService {
 
-    @Autowired
     private OrderRepository orderRepository;
-    @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private EmployerRepository employerRepository;
-    @Autowired
     private OrderDetailsRepository orderDetailsRepo;
-    @Autowired
     private ItemRepository itemRepository;
-    @Autowired
     private BranchRepository branchRepository;
-    @Autowired
     private OrderDetailsRepository orderDetailsRepository;
-    @Autowired
     private PaymentRepository paymentRepository;
 
 

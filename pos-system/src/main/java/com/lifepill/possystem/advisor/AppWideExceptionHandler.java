@@ -24,7 +24,6 @@ public class AppWideExceptionHandler {
     /**
      * Handles NotFoundException by returning a ResponseEntity with a corresponding error message.
      *
-     * @param e The NotFoundException instance
      * @return ResponseEntity with a StandardResponse containing the error details
      */
     @ExceptionHandler(DataIntegrityViolationException.class)

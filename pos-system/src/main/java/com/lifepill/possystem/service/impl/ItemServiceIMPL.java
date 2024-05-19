@@ -35,22 +35,12 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ItemServiceIMPL implements ItemService {
-    @Autowired
+
     private ItemRepository itemRepository;
-
-    @Autowired
     private BranchRepository branchRepository;
-
-    @Autowired
     private ModelMapper modelMapper;
-
-    @Autowired
     private ItemMapper itemMapper;
-
-    @Autowired
     private ItemCategoryRepository itemCategoryRepository;
-
-    @Autowired
     private SupplierRepository supplierRepository;
 
     /**

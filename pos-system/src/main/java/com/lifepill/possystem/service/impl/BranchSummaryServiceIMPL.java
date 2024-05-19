@@ -126,7 +126,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
                 .collect(Collectors.groupingBy(
                         Order::getBranchId, Collectors.summingDouble(Order::getTotal))
                 );
-        logger.info(branchSalesMap.toString() + "branchSalesMap");
         Map<Long, Long> branchOrdersCountMap = ordersForDate.stream()
                 .collect(Collectors.groupingBy(
                         Order::getBranchId, Collectors.counting())
@@ -145,7 +144,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
         }).collect(Collectors.toList());
 
-        logger.info("Fetched all branches with sales information successfully.");
         return pharmacyData;
     }
 
@@ -184,8 +182,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             BranchDTO branchDTO = getBranchDetails(branchId);
             return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
         }).collect(Collectors.toList());
-
-        logger.info("Fetched all branches with sales information successfully.");
         return pharmacyData;
     }
 
@@ -234,7 +230,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             return new PharmacyBranchResponseDTO(sales, orders, manager, branchDTO);
         }).collect(Collectors.toList());
 
-        logger.info("Fetched all branches with sales information successfully.");
         return pharmacyData;
     }
 
@@ -296,16 +291,16 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         Double totalSales = orderRepository.getTotalSales();
 
         // Fetch total orders
-        Long totalOrders = orderRepository.count();
+        long totalOrders = orderRepository.count();
 
         // Fetch total employees
-        Long totalEmployees = employerRepository.count();
+        long totalEmployees = employerRepository.count();
 
         // Fetch total branches
-        Long totalBranches = branchRepository.count();
+        long totalBranches = branchRepository.count();
 
         // Create and return AllPharmacySummaryResponseDTO
-        return new AllPharmacySummaryResponseDTO(totalSales, totalOrders.intValue(), totalEmployees.intValue(), totalBranches.intValue());
+        return new AllPharmacySummaryResponseDTO(totalSales, (int) totalOrders, (int) totalEmployees, (int) totalBranches);
     }
 
 

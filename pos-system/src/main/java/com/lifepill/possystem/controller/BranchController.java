@@ -7,6 +7,7 @@ import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("lifepill/v1/branch")
+@AllArgsConstructor
 public class BranchController {
 
-    @Autowired
     private BranchService branchService;
-
-    @Autowired
     private EmployerService employerService;
 
     /**

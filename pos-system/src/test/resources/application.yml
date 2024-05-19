@@ -1,6 +1,5 @@
 spring:
   datasource:
-    hikari:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/pos-monolithic
     username: postgres
@@ -26,5 +25,4 @@ spring:
         logging:
           level:
             org.springframework.security: TRACE
-app:
-  base-url: http://localhost:8081
+
