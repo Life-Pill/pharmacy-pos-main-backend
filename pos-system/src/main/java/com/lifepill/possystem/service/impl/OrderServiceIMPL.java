@@ -154,10 +154,11 @@ public class OrderServiceIMPL implements OrderService {
         }
     }
 
+
     public List<OrderResponseDTO> getAllOrdersWithDetails() {
         List<Order> orders = orderRepository.findAll();
         Map<String, List<Order>> groupedOrders = orders.stream()
-                .collect(Collectors.groupingBy(order -> order.getOrderDate() + "-" + order.getBranchId()));
+                .collect(Collectors.groupingBy(order -> order.getOrderDate() + "-" + order.getBranchId() + "-" + order.getEmployer().getEmployerId()));
 
         return groupedOrders.entrySet().stream()
                 .map(entry -> {
