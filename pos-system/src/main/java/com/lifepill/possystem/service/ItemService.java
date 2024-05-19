@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.ItemCategoryDTO;
+import com.lifepill.possystem.dto.ItemDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
@@ -35,4 +36,5 @@ public interface ItemService {
 
     String deleteCategory(long categoryId);
 
+    ItemDTO getItemById(int itemId);
 }

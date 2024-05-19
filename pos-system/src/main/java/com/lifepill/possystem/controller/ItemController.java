@@ -190,4 +190,14 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
+
+    // get item by id
+    @GetMapping(path = "/get-item-by-id/{id}")
+    public ResponseEntity<StandardResponse> getItemById(@PathVariable(value = "id") int itemId){
+        ItemDTO itemDTO = itemService.getItemById(itemId);
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(200,"Success",itemDTO),
+                HttpStatus.OK
+        );
+    }
 }

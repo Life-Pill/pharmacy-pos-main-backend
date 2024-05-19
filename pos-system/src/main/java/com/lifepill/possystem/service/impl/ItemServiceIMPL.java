@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.ItemCategoryDTO;
+import com.lifepill.possystem.dto.ItemDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
@@ -445,5 +446,12 @@ public class ItemServiceIMPL implements ItemService {
         } else {
             throw new NotFoundException("Category not found");
         }
+    }
+
+    @Override
+    public ItemDTO getItemById(int itemId) {
+        Item item = itemRepository.findById((long) itemId)
+                .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
+        return modelMapper.map(item, ItemDTO.class);
     }
 }
