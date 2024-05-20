@@ -1,6 +1,5 @@
 package com.lifepill.possystem.controller;
 
-import com.lifepill.possystem.dto.ItemCategoryDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;

@@ -1,7 +1,5 @@
 package com.lifepill.possystem.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lifepill.possystem.entity.enums.Gender;
 import com.lifepill.possystem.entity.enums.Role;

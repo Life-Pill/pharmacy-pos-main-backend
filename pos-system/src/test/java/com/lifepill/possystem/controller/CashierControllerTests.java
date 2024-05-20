@@ -4,7 +4,6 @@ import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerPasswordRese
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerRecentPinUpdateDTO;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.service.EmployerService;
-import io.micrometer.core.instrument.config.validate.ValidationException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

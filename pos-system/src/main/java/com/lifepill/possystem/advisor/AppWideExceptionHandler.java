@@ -34,8 +34,6 @@ public class AppWideExceptionHandler {
         // Provide a meaningful error message to the client
         String errorMessage = "An error occurred while processing your request. Please try again later.";
 
-        // You can customize the error message based on the specific constraint violation if needed
-
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 }

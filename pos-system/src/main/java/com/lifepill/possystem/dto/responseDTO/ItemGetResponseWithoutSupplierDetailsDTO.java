@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class ItemGetResponsewithoutSupplierDetailsDTO {
+public class ItemGetResponseWithoutSupplierDetailsDTO {
         private ItemGetAllResponseDTO itemGetAllResponseDTO;
         private ItemCategoryDTO itemCategoryDTO;
 }

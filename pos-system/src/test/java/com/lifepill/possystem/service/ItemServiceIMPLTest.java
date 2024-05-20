@@ -1,8 +1,5 @@
 package com.lifepill.possystem.service;
 
-import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
-import com.lifepill.possystem.entity.Item;
-import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.service.impl.ItemServiceIMPL;
@@ -13,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

@@ -1,6 +1,5 @@
 package com.lifepill.possystem.dto;
 
-import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.entity.enums.Gender;
 import com.lifepill.possystem.entity.enums.Role;
 import lombok.*;

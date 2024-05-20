@@ -1,7 +1,6 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.EmployerDTO;
-import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.service.EmployerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +10,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;

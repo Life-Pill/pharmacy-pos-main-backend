@@ -1,12 +1,10 @@
 package com.lifepill.possystem.dto;
 
-import com.lifepill.possystem.entity.ItemCategory;
 import com.lifepill.possystem.entity.enums.MeasuringUnitType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.Date;
 
 /**

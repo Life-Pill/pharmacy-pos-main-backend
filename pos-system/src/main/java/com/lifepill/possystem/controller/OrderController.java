@@ -1,14 +1,10 @@
 package com.lifepill.possystem.controller;
 
-import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
-import com.lifepill.possystem.dto.requestDTO.RequestOrderDetailsSaveDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderSaveDTO;
 import com.lifepill.possystem.dto.responseDTO.OrderResponseDTO;
-import com.lifepill.possystem.entity.Order;
 import com.lifepill.possystem.service.OrderService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +16,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/lifepill/v1/order")
-@CrossOrigin
 @AllArgsConstructor
 public class OrderController{
 

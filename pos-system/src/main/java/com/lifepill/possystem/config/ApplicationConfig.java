@@ -3,7 +3,6 @@ package com.lifepill.possystem.config;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import org.springframework.context.annotation.Configuration;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 
 /**
  * Configuration class for application settings.

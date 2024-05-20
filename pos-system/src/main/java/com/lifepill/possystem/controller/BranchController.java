@@ -3,16 +3,13 @@ package com.lifepill.possystem.controller;
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
-import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -173,7 +170,5 @@ public class BranchController {
     public ResponseEntity<String> testEmployer() {
         return ResponseEntity.ok("Branch test successful");
     }
-
-
 
 }

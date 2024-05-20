@@ -1,6 +1,5 @@
 package com.lifepill.possystem.controller;
 
-import com.lifepill.possystem.dto.ItemDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
@@ -8,12 +7,10 @@ import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetResponsewithoutSupplierDetailsDTO;
+import com.lifepill.possystem.dto.responseDTO.ItemGetResponseWithoutSupplierDetailsDTO;
 import com.lifepill.possystem.service.ItemService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.AllArgsConstructor;
-import org.hibernate.annotations.MapKeyType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -215,7 +212,7 @@ public class ItemController {
      */
     @GetMapping(path = "/get-item-details-by-id/{id}")
     public ResponseEntity<StandardResponse> getItemWithCategoryById(@PathVariable(value = "id") long itemId){
-        ItemGetResponsewithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO = itemService.getItemById(itemId);
+        ItemGetResponseWithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO = itemService.getItemById(itemId);
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(200,"Success",itemGetResponsewithoutSupplierDetailsDTO),
                 HttpStatus.OK

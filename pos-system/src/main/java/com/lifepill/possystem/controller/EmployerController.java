@@ -5,15 +5,11 @@ import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.EmployerWithBankDTO;
 import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
-import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.exception.NotFoundException;
-import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
 import com.lifepill.possystem.util.mappers.EmployerMapper;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,10 +31,8 @@ public class EmployerController {
 
     private EmployerService employerService;
     private EmployerMapper employerMapper;
-    private ModelMapper modelMapper;
-    private EmployerRepository employerRepository;
 
-    public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
+ //   public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
 
     /**
@@ -334,7 +328,6 @@ public class EmployerController {
      */
     @GetMapping("/with-bank-details/{employerId}")
     public EmployerWithBankDTO getEmployerWithBankDetailsById(@PathVariable long employerId) {
-        EmployerWithBankDTO employerWithBankDTO = employerService.getEmployerWithBankDetailsById(employerId);
-        return employerWithBankDTO;
+        return employerService.getEmployerWithBankDetailsById(employerId);
     }
 }

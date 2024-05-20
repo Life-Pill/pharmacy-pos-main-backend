@@ -2,7 +2,6 @@ package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.requestDTO.RequestOrderSaveDTO;
 import com.lifepill.possystem.dto.responseDTO.OrderResponseDTO;
-import com.lifepill.possystem.entity.Order;
 
 import java.util.List;
 

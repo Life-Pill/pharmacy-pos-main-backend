@@ -1,10 +1,8 @@
 package com.lifepill.possystem.entity;
 
-import com.lifepill.possystem.entity.enums.MeasuringUnitType;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 
 /**
