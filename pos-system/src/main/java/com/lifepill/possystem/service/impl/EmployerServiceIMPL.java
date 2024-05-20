@@ -230,13 +230,6 @@ public class EmployerServiceIMPL implements EmployerService {
      * @return A DTO containing the updated employer data along with bank account details.
      * @throws NotFoundException If the employer with the given ID is not found.
      */
-    /**
-     * Updates the bank account details of an employer.
-     *
-     * @param employerUpdateBankAccountDTO The DTO containing the updated bank account details.
-     * @return A DTO containing the updated employer data along with bank account details.
-     * @throws NotFoundException If the employer with the given ID is not found.
-     */
     @Override
     public EmployerWithBankDTO updateEmployerBankAccountDetails(EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO) {
         long employerId = employerUpdateBankAccountDTO.getEmployerId();
@@ -244,8 +237,8 @@ public class EmployerServiceIMPL implements EmployerService {
         // Check if the employer exists
         if (employerRepository.existsById(employerId)) {
             Employer employer = employerRepository.getReferenceById(employerId);
-
             // Check if the employer already has bank details
+
             Optional<EmployerBankDetails> existingBankDetailsOpt = cashierBankDetailsRepo.findById(employerUpdateBankAccountDTO.getEmployerBankDetailsId());
 
             EmployerBankDetails bankDetails;
@@ -258,7 +251,6 @@ public class EmployerServiceIMPL implements EmployerService {
                 bankDetails = new EmployerBankDetails();
                 bankDetails.setEmployerId(employerId); // Set the employer ID for the new bank details
             }
-
             // Update the bank details
             bankDetails.setBankName(employerUpdateBankAccountDTO.getBankName());
             bankDetails.setBankBranchName(employerUpdateBankAccountDTO.getBankBranchName());
@@ -276,6 +268,9 @@ public class EmployerServiceIMPL implements EmployerService {
 
             // Prepare the DTO to return
             EmployerWithBankDTO employerWithBankDTO = modelMapper.map(employer, EmployerWithBankDTO.class);
+
+            // set Branch ID
+            employerWithBankDTO.setBranchId(employer.getBranch().getBranchId());
 
             return employerWithBankDTO;
         } else {

@@ -185,7 +185,6 @@ public class EmployerController {
         }
     }
 
-
     /**
      * Retrieves an employer by ID.
      *
