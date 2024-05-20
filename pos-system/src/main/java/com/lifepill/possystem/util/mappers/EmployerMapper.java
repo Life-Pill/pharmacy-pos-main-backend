@@ -19,9 +19,10 @@ public class EmployerMapper {
         employerBankDetails.setEmployerDescription(bankDetailsDTO.getEmployerDescription());
         employerBankDetails.setMonthlyPayment(bankDetailsDTO.getMonthlyPayment());
         employerBankDetails.setMonthlyPaymentStatus(bankDetailsDTO.getMonthlyPaymentStatus());
-        employerBankDetails.setEmployerId(bankDetailsDTO.getEmployerId());
+        employerBankDetails.setEmployerBankDetailsId(bankDetailsDTO.getEmployerId());
         employerBankDetails.setEmployerBankDetailsId(bankDetailsDTO.getEmployerBankDetailsId());
-      //  employerBankDetails.setEmployers(bankDetailsDTO.getEmployers());
+       // employerBankDetails.setEmployers(bankDetailsDTO.getEmployers());
+
         return employerBankDetails;
     }
 

@@ -22,9 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -243,6 +241,7 @@ public class EmployerServiceIMPL implements EmployerService {
 
             if (existingBankDetails != null) {
                 // Update existing bank details
+                existingBankDetails.setEmployerId(employerId);
                 existingBankDetails.setBankName(employerUpdateBankAccountDTO.getBankName());
                 existingBankDetails.setBankBranchName(employerUpdateBankAccountDTO.getBankBranchName());
                 existingBankDetails.setBankAccountNumber(employerUpdateBankAccountDTO.getBankAccountNumber());
@@ -252,9 +251,13 @@ public class EmployerServiceIMPL implements EmployerService {
 
                 cashierBankDetailsRepo.save(existingBankDetails);
             } else {
+                System.out.println("No bank details found for employer ID: " + employerId);
+                System.out.println("Creating new bank details..."+ employerUpdateBankAccountDTO.getBankAccountNumber());
                 // Create new bank details if not present
                 EmployerBankDetails newBankDetails = new EmployerBankDetails();
-                //   newBankDetails.setEmployer(employer);
+                newBankDetails.setEmployers(Collections.singleton(employer));
+                newBankDetails.setEmployerBankDetailsId(employerUpdateBankAccountDTO.getEmployerBankDetailsId());
+                newBankDetails.setEmployerId(employerUpdateBankAccountDTO.getEmployerId());
                 newBankDetails.setBankName(employerUpdateBankAccountDTO.getBankName());
                 newBankDetails.setBankBranchName(employerUpdateBankAccountDTO.getBankBranchName());
                 newBankDetails.setBankAccountNumber(employerUpdateBankAccountDTO.getBankAccountNumber());

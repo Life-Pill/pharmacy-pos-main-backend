@@ -1,8 +1,11 @@
 package com.lifepill.possystem.dto;
 
+import com.lifepill.possystem.entity.Employer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,5 +20,5 @@ public class EmployerBankDetailsDTO {
     private double monthlyPayment;
     private Boolean monthlyPaymentStatus;
     private long employerId;
-//    private Set<Employer> employers;
+    private Set<Employer> employers;
 }

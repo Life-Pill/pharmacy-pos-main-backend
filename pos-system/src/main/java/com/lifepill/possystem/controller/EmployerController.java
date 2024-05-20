@@ -34,7 +34,6 @@ public class EmployerController {
 
  //   public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
-
     /**
      * Saves an employer without an image.
      *
