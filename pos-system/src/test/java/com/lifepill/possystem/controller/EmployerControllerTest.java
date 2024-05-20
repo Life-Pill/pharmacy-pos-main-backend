@@ -1,13 +1,17 @@
 package com.lifepill.possystem.controller;// EmployerControllerTest.java
 import com.lifepill.possystem.dto.*;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
+import com.lifepill.possystem.entity.EmployerBankDetails;
+import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
+import com.lifepill.possystem.util.mappers.EmployerMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -28,12 +32,16 @@ class EmployerControllerTest {
     @InjectMocks
     private EmployerController employerController;
 
+    @Mock
+    private EmployerMapper employerMapper;
+
     /**
      * Sets up.
      */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        employerController = new EmployerController(employerService, employerMapper, null, null);
     }
 
     /**
@@ -159,5 +167,55 @@ class EmployerControllerTest {
         assertEquals(201, responseEntity.getBody().getCode());
         assertEquals("SUCCESS", responseEntity.getBody().getMessage());
         assertEquals(employerUpdateBankAccountDTOList, responseEntity.getBody().getData());
+    }
+
+    /**
+     * Test update employer bank account details with id success.
+     */
+    @Test
+    void testUpdateEmployerBankAccountDetailsWithId_Success() {
+        // Arrange
+        long employerId = 1L;
+        EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO = new EmployerUpdateBankAccountDTO();
+        EmployerWithBankDTO expectedEmployerWithBankDTO = new EmployerWithBankDTO();
+        EmployerBankDetailsDTO expectedBankDetailsDTO = new EmployerBankDetailsDTO();
+        EmployerBankDetails bankDetails = new EmployerBankDetails();
+
+        when(employerService.updateEmployerBankAccountDetails(employerUpdateBankAccountDTO)).thenReturn(expectedEmployerWithBankDTO);
+        when(employerService.getEmployerBankDetailsById(employerId)).thenReturn(expectedBankDetailsDTO);
+
+
+        // Act
+        ResponseEntity<StandardResponse> responseEntity = employerController.updateEmployerBankAccountDetailsWithId(employerId, employerUpdateBankAccountDTO);
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        StandardResponse response = responseEntity.getBody();
+      assertEquals(201, response.getCode());
+       assertEquals("SUCCESS", response.getMessage());
+        EmployerWithBankDTO actualEmployerWithBankDTO = (EmployerWithBankDTO) response.getData();
+       assertEquals(expectedEmployerWithBankDTO, actualEmployerWithBankDTO);
+    }
+
+    /**
+     * Test update employer bank account details with id employer not found.
+     */
+    @Test
+    void testUpdateEmployerBankAccountDetailsWithId_EmployerNotFound() {
+        // Arrange
+        long employerId = 1L;
+        EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO = new EmployerUpdateBankAccountDTO();
+        String errorMessage = "Employer not found with ID: " + employerId;
+
+        when(employerService.updateEmployerBankAccountDetails(employerUpdateBankAccountDTO)).thenThrow(new NotFoundException(errorMessage));
+
+        // Act
+        ResponseEntity<StandardResponse> responseEntity = employerController.updateEmployerBankAccountDetailsWithId(employerId, employerUpdateBankAccountDTO);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        StandardResponse response = responseEntity.getBody();
+       assertEquals(404, response.getCode());
+       assertEquals(errorMessage, response.getMessage());
     }
 }

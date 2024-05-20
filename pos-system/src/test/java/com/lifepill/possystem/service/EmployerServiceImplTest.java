@@ -34,6 +34,9 @@ class EmployerServiceImplTest {
     private EmployerBankDetailsRepository employerBankDetailsRepository;
 
     @Mock
+    private EmployerBankDetailsRepository cashierBankDetailsRepo;
+
+    @Mock
     private BranchRepository branchRepository;
 
     @Mock
@@ -45,12 +48,38 @@ class EmployerServiceImplTest {
     @InjectMocks
     private EmployerServiceIMPL employerService;
 
+    private Employer employer;
+    private Branch branch;
+    private EmployerBankDetails bankDetails;
+    private EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO;
+
     /**
      * Sets up.
      */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        branch = new Branch();
+        branch.setBranchId(1L);
+
+        employer = new Employer();
+        employer.setEmployerId(1L);
+        employer.setBranch(branch);
+
+        bankDetails = new EmployerBankDetails();
+        bankDetails.setEmployerBankDetailsId(1L);
+        bankDetails.setEmployerId(1L);
+
+        employerUpdateBankAccountDTO = new EmployerUpdateBankAccountDTO();
+        employerUpdateBankAccountDTO.setEmployerId(1L);
+        employerUpdateBankAccountDTO.setEmployerBankDetailsId(1L);
+        employerUpdateBankAccountDTO.setBankName("Test Bank");
+        employerUpdateBankAccountDTO.setBankBranchName("Test Branch");
+        employerUpdateBankAccountDTO.setBankAccountNumber("123456789");
+        employerUpdateBankAccountDTO.setEmployerDescription("Test Description");
+        employerUpdateBankAccountDTO.setMonthlyPayment(1000.0);
+        employerUpdateBankAccountDTO.setMonthlyPaymentStatus(true);
     }
 
     /**
@@ -137,5 +166,57 @@ class EmployerServiceImplTest {
 
         assertEquals("Successfully Reset employer PIN", result);
         verify(employerRepository, times(1)).save(employer);
+    }
+
+    @Test
+    void testUpdateEmployerBankAccountDetails_EmployerExists_BankDetailsExists() {
+        // Arrange
+        when(employerRepository.existsById(employer.getEmployerId())).thenReturn(true);
+        when(employerRepository.getReferenceById(employer.getEmployerId())).thenReturn(employer);
+        when(cashierBankDetailsRepo.findById(employerUpdateBankAccountDTO.getEmployerBankDetailsId()))
+                .thenReturn(Optional.of(bankDetails));
+        EmployerWithBankDTO expectedEmployerWithBankDTO = new EmployerWithBankDTO();
+        when(modelMapper.map(employer, EmployerWithBankDTO.class)).thenReturn(expectedEmployerWithBankDTO);
+
+        // Act
+        EmployerWithBankDTO result = employerService.updateEmployerBankAccountDetails(employerUpdateBankAccountDTO);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(expectedEmployerWithBankDTO, result);
+        verify(employerRepository, times(1)).save(employer);
+    }
+
+    @Test
+    void testUpdateEmployerBankAccountDetails_EmployerExists_BankDetailsNotExists() {
+        // Arrange
+        when(employerRepository.existsById(employer.getEmployerId())).thenReturn(true);
+        when(employerRepository.getReferenceById(employer.getEmployerId())).thenReturn(employer);
+        when(cashierBankDetailsRepo.findById(employerUpdateBankAccountDTO.getEmployerBankDetailsId()))
+                .thenReturn(Optional.empty());
+        EmployerWithBankDTO expectedEmployerWithBankDTO = new EmployerWithBankDTO();
+        when(modelMapper.map(employer, EmployerWithBankDTO.class)).thenReturn(expectedEmployerWithBankDTO);
+
+        // Act
+        EmployerWithBankDTO result = employerService.updateEmployerBankAccountDetails(employerUpdateBankAccountDTO);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(expectedEmployerWithBankDTO, result);
+        verify(employerRepository, times(1)).save(employer);
+
+    }
+
+    @Test
+    void testUpdateEmployerBankAccountDetails_EmployerNotExists() {
+        // Arrange
+        when(employerRepository.existsById(employer.getEmployerId())).thenReturn(false);
+
+        // Act & Assert
+        assertThrows(NotFoundException.class, () -> employerService.updateEmployerBankAccountDetails(employerUpdateBankAccountDTO));
+        verify(employerRepository, times(1)).existsById(employer.getEmployerId());
+        verify(cashierBankDetailsRepo, never()).findById(any());
+        verify(cashierBankDetailsRepo, never()).save(any(EmployerBankDetails.class));
+        verify(employerRepository, never()).save(any(Employer.class));
     }
 }
