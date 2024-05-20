@@ -30,6 +30,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import com.lifepill.possystem.entity.EmployerBankDetails;
+
 
 /**
  * The type Employer service impl test.
@@ -50,7 +52,6 @@ class EmployerServiceImplTest {
 
     @Mock
     private ModelMapper modelMapper;
-
     @Mock
     private PasswordEncoder passwordEncoder;
 
