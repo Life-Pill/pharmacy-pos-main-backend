@@ -1,15 +1,15 @@
 package com.lifepill.possystem.service;
 
-import com.lifepill.possystem.dto.EmployerDTO;
-import com.lifepill.possystem.dto.EmployerWithBankDTO;
-import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
-import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerPasswordResetDTO;
-import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerRecentPinUpdateDTO;
-import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerUpdateAccountDetailsDTO;
-import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerUpdateBankAccountDTO;
+// EmployerServiceImplTest.java
+import com.lifepill.possystem.dto.*;
+import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
 import com.lifepill.possystem.entity.Branch;
-import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.entity.EmployerBankDetails;
+import com.lifepill.possystem.entity.Employer;
+import com.lifepill.possystem.entity.enums.Gender;
+import com.lifepill.possystem.entity.enums.Role;
+import com.lifepill.possystem.exception.EntityDuplicationException;
+import com.lifepill.possystem.exception.EntityNotFoundException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerBankDetailsRepository;
@@ -23,6 +23,9 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +43,9 @@ class EmployerServiceImplTest {
     private EmployerBankDetailsRepository employerBankDetailsRepository;
 
     @Mock
+    private EmployerBankDetailsRepository cashierBankDetailsRepo;
+
+    @Mock
     private BranchRepository branchRepository;
 
     @Mock
@@ -50,10 +56,6 @@ class EmployerServiceImplTest {
 
     @InjectMocks
     private EmployerServiceIMPL employerService;
-
-    @Mock
-    private EmployerBankDetailsRepository cashierBankDetailsRepo;
-
 
     private Employer employer;
     private Branch branch;
@@ -209,7 +211,7 @@ class EmployerServiceImplTest {
 
         // Assert
         assertNotNull(result);
-       assertEquals(expectedEmployerWithBankDTO, result);
+        assertEquals(expectedEmployerWithBankDTO, result);
         verify(employerRepository, times(1)).save(employer);
 
     }
