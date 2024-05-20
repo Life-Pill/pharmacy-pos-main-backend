@@ -1,11 +1,9 @@
 package com.lifepill.possystem.dto;
 
-import com.lifepill.possystem.entity.Employer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

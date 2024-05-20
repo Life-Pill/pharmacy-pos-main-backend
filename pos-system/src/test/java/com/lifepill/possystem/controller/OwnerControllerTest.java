@@ -4,7 +4,6 @@ import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.entity.enums.Gender;
 import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.service.EmployerService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

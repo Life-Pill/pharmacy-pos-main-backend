@@ -1,7 +1,6 @@
 package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.ItemCategoryDTO;
-import com.lifepill.possystem.dto.ItemDTO;
 import com.lifepill.possystem.dto.SupplierCompanyDTO;
 import com.lifepill.possystem.dto.SupplierDTO;
 import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
@@ -11,6 +10,7 @@ import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.ItemGetResponseWithoutSupplierDetailsDTO;
 import com.lifepill.possystem.entity.*;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
@@ -23,7 +23,6 @@ import com.lifepill.possystem.util.mappers.ItemMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -455,6 +454,11 @@ public class ItemServiceIMPL implements ItemService {
 
         ItemGetIdResponseDTO itemGetIdResponseDTO = modelMapper.map(item, ItemGetIdResponseDTO.class);
 
+        // Map Item Get All response
+        ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
+        itemGetIdResponseDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
+
+
         // Map ItemCategory
         ItemCategory itemCategory = item.getItemCategory();
         ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
@@ -474,17 +478,22 @@ public class ItemServiceIMPL implements ItemService {
     }
 
     @Override
-    public ItemGetIdResponseDTO getItemById(long itemId) {
+    public ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
 
-        ItemGetIdResponseDTO itemGetIdResponseDTO = modelMapper.map(item, ItemGetIdResponseDTO.class);
+        ItemGetResponseWithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO =
+                modelMapper.map(item, ItemGetResponseWithoutSupplierDetailsDTO.class);
+
+        // Map Get All Item Response
+        ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
+        itemGetResponsewithoutSupplierDetailsDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
 
         // Map ItemCategory
         ItemCategory itemCategory = item.getItemCategory();
         ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
-        itemGetIdResponseDTO.setItemCategoryDTO(itemCategoryDTO);
+        itemGetResponsewithoutSupplierDetailsDTO.setItemCategoryDTO(itemCategoryDTO);
 
-        return itemGetIdResponseDTO;
+        return itemGetResponsewithoutSupplierDetailsDTO;
     }
 }

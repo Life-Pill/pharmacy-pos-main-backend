@@ -43,7 +43,6 @@ public class CashierController {
     @PutMapping("/updateRecentPin")
     @Transactional
     public String updateRecentPin(@RequestBody EmployerRecentPinUpdateDTO cashierRecentPinUpdateDTO) {
-        String message = employerService.updateRecentPin(cashierRecentPinUpdateDTO);
-        return message;
+        return employerService.updateRecentPin(cashierRecentPinUpdateDTO);
     }
 }

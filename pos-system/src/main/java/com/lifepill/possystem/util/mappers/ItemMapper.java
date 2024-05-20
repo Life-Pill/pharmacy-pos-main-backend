@@ -1,15 +1,12 @@
 package com.lifepill.possystem.util.mappers;
 
-import com.lifepill.possystem.dto.ItemDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
-import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Item;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface ItemMapper {

@@ -3,7 +3,6 @@ package com.lifepill.possystem.controller;
 import com.lifepill.possystem.dto.SupplierCompanyDTO;
 import com.lifepill.possystem.service.SupplierCompanyService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +37,11 @@ public class SupplierCompanyController {
      * @return ResponseEntity containing the saved supplier company.
      */
     @PostMapping(path = "/save")
-    public ResponseEntity<SupplierCompanyDTO> saveSupplierCompany(@RequestBody SupplierCompanyDTO supplierCompanyDTO) {
-        SupplierCompanyDTO savedCompany = supplierCompanyService.saveSupplierCompany(supplierCompanyDTO);
+    public ResponseEntity<SupplierCompanyDTO> saveSupplierCompany(
+            @RequestBody SupplierCompanyDTO supplierCompanyDTO
+    ) {
+        SupplierCompanyDTO savedCompany = supplierCompanyService
+                .saveSupplierCompany(supplierCompanyDTO);
         return new ResponseEntity<>(savedCompany, HttpStatus.CREATED);
     }
 
@@ -51,8 +53,11 @@ public class SupplierCompanyController {
      * @return ResponseEntity containing the updated supplier company DTO and HTTP status.
      */
     @PutMapping(path = "/update-supplier-company/{id}")
-    public ResponseEntity<SupplierCompanyDTO> updateSupplierCompanyById(@PathVariable("id") long id, @RequestBody SupplierCompanyDTO updatedCompanyDTO) {
-        SupplierCompanyDTO updatedCompany = supplierCompanyService.updateSupplierCompanyById(id, updatedCompanyDTO);
+    public ResponseEntity<SupplierCompanyDTO> updateSupplierCompanyById(
+            @PathVariable("id") long id, @RequestBody SupplierCompanyDTO updatedCompanyDTO
+    ) {
+        SupplierCompanyDTO updatedCompany =
+                supplierCompanyService.updateSupplierCompanyById(id, updatedCompanyDTO);
         return new ResponseEntity<>(updatedCompany, HttpStatus.OK);
     }
 

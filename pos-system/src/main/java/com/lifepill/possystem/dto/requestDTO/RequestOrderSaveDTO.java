@@ -21,7 +21,7 @@ public class RequestOrderSaveDTO {
     private long orderId;
     private long branchId;
     private Date orderDate;
-    private Double total;
+    private Double total; // TODO Change total to orderTotal
     private List<RequestOrderDetailsSaveDTO> orderDetails;
     private RequestPaymentDetailsDTO paymentDetails;
 

@@ -4,13 +4,7 @@ package com.lifepill.possystem.service;
 import com.lifepill.possystem.dto.*;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
 import com.lifepill.possystem.entity.Branch;
-import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.entity.Employer;
-import com.lifepill.possystem.entity.enums.Gender;
-import com.lifepill.possystem.entity.enums.Role;
-import com.lifepill.possystem.exception.EntityDuplicationException;
-import com.lifepill.possystem.exception.EntityNotFoundException;
-import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerBankDetailsRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
@@ -23,9 +17,6 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

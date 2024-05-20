@@ -2,7 +2,6 @@ package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
-import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
@@ -11,10 +10,6 @@ import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.service.BranchService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
