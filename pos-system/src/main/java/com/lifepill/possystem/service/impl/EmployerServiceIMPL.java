@@ -230,69 +230,48 @@ public class EmployerServiceIMPL implements EmployerService {
      * @return A DTO containing the updated employer data along with bank account details.
      * @throws NotFoundException If the employer with the given ID is not found.
      */
+    /**
+     * Updates the bank account details of an employer.
+     *
+     * @param employerUpdateBankAccountDTO The DTO containing the updated bank account details.
+     * @return A DTO containing the updated employer data along with bank account details.
+     * @throws NotFoundException If the employer with the given ID is not found.
+     */
     @Override
     public EmployerWithBankDTO updateEmployerBankAccountDetails(EmployerUpdateBankAccountDTO employerUpdateBankAccountDTO) {
         long employerId = employerUpdateBankAccountDTO.getEmployerId();
 
-        if (employerRepository.existsById(employerId)) {
-            Employer employer = employerRepository.getReferenceById(employerId);
+        // Retrieve the employer by ID
+        Employer employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new NotFoundException("No data found for that employer ID"));
 
-            // Check if the employer already has bank details
-            EmployerBankDetails existingBankDetails = cashierBankDetailsRepo.findById(employerId).orElse(null);
-
-
-            if (existingBankDetails != null) {
-                // Update existing bank details
-                existingBankDetails.setBankName(employerUpdateBankAccountDTO.getBankName());
-                existingBankDetails.setBankBranchName(employerUpdateBankAccountDTO.getBankBranchName());
-                existingBankDetails.setBankAccountNumber(employerUpdateBankAccountDTO.getBankAccountNumber());
-                existingBankDetails.setEmployerDescription(employerUpdateBankAccountDTO.getEmployerDescription());
-                existingBankDetails.setMonthlyPayment(employerUpdateBankAccountDTO.getMonthlyPayment());
-                existingBankDetails.setMonthlyPaymentStatus(employerUpdateBankAccountDTO.isMonthlyPaymentStatus());
-
-                cashierBankDetailsRepo.save(existingBankDetails);
-            } else {
-                // Create new bank details if not present
-                EmployerBankDetails newBankDetails = new EmployerBankDetails();
-                //   newBankDetails.setEmployer(employer);
-                newBankDetails.setBankName(employerUpdateBankAccountDTO.getBankName());
-                newBankDetails.setBankBranchName(employerUpdateBankAccountDTO.getBankBranchName());
-                newBankDetails.setBankAccountNumber(employerUpdateBankAccountDTO.getBankAccountNumber());
-                newBankDetails.setEmployerDescription(employerUpdateBankAccountDTO.getEmployerDescription());
-                newBankDetails.setMonthlyPayment(employerUpdateBankAccountDTO.getMonthlyPayment());
-                newBankDetails.setMonthlyPaymentStatus(employerUpdateBankAccountDTO.isMonthlyPaymentStatus());
-
-                cashierBankDetailsRepo.save(newBankDetails);
-            }
-
-            // Return employer data along with bank account details
-            EmployerWithBankDTO employerWithBankDTO = new EmployerWithBankDTO();
-            employerWithBankDTO.setEmployerId(employerId);
-            employerWithBankDTO.setEmployerNic(employer.getEmployerNic());
-            employerWithBankDTO.setEmployerPhone(employer.getEmployerPhone());
-            employerWithBankDTO.setEmployerEmail(employer.getEmployerEmail());
-            employerWithBankDTO.setEmployerSalary(employer.getEmployerSalary());
-            employerWithBankDTO.setRole(employer.getRole());
-            employerWithBankDTO.setEmployerFirstName(employer.getEmployerFirstName());
-            employerWithBankDTO.setEmployerLastName(employer.getEmployerLastName());
-            employerWithBankDTO.setGender(employer.getGender());
-            employerWithBankDTO.setEmployerAddress(employer.getEmployerAddress());
-            employerWithBankDTO.setDateOfBirth(employer.getDateOfBirth());
-            employerWithBankDTO.setBranchId(employer.getBranch().getBranchId());
-            employerWithBankDTO.setProfileImage(employer.getProfileImage());
-            employerWithBankDTO.setEmployerNicName(employer.getEmployerNicName());
-            employerWithBankDTO.setPin(employer.getPin());
-
-            Employer employerBankDetailsId = employerRepository.getReferenceById(employerId);
-
-            employerWithBankDTO.setEmployerBankDetails(employerBankDetailsId.getEmployerBankDetails());
-            //  System.out.println(employerBankDetailsId.getEmployerBankDetails());
-
-            return employerWithBankDTO;
-        } else {
-            throw new NotFoundException("No data found for that employer ID");
+        // Find existing bank details or create new ones if they don't exist
+        EmployerBankDetails existingBankDetails = employer.getEmployerBankDetails();
+        if (existingBankDetails == null) {
+            existingBankDetails = new EmployerBankDetails();
         }
+
+        // Update the bank details
+        existingBankDetails.setBankName(employerUpdateBankAccountDTO.getBankName());
+        existingBankDetails.setBankBranchName(employerUpdateBankAccountDTO.getBankBranchName());
+        existingBankDetails.setBankAccountNumber(employerUpdateBankAccountDTO.getBankAccountNumber());
+        existingBankDetails.setEmployerDescription(employerUpdateBankAccountDTO.getEmployerDescription());
+        existingBankDetails.setMonthlyPayment(employerUpdateBankAccountDTO.getMonthlyPayment());
+        existingBankDetails.setMonthlyPaymentStatus(employerUpdateBankAccountDTO.isMonthlyPaymentStatus());
+
+        // Save the bank details
+        cashierBankDetailsRepo.save(existingBankDetails);
+
+        // Ensure the employer references the updated bank details
+        employer.setEmployerBankDetails(existingBankDetails);
+        employerRepository.save(employer);
+
+        // Map the updated employer to EmployerWithBankDTO
+        EmployerWithBankDTO employerWithBankDTO = modelMapper.map(employer, EmployerWithBankDTO.class);
+
+        return employerWithBankDTO;
     }
+
 
     /**
      * Retrieves an employer by their ID.
