@@ -41,7 +41,7 @@ class EmployerControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        employerController = new EmployerController(employerService, employerMapper, null, null);
+        employerController = new EmployerController(employerService, employerMapper);
     }
 
     /**
