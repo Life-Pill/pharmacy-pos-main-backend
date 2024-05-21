@@ -152,7 +152,6 @@ public class OrderServiceIMPL implements OrderService {
         }
     }
 
-
     public List<OrderResponseDTO> getAllOrdersWithDetails() {
         List<Order> orders = orderRepository.findAll();
         Map<String, List<Order>> groupedOrders = orders.stream()
@@ -160,8 +159,7 @@ public class OrderServiceIMPL implements OrderService {
                         order -> order.getOrderDate() + "-"
                                 + order.getBranchId() + "-"
                                 + order.getEmployer().getEmployerId()
-                        )
-                );
+                ));
 
         return groupedOrders.entrySet().stream()
                 .map(entry -> {
@@ -174,7 +172,6 @@ public class OrderServiceIMPL implements OrderService {
                     orderResponseDTO.setOrderDate(firstOrder.getOrderDate());
                     orderResponseDTO.setTotal(ordersInGroup.stream().mapToDouble(Order::getTotal).sum());
 
-
                     List<RequestOrderDetailsSaveDTO> orderDetails = ordersInGroup.stream()
                             .flatMap(order -> order.getOrderDetails().stream())
                             .map(orderDetail -> modelMapper.map(
@@ -183,11 +180,13 @@ public class OrderServiceIMPL implements OrderService {
                             )
                             .collect(Collectors.toList());
 
+                    // Limit orderDetails to the actual number of orders in the group
+                    orderDetails = orderDetails.stream().limit(ordersInGroup.size()).collect(Collectors.toList());
 
                     RequestPaymentDetailsDTO paymentDetails = ordersInGroup.stream()
-                            .filter(order -> order.getPaymentDetails() != null)
+                            .filter(order -> order.getPaymentDetails() != null && !order.getPaymentDetails().isEmpty())
                             .map(order -> modelMapper.map(
-                                    order.getPaymentDetails(),
+                                    order.getPaymentDetails().iterator().next(), // Get the first payment detail
                                     RequestPaymentDetailsDTO.class)
                             )
                             .findFirst()
@@ -202,4 +201,5 @@ public class OrderServiceIMPL implements OrderService {
                 })
                 .collect(Collectors.toList());
     }
+
 }
