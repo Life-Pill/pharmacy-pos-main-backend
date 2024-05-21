@@ -18,6 +18,7 @@ import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.repo.paymentRepository.PaymentRepository;
 import com.lifepill.possystem.service.OrderService;
+import com.lifepill.possystem.util.mappers.OrderToResponseDTO;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -45,6 +46,7 @@ public class OrderServiceIMPL implements OrderService {
     private BranchRepository branchRepository;
     private OrderDetailsRepository orderDetailsRepository;
     private PaymentRepository paymentRepository;
+    private OrderToResponseDTO orderToResponseDTO;
 
 
     /**
@@ -258,8 +260,5 @@ public class OrderServiceIMPL implements OrderService {
         orderResponseDTO.setGroupedOrderDetails(groupedOrderDetails);
         return orderResponseDTO;
     }
-
-
-
 
 }
