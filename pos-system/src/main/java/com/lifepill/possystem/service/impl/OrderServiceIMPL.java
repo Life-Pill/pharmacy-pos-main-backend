@@ -152,6 +152,7 @@ public class OrderServiceIMPL implements OrderService {
         }
     }
 
+
     public List<OrderResponseDTO> getAllOrdersWithDetails() {
         List<Order> orders = orderRepository.findAll();
         Map<String, List<Order>> groupedOrders = orders.stream()
@@ -174,14 +175,15 @@ public class OrderServiceIMPL implements OrderService {
 
                     List<RequestOrderDetailsSaveDTO> orderDetails = ordersInGroup.stream()
                             .flatMap(order -> order.getOrderDetails().stream())
-                            .map(orderDetail -> modelMapper.map(
-                                    orderDetail,
-                                    RequestOrderDetailsSaveDTO.class)
-                            )
+                            .map(orderDetail -> {
+                                RequestOrderDetailsSaveDTO dto = modelMapper.map(orderDetail, RequestOrderDetailsSaveDTO.class);
+                                dto.setId(firstOrder.getOrderDetails().iterator().next().getItems().getItemId()); // Ensure the ID is set correctly
+                                return dto;
+                            })
                             .collect(Collectors.toList());
 
                     // Limit orderDetails to the actual number of orders in the group
-                    orderDetails = orderDetails.stream().limit(ordersInGroup.size()).collect(Collectors.toList());
+                //    orderDetails = orderDetails.stream().limit(ordersInGroup.size()).collect(Collectors.toList());
 
                     RequestPaymentDetailsDTO paymentDetails = ordersInGroup.stream()
                             .filter(order -> order.getPaymentDetails() != null && !order.getPaymentDetails().isEmpty())
@@ -192,14 +194,28 @@ public class OrderServiceIMPL implements OrderService {
                             .findFirst()
                             .orElse(null);
 
+                    if (paymentDetails != null && !ordersInGroup.get(0).getPaymentDetails().isEmpty()) {
+                        paymentDetails.setPayedAmount(firstOrder.getPaymentDetails().iterator().next().getPaidAmount());
+                    }
+
                     int orderCount = ordersInGroup.size();
 
+                    // Set these values to orderResponseDTO object
                     orderResponseDTO.setGroupedOrderDetails(
                             new GroupedOrderDetails(orderDetails, paymentDetails, orderCount)
                     );
+//OrderDetail item id
+                    firstOrder.getOrderDetails().iterator().next().getItems().getItemId();
+                    System.out.println(" item id: " + firstOrder.getOrderDetails().iterator().next().getItems().getItemId());
+                    // Logging statements to debug and verify values
+                    System.out.println("Order ID: " + firstOrder.getOrderId());
+                    System.out.println("First Order Details ID: " + firstOrder.getOrderDetails().iterator().next().getOrderDetailsId());
+                    System.out.println("First Order Payed Amount: " + firstOrder.getPaymentDetails().iterator().next().getPaidAmount());
+
                     return orderResponseDTO;
                 })
                 .collect(Collectors.toList());
     }
+
 
 }
