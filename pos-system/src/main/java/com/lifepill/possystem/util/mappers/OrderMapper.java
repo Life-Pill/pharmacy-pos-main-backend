@@ -1,4 +1,4 @@
-package com.lifepill.possystem.service.impl;
+package com.lifepill.possystem.util.mappers;
 
 import com.lifepill.possystem.dto.GroupedOrderDetails;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderDetailsSaveDTO;
