@@ -18,7 +18,6 @@ import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.repo.paymentRepository.PaymentRepository;
 import com.lifepill.possystem.service.OrderService;
-import com.lifepill.possystem.util.mappers.OrderToResponseDTO;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -46,7 +45,7 @@ public class OrderServiceIMPL implements OrderService {
     private BranchRepository branchRepository;
     private OrderDetailsRepository orderDetailsRepository;
     private PaymentRepository paymentRepository;
-    private OrderToResponseDTO orderToResponseDTO;
+    private OrderMapper orderMapper;
 
 
     /**
@@ -54,7 +53,7 @@ public class OrderServiceIMPL implements OrderService {
      *
      * @param requestOrderSaveDTO The DTO containing order details.
      * @return A message indicating the result of the operation.
-     * */
+     */
     @Override
     public String addOrder(RequestOrderSaveDTO requestOrderSaveDTO) {
         // Check if items in the order have sufficient quantity
@@ -70,20 +69,21 @@ public class OrderServiceIMPL implements OrderService {
         order.setBranchId(requestOrderSaveDTO.getBranchId());
         orderRepository.save(order);
 
-        if (orderRepository.existsById(order.getOrderId())){
+        if (orderRepository.existsById(order.getOrderId())) {
             List<OrderDetails> orderDetails = modelMapper.
-                    map(requestOrderSaveDTO.getOrderDetails(), new TypeToken<List<OrderDetails>>(){}
-                            .getType()
+                    map(requestOrderSaveDTO.getOrderDetails(), new TypeToken<List<OrderDetails>>() {
+                            }
+                                    .getType()
                     );
-            for (int i=0;i<orderDetails.size();i++){
+            for (int i = 0; i < orderDetails.size(); i++) {
                 orderDetails.get(i).setOrders(order);
                 orderDetails.get(i).setItems(itemRepository
                         .getById(requestOrderSaveDTO
-                            .getOrderDetails().get(i).getId()
+                                .getOrderDetails().get(i).getId()
                         )
                 );
             }
-            if (!orderDetails.isEmpty()){
+            if (!orderDetails.isEmpty()) {
                 orderDetailsRepo.saveAll(orderDetails);
             }
             savePaymentDetails(requestOrderSaveDTO.getPaymentDetails(), order);
@@ -115,7 +115,7 @@ public class OrderServiceIMPL implements OrderService {
      *
      * @param requestOrderSaveDTO The DTO containing the order details.
      * @throws InsufficientItemQuantityException if an item in the order does not have enough quantity.
-     * @throws NotFoundException                if an item in the order is not found in the database.
+     * @throws NotFoundException                 if an item in the order is not found in the database.
      */
     private void checkItemStock(RequestOrderSaveDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
@@ -125,7 +125,7 @@ public class OrderServiceIMPL implements OrderService {
                 if (item.getItemQuantity() < orderDetail.getAmount()) {
                     throw new InsufficientItemQuantityException(
                             "Item " + item.getItemId()
-                            + " does not have enough quantity"
+                                    + " does not have enough quantity"
                     );
                 }
             } else {
@@ -154,7 +154,11 @@ public class OrderServiceIMPL implements OrderService {
         }
     }
 
-
+    /**
+     * Retrieves all orders with their details.
+     *
+     * @return A list of OrderResponseDTO containing orders with details.
+     */
     public List<OrderResponseDTO> getAllOrdersWithDetails() {
         List<Order> orders = orderRepository.findAll();
         Map<String, List<Order>> groupedOrders = orders.stream()
@@ -185,7 +189,7 @@ public class OrderServiceIMPL implements OrderService {
                             .collect(Collectors.toList());
 
                     // Limit orderDetails to the actual number of orders in the group
-                //    orderDetails = orderDetails.stream().limit(ordersInGroup.size()).collect(Collectors.toList());
+                    //    orderDetails = orderDetails.stream().limit(ordersInGroup.size()).collect(Collectors.toList());
 
                     RequestPaymentDetailsDTO paymentDetails = ordersInGroup.stream()
                             .filter(order -> order.getPaymentDetails() != null && !order.getPaymentDetails().isEmpty())
@@ -206,7 +210,7 @@ public class OrderServiceIMPL implements OrderService {
                     orderResponseDTO.setGroupedOrderDetails(
                             new GroupedOrderDetails(orderDetails, paymentDetails, orderCount)
                     );
-//OrderDetail item id
+
                     firstOrder.getOrderDetails().iterator().next().getItems().getItemId();
                     System.out.println(" item id: " + firstOrder.getOrderDetails().iterator().next().getItems().getItemId());
                     // Logging statements to debug and verify values
@@ -219,46 +223,22 @@ public class OrderServiceIMPL implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves an order with its details by the provided order ID.
+     *
+     * @param orderId The ID of the order to retrieve.
+     * @return The order response DTO containing the order details.
+     * @throws NotFoundException if no order is found with the provided ID.
+     */
     public OrderResponseDTO getOrderWithDetailsById(long orderId) {
         Optional<Order> orderOptional = orderRepository.findById(orderId);
 
         System.out.println("Order ID: " + orderId);
         if (orderOptional.isPresent()) {
             Order order = orderOptional.get();
-            return mapOrderToResponseDTO(order);
+            return orderMapper.mapOrderToResponseDTO(order);
         } else {
             throw new NotFoundException("Order not found with ID: " + orderId);
         }
     }
-
-    private OrderResponseDTO mapOrderToResponseDTO(Order order) {
-        OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
-        orderResponseDTO.setEmployerId(order.getEmployer().getEmployerId());
-        orderResponseDTO.setBranchId(order.getBranchId());
-        orderResponseDTO.setOrderDate(order.getOrderDate());
-        orderResponseDTO.setTotal(order.getTotal());
-
-        GroupedOrderDetails groupedOrderDetails = new GroupedOrderDetails();
-        List<RequestOrderDetailsSaveDTO> orderDetails = order.getOrderDetails().stream()
-                .map(orderDetail -> {
-                    RequestOrderDetailsSaveDTO dto = modelMapper.map(orderDetail, RequestOrderDetailsSaveDTO.class);
-                    dto.setId(orderDetail.getItems().getItemId());
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        groupedOrderDetails.setOrderDetails(orderDetails);
-
-        if (order.getPaymentDetails() != null && !order.getPaymentDetails().isEmpty()) {
-            PaymentDetails paymentDetails = order.getPaymentDetails().iterator().next();
-            RequestPaymentDetailsDTO paymentDetailsDTO = modelMapper.map(paymentDetails, RequestPaymentDetailsDTO.class);
-            paymentDetailsDTO.setPayedAmount(paymentDetails.getPaidAmount());
-            groupedOrderDetails.setPaymentDetails(paymentDetailsDTO);
-        }
-
-        groupedOrderDetails.setOrderCount(1); // Since we're retrieving a single order
-
-        orderResponseDTO.setGroupedOrderDetails(groupedOrderDetails);
-        return orderResponseDTO;
-    }
-
 }
