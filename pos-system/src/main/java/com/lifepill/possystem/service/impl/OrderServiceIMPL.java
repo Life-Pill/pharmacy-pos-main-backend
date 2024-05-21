@@ -217,5 +217,10 @@ public class OrderServiceIMPL implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public OrderResponseDTO getOrderWithDetailsById(long orderId) {
+        return null;
+    }
+
 
 }

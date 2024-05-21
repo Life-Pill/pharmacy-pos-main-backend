@@ -9,4 +9,6 @@ public interface OrderService {
     String addOrder(RequestOrderSaveDTO requestOrderSaveDTO);
 
     List<OrderResponseDTO> getAllOrdersWithDetails();
+
+    OrderResponseDTO getOrderWithDetailsById(long orderId);
 }
