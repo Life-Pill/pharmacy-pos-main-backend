@@ -217,10 +217,49 @@ public class OrderServiceIMPL implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public OrderResponseDTO getOrderWithDetailsById(long orderId) {
-        return null;
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+
+        System.out.println("Order ID: " + orderId);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            return mapOrderToResponseDTO(order);
+        } else {
+            throw new NotFoundException("Order not found with ID: " + orderId);
+        }
     }
+
+    private OrderResponseDTO mapOrderToResponseDTO(Order order) {
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+        orderResponseDTO.setEmployerId(order.getEmployer().getEmployerId());
+        orderResponseDTO.setBranchId(order.getBranchId());
+        orderResponseDTO.setOrderDate(order.getOrderDate());
+        orderResponseDTO.setTotal(order.getTotal());
+
+        GroupedOrderDetails groupedOrderDetails = new GroupedOrderDetails();
+        List<RequestOrderDetailsSaveDTO> orderDetails = order.getOrderDetails().stream()
+                .map(orderDetail -> {
+                    RequestOrderDetailsSaveDTO dto = modelMapper.map(orderDetail, RequestOrderDetailsSaveDTO.class);
+                    dto.setId(orderDetail.getItems().getItemId());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        groupedOrderDetails.setOrderDetails(orderDetails);
+
+        if (order.getPaymentDetails() != null && !order.getPaymentDetails().isEmpty()) {
+            PaymentDetails paymentDetails = order.getPaymentDetails().iterator().next();
+            RequestPaymentDetailsDTO paymentDetailsDTO = modelMapper.map(paymentDetails, RequestPaymentDetailsDTO.class);
+            paymentDetailsDTO.setPayedAmount(paymentDetails.getPaidAmount());
+            groupedOrderDetails.setPaymentDetails(paymentDetailsDTO);
+        }
+
+        groupedOrderDetails.setOrderCount(1); // Since we're retrieving a single order
+
+        orderResponseDTO.setGroupedOrderDetails(groupedOrderDetails);
+        return orderResponseDTO;
+    }
+
+
 
 
 }
