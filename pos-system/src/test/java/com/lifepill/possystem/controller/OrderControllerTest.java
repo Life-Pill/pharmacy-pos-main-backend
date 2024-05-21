@@ -134,6 +134,7 @@ class OrderControllerTest {
     private List<OrderResponseDTO> createMockOrderResponseList() {
         // Create mock order response list
         List<OrderResponseDTO> orderResponseList = new ArrayList<>();
+
         // Add mock order responses
         OrderResponseDTO order1 = new OrderResponseDTO();
         // Set order details for order1
@@ -145,5 +146,29 @@ class OrderControllerTest {
         return orderResponseList;
     }
 
+    /**
+     * Test getOrderWithDetailsById success.
+     */
+    @Test
+    void testGetOrderWithDetailsById_Success() {
+        // Arrange
+        long orderId = 1L;
+        OrderResponseDTO expectedResponse = createMockOrderResponse();
+        when(orderService.getOrderWithDetailsById(orderId)).thenReturn(expectedResponse);
+
+        // Act
+        ResponseEntity<StandardResponse> responseEntity = orderController.getOrderWithDetailsById(orderId);
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(200, responseEntity.getBody().getCode());
+        assertEquals(expectedResponse, responseEntity.getBody().getData());
+    }
+
+    private OrderResponseDTO createMockOrderResponse() {
+        OrderResponseDTO orderResponse = new OrderResponseDTO();
+        // Set order details for orderResponse
+        return orderResponse;
+    }
 
 }
