@@ -3,6 +3,7 @@ package com.lifepill.possystem.controller;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderDetailsSaveDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderSaveDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestPaymentDetailsDTO;
+import com.lifepill.possystem.dto.responseDTO.OrderResponseDTO;
 import com.lifepill.possystem.service.OrderService;
 import com.lifepill.possystem.util.StandardResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -109,6 +110,65 @@ class OrderControllerTest {
         requestOrderSaveDTO.setPaymentDetails(paymentDetails);
 
         return requestOrderSaveDTO;
+    }
+
+
+    /**
+     * Test getAllOrdersWithDetails success.
+     */
+    @Test
+    void testGetAllOrdersWithDetails_Success() {
+        // Arrange
+        List<OrderResponseDTO> expectedResponse = createMockOrderResponseList();
+        when(orderService.getAllOrdersWithDetails()).thenReturn(expectedResponse);
+
+        // Act
+        ResponseEntity<StandardResponse> responseEntity = orderController.getAllOrdersWithDetails();
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(200, responseEntity.getBody().getCode());
+        assertEquals(expectedResponse, responseEntity.getBody().getData());
+    }
+
+    private List<OrderResponseDTO> createMockOrderResponseList() {
+        // Create mock order response list
+        List<OrderResponseDTO> orderResponseList = new ArrayList<>();
+
+        // Add mock order responses
+        OrderResponseDTO order1 = new OrderResponseDTO();
+        // Set order details for order1
+        orderResponseList.add(order1);
+        OrderResponseDTO order2 = new OrderResponseDTO();
+        // Set order details for order2
+        orderResponseList.add(order2);
+
+        return orderResponseList;
+    }
+
+    /**
+     * Test getOrderWithDetailsById success.
+     */
+    @Test
+    void testGetOrderWithDetailsById_Success() {
+        // Arrange
+        long orderId = 1L;
+        OrderResponseDTO expectedResponse = createMockOrderResponse();
+        when(orderService.getOrderWithDetailsById(orderId)).thenReturn(expectedResponse);
+
+        // Act
+        ResponseEntity<StandardResponse> responseEntity = orderController.getOrderWithDetailsById(orderId);
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(200, responseEntity.getBody().getCode());
+        assertEquals(expectedResponse, responseEntity.getBody().getData());
+    }
+
+    private OrderResponseDTO createMockOrderResponse() {
+        OrderResponseDTO orderResponse = new OrderResponseDTO();
+        // Set order details for orderResponse
+        return orderResponse;
     }
 
 }

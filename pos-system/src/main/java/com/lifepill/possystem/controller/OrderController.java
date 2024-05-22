@@ -49,4 +49,19 @@ public class OrderController{
                 new StandardResponse(200, "All Orders Retrieved Successfully", orderResponseDTOList),
                 HttpStatus.OK);
     }
+
+    /**
+     * Gets order with details by id.
+     *
+     * @param orderId the order id
+     * @return the order with details by id
+     */
+    @GetMapping("/getOrderWithDetails/{orderId}")
+    public ResponseEntity<StandardResponse> getOrderWithDetailsById(@PathVariable long orderId) {
+        OrderResponseDTO orderResponseDTO = orderService.getOrderWithDetailsById(orderId);
+        return new ResponseEntity<>(
+                new StandardResponse(200, "Order Retrieved Successfully", orderResponseDTO),
+                HttpStatus.OK);
+    }
+
 }
