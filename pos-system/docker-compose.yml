@@ -12,7 +12,7 @@ services:
     environment:
       - POSTGRES_USER="postgres"
       - POSTGRES_PASSWORD="Prami@3990"
-      - SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/pos-monolithic"
+      - SPRING_DATASOURCE_URL="jdbc:postgresql://db:5432/pos-monolithic"
       - SPRING_DATASOURCE_USERNAME="postgres"
       - SPRING_DATASOURCE_PASSWORD="Prami@3990"
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
