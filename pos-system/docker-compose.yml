@@ -29,6 +29,8 @@ services:
       - POSTGRES_DB=pos-monolithic
     ports:
       - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -40,3 +42,6 @@ services:
       - 5050:80
     depends_on:
       - db
+
+volumes:
+  pgdata:
