@@ -1,38 +1,47 @@
-#services:
-#  lifePill-pos:
-#    image: "lifepill/pos:s4"
-#    container_name: pos:ms
-#    ports:
-#      - "8081:8081"
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 7000m
-#    networks:
-#      - lifepill
-#  loans:
-#    image: "pramithamj/loans:s4"
-#    container_name: loans-ms
-#    ports:
-#      - "8090:8090"
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 7000m
-#    networks:
-#      - pramithamj
-#
-#  cards:
-#    image: "pramithamj/cards:s4"
-#    container_name: cards-ms
-#    ports:
-#      - "9000:9000"
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 7000m
-#    networks:
-#      - pramithamj
-#networks:
-#  pramithamj:
-#    driver: "bridge"
+version: '3.8'
+
+services:
+  app:
+    image: 'pos-system'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lifepill
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Prami@3990
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pos-monolithic
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=Prami@3990
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+    ports:
+      - 8081:8081
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Prami@3990
+      - POSTGRES_DB=pos-monolithic
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - 5050:80
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
