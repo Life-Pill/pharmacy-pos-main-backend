@@ -10,11 +10,11 @@ services:
     depends_on:
       - db
     environment:
-      - POSTGRES_USER="postgres"
-      - POSTGRES_PASSWORD="Prami@3990"
-      - SPRING_DATASOURCE_URL="jdbc:postgresql://db:5432/pos-monolithic"
-      - SPRING_DATASOURCE_USERNAME="postgres"
-      - SPRING_DATASOURCE_PASSWORD="Prami@3990"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Prami@3990
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pos-monolithic
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=Prami@3990
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
     ports:
@@ -24,8 +24,8 @@ services:
     image: postgres
     container_name: db
     environment:
-      - POSTGRES_USER="postgres"
-      - POSTGRES_PASSWORD="Prami@3990"
-      - POSTGRES_DB="pos-monolithic"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Prami@3990
+      - POSTGRES_DB=pos-monolithic
     ports:
       - 5432:5432
