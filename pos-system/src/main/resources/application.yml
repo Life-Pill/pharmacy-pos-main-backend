@@ -21,7 +21,7 @@ spring:
       name: lifepill
       password: 12345
 server:
-  port: 8081
+  port: 8079
 logging:
   level:
     org.springframework.security: TRACE
