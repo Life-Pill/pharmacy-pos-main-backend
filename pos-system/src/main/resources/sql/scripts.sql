@@ -106,27 +106,58 @@ VALUES
     (10, 'Supplier 10', '707 Supplier St', '012-345-6789', 'supplier10@example.com', 'Description for Supplier 10', 'supplier10_image.jpg', '4.6', 10, CURRENT_TIMESTAMP, 'Admin');
 
 
-INSERT INTO item (item_id, item_name, selling_price, item_barcode, supply_date, supplier_price, is_free_issued, is_discounted, item_Manufacture, item_quantity, is_stock, measuring_unit_type, manufacture_date, expire_date, purchase_date, warranty_period, rack_number, discounted_price, discounted_percentage, warehouse_name, is_special_condition, item_image, item_description, date_created, last_updated_date, category_id, supplier_id)
-VALUES
-    (1, 'Item 1', 10.99, '123456789012', '2024-04-12', 8.99, false, true, 'Manufacturer A', 100, true, 'PIECE', '2023-01-01', '2025-01-01', '2024-04-12', '1 year', 'A1', 9.99, 10.0, 'Warehouse A', false, 'item1_image.jpg', 'Description for Item 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 1),
-    (2, 'Item 2', 15.99, '234567890123', '2024-04-12', 12.99, false, false, 'Manufacturer B', 150, true, 'PIECE', '2023-02-01', '2025-02-01', '2024-04-12', '2 years', 'B2', 13.99, 15.0, 'Warehouse B', false, 'item2_image.jpg', 'Description for Item 2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2, 2),
-    (3, 'Item 3', 20.99, '345678901234', '2024-04-12', 18.99, true, false, 'Manufacturer C', 200, true, 'PIECE', '2023-03-01', '2025-03-01', '2024-04-12', '3 years', 'C3', 19.99, 20.0, 'Warehouse C', false, 'item3_image.jpg', 'Description for Item 3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 3),
-    (4, 'Item 4', 25.99, '456789012345', '2024-04-12', 22.99, false, true, 'Manufacturer D', 250, true, 'PIECE', '2023-04-01', '2025-04-01', '2024-04-12', '4 years', 'D4', 23.99, 25.0, 'Warehouse D', false, 'item4_image.jpg', 'Description for Item 4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4, 4),
-    (5, 'Item 5', 30.99, '567890123456', '2024-04-12', 28.99, true, false, 'Manufacturer E', 300, true, 'PIECE', '2023-05-01', '2025-05-01', '2024-04-12', '5 years', 'E5', 29.99, 30.0, 'Warehouse E', false, 'item5_image.jpg', 'Description for Item 5', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5, 5),
-    (6, 'Item 6', 35.99, '678901234567', '2024-04-12', 32.99, false, true, 'Manufacturer F', 350, true, 'PIECE', '2023-06-01', '2025-06-01', '2024-04-12', '6 years', 'F6', 33.99, 35.0, 'Warehouse F', false, 'item6_image.jpg', 'Description for Item 6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 2),
-    (7, 'Item 7', 40.99, '789012345678', '2024-04-12', 38.99, true, false, 'Manufacturer G', 400, true, 'PIECE', '2023-07-01', '2025-07-01', '2024-04-12', '7 years', 'G7', 39.99, 40.0, 'Warehouse G', false, 'item7_image.jpg', 'Description for Item 7', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2, 3),
-    (8, 'Item 8', 45.99, '890123456789', '2024-04-12', 42.99, false, true, 'Manufacturer H', 450, true, 'PIECE', '2023-08-01', '2025-08-01', '2024-04-12', '8 years', 'H8', 43.99, 45.0, 'Warehouse H', false, 'item8_image.jpg', 'Description for Item 8', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, 4),
-    (9, 'Item 9', 50.99, '901234567890', '2024-04-12', 48.99, true, false, 'Manufacturer I', 500, true, 'PIECE', '2023-09-01', '2025-09-01', '2024-04-12', '9 years', 'I9', 49.99, 50.0, 'Warehouse I', false, 'item9_image.jpg', 'Description for Item 9', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4, 5),
-    (10, 'Item 10', 55.99, '012345678901', '2024-04-12', 52.99, false, true, 'Manufacturer J', 550, true, 'PIECE', '2023-10-01', '2025-10-01', '2024-04-12', '10 years', 'J10', 53.99, 55.0, 'Warehouse J', false, 'item10_image.jpg', 'Description for Item 10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5, 1);
+INSERT INTO item (
+    item_id, branch_id, date_created, discounted_percentage, discounted_price, expire_date, is_discounted, is_free_issued, is_special_condition, item_barcode, item_description, item_image, item_manufacture, item_name, item_quantity, last_updated_date, manufacture_date, measuring_unit_type, purchase_date, rack_number, selling_price, is_stock, supplier_price, supply_date, warehouse_name, warranty_period, category_id, supplier_id
+) VALUES
+      (1, 1, CURRENT_TIMESTAMP, 10.0, 9.99, '2025-01-01', true, false, false, '123456789012', 'Description for Medicine 1', 'medicine1_image.jpg', 'Manufacturer A', 'Panadol', 100, CURRENT_TIMESTAMP, '2023-01-01', 'TABLETS', '2024-04-12', 'A1', 10.99, true, 8.99, '2024-04-12', 'Warehouse A', '1 year', 1, 1),
+      (2, 2, CURRENT_TIMESTAMP, 15.0, 13.99, '2025-02-01', true, false, false, '234567890123', 'Description for Medicine 2', 'medicine2_image.jpg', 'Manufacturer B', 'Panadol', 150, CURRENT_TIMESTAMP, '2023-02-01', 'TABLETS', '2024-04-12', 'B2', 15.99, true, 12.99, '2024-04-12', 'Warehouse B', '2 years', 2, 2),
+      (3, 3, CURRENT_TIMESTAMP, 20.0, 19.99, '2025-03-01', true, true, false, '345678901234', 'Description for Medicine 3', 'medicine3_image.jpg', 'Manufacturer C', 'VitamineC', 200, CURRENT_TIMESTAMP, '2023-03-01', 'TABLETS', '2024-04-12', 'C3', 20.99, true, 18.99, '2024-04-12', 'Warehouse C', '3 years', 3, 3),
+      (4, 4, CURRENT_TIMESTAMP, 25.0, 23.99, '2025-04-01', true, false, false, '456789012345', 'Description for Medicine 4', 'medicine4_image.jpg', 'Manufacturer D', 'Panadol', 250, CURRENT_TIMESTAMP, '2023-04-01', 'TABLETS', '2024-04-12', 'D4', 25.99, true, 22.99, '2024-04-12', 'Warehouse D', '4 years', 4, 4),
+      (5, 5, CURRENT_TIMESTAMP, 30.0, 29.99, '2025-05-01', true, true, false, '567890123456', 'Description for Medicine 5', 'medicine5_image.jpg', 'Manufacturer E', 'Medicine5', 300, CURRENT_TIMESTAMP, '2023-05-01', 'TABLETS', '2024-04-12', 'E5', 30.99, true, 28.99, '2024-04-12', 'Warehouse E', '5 years', 5, 5),
+      (6, 1, CURRENT_TIMESTAMP, 35.0, 33.99, '2025-06-01', true, false, false, '678901234567', 'Description for Medicine 6', 'medicine6_image.jpg', 'Manufacturer F', 'Medicine6', 350, CURRENT_TIMESTAMP, '2023-06-01', 'TABLETS', '2024-04-12', 'F6', 35.99, true, 32.99, '2024-04-12', 'Warehouse F', '6 years', 1, 2),
+      (7, 2, CURRENT_TIMESTAMP, 40.0, 39.99, '2025-07-01', true, true, false, '789012345678', 'Description for Medicine 7', 'medicine7_image.jpg', 'Manufacturer G', 'Medicine7', 400, CURRENT_TIMESTAMP, '2023-07-01', 'TABLETS', '2024-04-12', 'G7', 40.99, true, 38.99, '2024-04-12', 'Warehouse G', '7 years', 2, 3),
+      (8, 3, CURRENT_TIMESTAMP, 45.0, 43.99, '2025-08-01', true, false, false, '890123456789', 'Description for Medicine 8', 'medicine8_image.jpg', 'Manufacturer H', 'Medicine8', 450, CURRENT_TIMESTAMP, '2023-08-01', 'TABLETS', '2024-04-12', 'H8', 45.99, true, 42.99, '2024-04-12', 'Warehouse H', '8 years', 3, 4),
+      (9, 4, CURRENT_TIMESTAMP, 50.0, 49.99, '2025-09-01', true, true, false, '901234567890', 'Description for Medicine 9', 'medicine9_image.jpg', 'Manufacturer I', 'Panadol', 500, CURRENT_TIMESTAMP, '2023-09-01', 'TABLETS', '2024-04-12', 'I9', 50.99, true, 48.99, '2024-04-12', 'Warehouse I', '9 years', 4, 5),
+      (10, 5, CURRENT_TIMESTAMP, 55.0, 53.99, '2025-10-01', true, false, false, '012345678901', 'Description for Medicine 10', 'medicine10_image.jpg', 'Manufacturer J', 'Medicine2', 550, CURRENT_TIMESTAMP, '2023-10-01', 'TABLETS', '2024-04-12', 'J10', 55.99, true, 52.99, '2024-04-12', 'Warehouse J', '10 years', 5, 1),
+      (11, 1, CURRENT_TIMESTAMP, 5.0, 4.99, '2025-11-01', true, false, false, '112345678901', 'Description for Medicine 11', 'medicine11_image.jpg', 'Manufacturer K', 'Medicine5', 600, CURRENT_TIMESTAMP, '2023-11-01', 'TABLETS', '2024-04-12', 'K11', 5.99, true, 4.99, '2024-04-12', 'Warehouse K', '11 years', 1, 2),
+      (12, 2, CURRENT_TIMESTAMP, 6.0, 5.99, '2025-12-01', true, true, false, '122345678901', 'Description for Medicine 12', 'medicine12_image.jpg', 'Manufacturer L', 'Medicine5', 650, CURRENT_TIMESTAMP, '2023-12-01', 'TABLETS', '2024-04-12', 'L12', 6.99, true, 5.99, '2024-04-12', 'Warehouse L', '12 years', 2, 3),
+      (13, 3, CURRENT_TIMESTAMP, 7.0, 6.99, '2026-01-01', true, false, false, '132345678901', 'Description for Medicine 13', 'medicine13_image.jpg', 'Manufacturer M', 'Medicine4', 700, CURRENT_TIMESTAMP, '2024-01-01', 'TABLETS', '2024-04-12', 'M13', 7.99, true, 6.99, '2024-04-12', 'Warehouse M', '13 years', 3, 4),
+      (14, 4, CURRENT_TIMESTAMP, 8.0, 7.99, '2026-02-01', true, true, false, '142345678901', 'Description for Medicine 14', 'medicine14_image.jpg', 'Manufacturer N', 'Medicine3', 750, CURRENT_TIMESTAMP, '2024-02-01', 'TABLETS', '2024-04-12', 'N14', 8.99, true, 7.99, '2024-04-12', 'Warehouse N', '14 years', 4, 5),
+      (15, 5, CURRENT_TIMESTAMP, 9.0, 8.99, '2026-03-01', true, false, false, '152345678901', 'Description for Medicine 15', 'medicine15_image.jpg', 'Manufacturer O', 'Medicine3', 800, CURRENT_TIMESTAMP, '2024-03-01', 'TABLETS', '2024-04-12', 'O15', 9.99, true, 8.99, '2024-04-12', 'Warehouse O', '15 years', 5, 1),
+      (16, 1, CURRENT_TIMESTAMP, 10.0, 9.99, '2026-04-01', true, true, false, '162345678901', 'Description for Medicine 16', 'medicine16_image.jpg', 'Manufacturer P', 'Medicine1', 850, CURRENT_TIMESTAMP, '2024-04-01', 'TABLETS', '2024-04-12', 'P16', 10.99, true, 9.99, '2024-04-12', 'Warehouse P', '16 years', 1, 2),
+      (17, 2, CURRENT_TIMESTAMP, 11.0, 10.99, '2026-05-01', true, false, false, '172345678901', 'Description for Medicine 17', 'medicine17_image.jpg', 'Manufacturer Q', 'Medicine1', 900, CURRENT_TIMESTAMP, '2024-05-01', 'TABLETS', '2024-04-12', 'Q17', 11.99, true, 10.99, '2024-04-12', 'Warehouse Q', '17 years', 2, 3),
+      (18, 3, CURRENT_TIMESTAMP, 12.0, 11.99, '2026-06-01', true, true, false, '182345678901', 'Description for Medicine 18', 'medicine18_image.jpg', 'Manufacturer R', 'Medicine2', 950, CURRENT_TIMESTAMP, '2024-06-01', 'TABLETS', '2024-04-12', 'R18', 12.99, true, 11.99, '2024-04-12', 'Warehouse R', '18 years', 3, 4),
+      (19, 4, CURRENT_TIMESTAMP, 13.0, 12.99, '2026-07-01', true, false, false, '192345678901', 'Description for Medicine 19', 'medicine19_image.jpg', 'Manufacturer S', 'Medicine2', 1000, CURRENT_TIMESTAMP, '2024-07-01', 'TABLETS', '2024-04-12', 'S19', 13.99, true, 12.99, '2024-04-12', 'Warehouse S', '19 years', 4, 5),
+      (20, 5, CURRENT_TIMESTAMP, 14.0, 13.99, '2026-08-01', true, true, false, '202345678901', 'Description for Medicine 20', 'medicine20_image.jpg', 'Manufacturer T', 'Medicine2', 1050, CURRENT_TIMESTAMP, '2024-08-01', 'TABLETS', '2024-04-12', 'T20', 14.99, true, 13.99, '2024-04-12', 'Warehouse T', '20 years', 5, 1);
 
-INSERT INTO authorities (id,name, employer_id) VALUES
-                                                (1,'ROLE_CASHIER', 1),
-                                                (2,'ROLE_BRANCHMANAGER', 2),
-                                                (3,'ROLE_CASHIER', 3),
-                                                (4,'ROLE_CASHIER', 4),
-                                                (5,'ROLE_CASHIER', 5),
-                                                (6,'ROLE_BRANCHMANAGER', 6),
-                                                (8,'ROLE_OTHER', 8),
-                                                (9,'ROLE_CASHIER', 9),
-                                                (10,'ROLE_BRANCHMANAGER', 10),
-                                                (14,'ROLE_OWNER',14);
+INSERT INTO branch_item(branch_id, item_id) VALUES
+    (1, 1),
+    (2, 1),
+    (3, 3),
+    (4, 4),
+    (5, 5),
+    (6, 6),
+    (7, 7),
+    (8, 8),
+    (9, 9),
+    (10, 10),
+    (1, 2),
+    (2, 2),
+    (3, 2),
+    (4, 2),
+    (5, 2),
+    (6, 2),
+    (7, 2),
+    (8, 2),
+    (9, 2),
+    (10, 2),
+    (1, 3),
+    (1, 4),
+    (3, 4),
+    (4, 3),
+    (5, 3),
+    (6, 3),
+    (7, 3),
+    (8, 3),
+    (9, 3),
+    (10, 5);

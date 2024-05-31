@@ -50,7 +50,8 @@ public class SecurityConfiguration {
                                         "/swagger-ui/**",
                                         "/v2/api-docs",
                                         "/webjars/**",
-                                        "/v3/api-docs"
+                                        "/v3/api-docs",
+                                        "/lifepill/v1/medicine-finding/find-medicine"
                                 ).permitAll()
                                 .antMatchers("lifepill/v1/branch-summary/**")
                                 .hasRole(OWNER.name())
@@ -58,7 +59,7 @@ public class SecurityConfiguration {
                                 .antMatchers("/lifepill/v1/admin/**").hasRole(OWNER.name())
                                 //.antMatchers( "/lifepill/v1/admin/**").permitAll()
                                 .antMatchers("/lifepill/v1/cashierNew/**").hasRole(CASHIER.name())
-                                .antMatchers("lifepill/v1/branch/**","/lifepill/v1/branch-summary/sales-summary")
+                                .antMatchers("lifepill/v1/branch/**", "/lifepill/v1/branch-summary/sales-summary")
                                 .hasAnyRole(OWNER.name())
                                 .antMatchers("lifepill/v1/employers/**")
                                 .hasAnyRole(OWNER.name(), MANAGER.name())
