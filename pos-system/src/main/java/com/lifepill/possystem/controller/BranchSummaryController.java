@@ -1,6 +1,7 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.DailySalesSummaryDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.service.BranchSummaryService;
 import com.lifepill.possystem.util.StandardResponse;
@@ -168,11 +169,31 @@ public class BranchSummaryController {
     public ResponseEntity getAllPharmacySummary() {
         // Call service method to retrieve total details of all pharmacy branches
         AllPharmacySummaryResponseDTO summary = branchSummaryService.getAllPharmacySummary();
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(
                         200,
                         "OK",
                         summary
+                ),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * Retrieves daily sales summary of a specific branch by its ID.
+     *
+     * @param branchId The ID of the branch
+     * @return ResponseEntity containing StandardResponse with status 200 (OK)
+     * and list of DailySalesSummaryDTO
+     */
+    @GetMapping("/sales-summary/daily/{branchId}")
+    public ResponseEntity<StandardResponse> getDailySalesSummary(@PathVariable long branchId) {
+        List<DailySalesSummaryDTO> dailySalesSummary = branchSummaryService.getDailySalesSummary(branchId);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "SUCCESS",
+                        dailySalesSummary
                 ),
                 HttpStatus.OK
         );

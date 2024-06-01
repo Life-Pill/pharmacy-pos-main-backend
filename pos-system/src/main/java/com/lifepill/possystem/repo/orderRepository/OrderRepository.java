@@ -47,4 +47,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
      */
     @Query("SELECT SUM(o.total) FROM Order o")
     Double getTotalSales();
+
+    List<Order> findAllByBranchId(long branchId);
 }
