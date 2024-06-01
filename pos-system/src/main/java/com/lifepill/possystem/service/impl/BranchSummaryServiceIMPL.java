@@ -2,6 +2,7 @@ package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.DailySalesSummaryDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Employer;
@@ -19,10 +20,9 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -304,6 +304,7 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
     }
 
 
+
     /**
      * Retrieves the manager's first name for the given branch ID.
      *
@@ -341,5 +342,35 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         } else {
             throw new NotFoundException("No Branch found for that id");
         }
+    }
+
+
+    @Override
+    public List<DailySalesSummaryDTO> getDailySalesSummary(long branchId) {
+        // Retrieve all orders for the given branch
+        List<Order> orders = orderRepository.findAllByBranchId(branchId);
+
+        // Group orders by order date and calculate total sales and count of orders for each date
+        Map<LocalDate, Double> dailySalesMap = orders.stream()
+                .collect(Collectors.groupingBy(
+                        order -> order.getOrderDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        Collectors.summingDouble(Order::getTotal))
+                );
+        Map<LocalDate, Long> dailyOrdersCountMap = orders.stream()
+                .collect(Collectors.groupingBy(
+                        order -> order.getOrderDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        Collectors.counting())
+                );
+
+        // Create and return DailySalesSummaryDTO
+        List<DailySalesSummaryDTO> result = dailySalesMap.entrySet().stream().map(entry -> {
+            LocalDate date = entry.getKey();
+            Double sales = entry.getValue();
+            Long ordersCount = dailyOrdersCountMap.getOrDefault(date, 0L);
+            return new DailySalesSummaryDTO(date, ordersCount, sales);
+        }).collect(Collectors.toList());
+
+
+        return result;
     }
 }

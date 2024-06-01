@@ -3,6 +3,7 @@ package com.lifepill.possystem.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -53,4 +54,5 @@ public class Order {
         this.orderDate = orderDate;
         this.total = total;
     }
+
 }

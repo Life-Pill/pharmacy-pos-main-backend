@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.DailySalesSummaryDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
 
 import java.util.Date;
@@ -62,4 +63,6 @@ public interface BranchSummaryService {
      * @return AllPharmacySummaryResponseDTO containing total sales, total orders, total employees, and total branches.
      */
     AllPharmacySummaryResponseDTO getAllPharmacySummary();
+
+    List<DailySalesSummaryDTO> getDailySalesSummary(long branchId);
 }
