@@ -183,7 +183,8 @@ public class BranchSummaryController {
      * Retrieves daily sales summary of a specific branch by its ID.
      *
      * @param branchId The ID of the branch
-     * @return ResponseEntity containing StandardResponse with status 200 (OK) and list of DailySalesSummaryDTO
+     * @return ResponseEntity containing StandardResponse with status 200 (OK)
+     * and list of DailySalesSummaryDTO
      */
     @GetMapping("/sales-summary/daily/{branchId}")
     public ResponseEntity<StandardResponse> getDailySalesSummary(@PathVariable long branchId) {

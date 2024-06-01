@@ -344,7 +344,16 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
         }
     }
 
-
+    /**
+     * Retrieves daily sales summary for a specific branch.
+     *
+     * This method fetches all orders for a given branch, groups them by order date, and calculates
+     * the total sales and count of orders for each date. It then creates a list of DailySalesSummaryDTO
+     * objects, each representing the sales summary for a specific day, and returns this list.
+     *
+     * @param branchId The ID of the branch for which the daily sales summary is to be fetched.
+     * @return A list of DailySalesSummaryDTO objects, each representing the sales summary for a specific day.
+     */
     @Override
     public List<DailySalesSummaryDTO> getDailySalesSummary(long branchId) {
         // Retrieve all orders for the given branch
@@ -369,7 +378,6 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             Long ordersCount = dailyOrdersCountMap.getOrDefault(date, 0L);
             return new DailySalesSummaryDTO(date, ordersCount, sales);
         }).collect(Collectors.toList());
-
 
         return result;
     }

@@ -64,5 +64,14 @@ public interface BranchSummaryService {
      */
     AllPharmacySummaryResponseDTO getAllPharmacySummary();
 
+    /**
+     * Retrieves daily sales summary for a specific branch.
+     *
+     * This method is responsible for fetching the daily sales summary for a specific branch.
+     * The summary includes the date, number of orders, and total sales for each day.
+     *
+     * @param branchId The ID of the branch for which the daily sales summary is to be fetched.
+     * @return A list of DailySalesSummaryDTO objects, each representing the sales summary for a specific day.
+     */
     List<DailySalesSummaryDTO> getDailySalesSummary(long branchId);
 }
