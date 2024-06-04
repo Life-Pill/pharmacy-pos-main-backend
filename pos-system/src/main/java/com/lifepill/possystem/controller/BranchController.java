@@ -68,7 +68,7 @@ public class BranchController {
     @GetMapping(path = "/get-all-branches")
     public ResponseEntity<StandardResponse> getAllBranches() {
         List<BranchDTO> allBranches = branchService.getAllBranches();
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(201, "SUCCESS", allBranches),
                 HttpStatus.OK
         );
@@ -83,8 +83,7 @@ public class BranchController {
     @GetMapping(path = "/get-by-id", params = "id")
     @Transactional
     public BranchDTO getBranchById(@RequestParam(value = "id") int branchId) {
-        BranchDTO branchDTO = branchService.getBranchById(branchId);
-        return branchDTO;
+        return branchService.getBranchById(branchId);
     }
 
     /**
@@ -95,8 +94,7 @@ public class BranchController {
      */
     @DeleteMapping(path = "/delete-branch/{id}")
     public String deleteBranch(@PathVariable(value = "id") int branchId) {
-        String deleted = branchService.deleteBranch(branchId);
-        return deleted;
+        return branchService.deleteBranch(branchId);
     }
 
     /**

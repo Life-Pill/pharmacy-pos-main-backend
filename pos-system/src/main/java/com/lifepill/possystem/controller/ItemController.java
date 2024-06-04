@@ -55,7 +55,7 @@ public class ItemController {
     public ResponseEntity<StandardResponse> saveItem(@RequestBody ItemSaveRequestDTO itemSaveRequestDTO) {
         String message = itemService.saveItems(itemSaveRequestDTO);
 
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(201, "Success", message),
                 HttpStatus.CREATED);
     }
@@ -69,7 +69,7 @@ public class ItemController {
     @GetMapping(path = "get-all-items")
     public ResponseEntity<StandardResponse> getAllItems(){
         List<ItemGetAllResponseDTO> allItems = itemService.getAllItems();
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(201,"SUCCESS",allItems),
                 HttpStatus.OK
         );

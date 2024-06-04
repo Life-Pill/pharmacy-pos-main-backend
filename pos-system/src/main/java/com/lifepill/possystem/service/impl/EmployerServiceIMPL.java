@@ -291,7 +291,12 @@ public class EmployerServiceIMPL implements EmployerService {
     public EmployerDTO getEmployerById(long employerId) {
         if (employerRepository.existsById(employerId)){
             Employer employer = employerRepository.getReferenceById(employerId);
-            return modelMapper.map(employer, EmployerDTO.class);
+
+            long branchId = employer.getBranch().getBranchId();
+            EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
+
+            employerDTO.setBranchId(branchId);
+            return employerDTO;
         }else {
             throw  new NotFoundException("No employer found for that id");
         }

@@ -4,7 +4,6 @@ import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerPasswordRese
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.EmployerRecentPinUpdateDTO;
 import com.lifepill.possystem.service.EmployerService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +29,7 @@ public class CashierController {
     @PutMapping("/updatePassword")
     @Transactional
     public String updateEmployerPassword(@RequestBody EmployerPasswordResetDTO cashierPasswordResetDTO) {
-        String message = employerService.updateEmployerPassword(cashierPasswordResetDTO);
-        return message;
+        return employerService.updateEmployerPassword(cashierPasswordResetDTO);
     }
 
     /**
