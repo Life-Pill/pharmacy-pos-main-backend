@@ -1,13 +1,14 @@
 package com.lifepill.possystem.service;
 
 
-import com.lifepill.possystem.dto.EmployerBankDetailsDTO;
-import com.lifepill.possystem.dto.EmployerWithBankDTO;
-import com.lifepill.possystem.dto.EmployerDTO;
-import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
+import com.lifepill.possystem.dto.*;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
+import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.entity.enums.Role;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface EmployerService {
@@ -21,6 +22,8 @@ public interface EmployerService {
     String updateEmployer(Long cashierId, EmployerAllDetailsUpdateDTO employerAllDetailsUpdateDTO);
 
     EmployerDTO getEmployerById(long cashierId);
+
+    EmployerS3DTO getEmployerS3ById(long cashierId);
 
     String deleteEmployer(long cashierId);
 
@@ -55,4 +58,8 @@ public interface EmployerService {
     List<EmployerWithBankDTO> getAllEmployersWithBankDetails();
 
     EmployerWithBankDTO getEmployerWithBankDetailsById(long employerId);
+
+    EmployerS3DTO createEmployer(MultipartFile file, Long branchId, Employer employer) throws IOException;
+
+    InputStreamResource getEmployerImage(String profileImageUrl);
 }
