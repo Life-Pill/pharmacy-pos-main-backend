@@ -2,13 +2,12 @@ package com.lifepill.possystem.controller;
 
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.lifepill.possystem.dto.EmployerBankDetailsDTO;
-import com.lifepill.possystem.dto.EmployerDTO;
-import com.lifepill.possystem.dto.EmployerWithBankDTO;
-import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
+import com.lifepill.possystem.dto.*;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
+import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.service.S3Service;
@@ -16,6 +15,7 @@ import com.lifepill.possystem.util.StandardResponse;
 import com.lifepill.possystem.util.mappers.EmployerMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller class for managing employer-related operations.
@@ -40,21 +41,36 @@ public class EmployerController {
 
     private final S3Service s3Service;
     private final EmployerRepository employerRepository;
+    private final ModelMapper modelMapper;
 
     private EmployerService employerService;
     private EmployerMapper employerMapper;
+    private BranchRepository branchRepository;
 
  //   public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
+
     @PostMapping("/save-s3")
-    public ResponseEntity<Employer> createEmployer(
+    public ResponseEntity<EmployerS3DTO> createEmployer(
             @RequestParam("file") MultipartFile file,
+            @RequestParam("branchId") Long branchId,
             @ModelAttribute Employer employer
     ) throws IOException {
+        Optional<Branch> branchOptional = branchRepository.findById(branchId);
+        if (branchOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Branch branch = branchOptional.get();
+        employer.setBranch(branch);
+
         String imageUrl = s3Service.uploadFile(employer.getEmployerEmail(), file);
         employer.setProfileImageUrl(imageUrl);
         Employer savedEmployer = employerRepository.save(employer);
-        return new ResponseEntity<>(savedEmployer, HttpStatus.CREATED);
+
+        EmployerS3DTO employerDTO = modelMapper.map(savedEmployer, EmployerS3DTO.class);
+
+        return new ResponseEntity<>(employerDTO, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/{id}/image", produces = MediaType.IMAGE_JPEG_VALUE)

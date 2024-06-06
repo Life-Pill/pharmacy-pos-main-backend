@@ -26,7 +26,7 @@ public class S3ServiceIMPL implements S3Service {
     @Value("${aws.region}")
     private String awsRegion;
 
-    public S3Service(AmazonS3 s3client) {
+    public S3ServiceIMPL(AmazonS3 s3client) {
         this.s3client = s3client;
     }
 
