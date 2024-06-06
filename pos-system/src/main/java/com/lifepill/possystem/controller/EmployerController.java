@@ -1,15 +1,22 @@
 package com.lifepill.possystem.controller;
 
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.lifepill.possystem.dto.EmployerBankDetailsDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.EmployerWithBankDTO;
 import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
+import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.exception.NotFoundException;
+import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
+import com.lifepill.possystem.service.S3Service;
 import com.lifepill.possystem.util.StandardResponse;
 import com.lifepill.possystem.util.mappers.EmployerMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,13 +35,47 @@ import java.util.List;
 @RestController
 @RequestMapping("lifepill/v1/employers")
 @AllArgsConstructor
+@Log4j2
 public class EmployerController {
+
+    private final S3Service s3Service;
+    private final EmployerRepository employerRepository;
 
     private EmployerService employerService;
     private EmployerMapper employerMapper;
 
  //   public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
+    @PostMapping("/save-s3")
+    public ResponseEntity<Employer> createEmployer(
+            @RequestParam("file") MultipartFile file,
+            @ModelAttribute Employer employer
+    ) throws IOException {
+        String imageUrl = s3Service.uploadFile(employer.getEmployerEmail(), file);
+        employer.setProfileImageUrl(imageUrl);
+        Employer savedEmployer = employerRepository.save(employer);
+        return new ResponseEntity<>(savedEmployer, HttpStatus.CREATED);
+    }
+
+    @GetMapping(value = "/{id}/image", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> getEmployerImage(@PathVariable Long id) {
+        Employer employer = employerRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employer not found"));
+
+        String imageUrl = employer.getProfileImageUrl();
+        log.info("Image URL to retrieve: " + imageUrl);
+
+        // Extract the key from the imageUrl
+        String keyName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+        S3Object s3Object = s3Service.getFile(keyName);
+        S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
+        InputStreamResource inputStreamResource = new InputStreamResource(objectInputStream);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + keyName + "\"")
+                .body(inputStreamResource);
+    }
 
     /**
      * Saves an employer without an image.

@@ -25,3 +25,9 @@ server:
 logging:
   level:
     org.springframework.security: TRACE
+
+aws:
+    access.key: ${AWS_ACCESS_KEY}
+    secret.key: ${AWS_SECRET_KEY}
+    s3.bucket: ${AWS_S3_BUCKET}
+    region: ${AWS_REGION}

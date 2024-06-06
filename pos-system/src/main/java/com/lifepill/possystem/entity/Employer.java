@@ -43,6 +43,9 @@ public class Employer implements UserDetails {
     @Column(name = "profile_image",nullable = true)
     private byte[] profileImage;
 
+    @Column(name = "profile_image_url",nullable = true)
+    private String profileImageUrl;
+
     @Column(name = "employer_password", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String employerPassword;
