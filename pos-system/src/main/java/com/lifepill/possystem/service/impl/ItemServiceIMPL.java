@@ -1,5 +1,7 @@
 package com.lifepill.possystem.service.impl;
 
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.lifepill.possystem.dto.ItemCategoryDTO;
 import com.lifepill.possystem.dto.SupplierCompanyDTO;
 import com.lifepill.possystem.dto.SupplierDTO;
@@ -19,14 +21,18 @@ import com.lifepill.possystem.repo.itemRepository.ItemCategoryRepository;
 import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.repo.supplierRepository.SupplierRepository;
 import com.lifepill.possystem.service.ItemService;
+import com.lifepill.possystem.service.S3Service;
 import com.lifepill.possystem.util.mappers.ItemMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +48,7 @@ public class ItemServiceIMPL implements ItemService {
     private ItemMapper itemMapper;
     private ItemCategoryRepository itemCategoryRepository;
     private SupplierRepository supplierRepository;
+    private final S3Service s3Service;
 
     /**
      * Saves a new item based on the provided item save request DTO.
@@ -67,7 +74,7 @@ public class ItemServiceIMPL implements ItemService {
                 );
 
         // Check if the item supplier exists
-        Supplier supplier = supplierRepository.findById(itemSaveRequestDTO.getSupplierId())
+        supplierRepository.findById(itemSaveRequestDTO.getSupplierId())
                 .orElseThrow(() -> new NotFoundException("Supplier not found with ID: "
                         + itemSaveRequestDTO.getSupplierId())
                 );
@@ -475,6 +482,71 @@ public class ItemServiceIMPL implements ItemService {
         itemGetIdResponseDTO.setSupplierCompanyDTO(supplierCompanyDTO);
 
         return itemGetIdResponseDTO;
+    }
+
+    @Override
+    public ItemSaveRequestCategoryDTO createItemWithImage(
+            MultipartFile file,
+            ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO)
+    throws IOException {
+        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
+                .orElseGet(() -> {
+
+                    // If category doesn't exist, create a new one
+                    ItemCategory newCategory = new ItemCategory();
+                    // Set category properties if needed
+                    // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
+                    // newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
+                    // Save the new category
+                    return itemCategoryRepository.save(newCategory);
+                });
+
+        // Check if supplier exists
+        Supplier supplier = supplierRepository.findById(itemSaveRequestCategoryDTO.getSupplierId())
+                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: "
+                        + itemSaveRequestCategoryDTO.getSupplierId())
+                );
+
+        // Check if branch exists
+        Branch branch = branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
+                        + itemSaveRequestCategoryDTO.getBranchId())
+                );
+
+        itemRepository.findById(itemSaveRequestCategoryDTO.getItemId())
+                .ifPresent(item -> {
+                    throw new EntityDuplicationException("Item already exists with ID: "
+                            + itemSaveRequestCategoryDTO.getItemId());
+                });
+
+        // Now, associate the item with the category and supplier
+        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
+        item.setItemCategory(category);
+        item.setSupplier(supplier); // Ensure the supplier is set
+        item.setBranchId(itemSaveRequestCategoryDTO.getBranchId());
+        String imageUrl = s3Service.uploadFile(itemSaveRequestCategoryDTO.getItemName(), file);
+        itemSaveRequestCategoryDTO.setItemImage(imageUrl);
+        item.setItemImage(imageUrl);
+        itemRepository.save(item);
+        itemSaveRequestCategoryDTO.setItemId(item.getItemId());
+        return itemSaveRequestCategoryDTO;
+    }
+
+    @Override
+    public InputStreamResource getItemImage(String itemImage) {
+        //Extract the key name from the URL
+        String keyName = itemImage.substring(itemImage.lastIndexOf("/") + 1);
+        S3Object s3Object = s3Service.getFile(keyName);
+        S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+        return new InputStreamResource(s3ObjectInputStream);
+    }
+
+    @Override
+    public void updateItemImage(long itemId, MultipartFile file) throws IOException{
+        Item item = itemRepository.getReferenceById(itemId);
+        String imageUrl = s3Service.uploadFile(item.getItemName(), file);
+        item.setItemImage(imageUrl);
+        itemRepository.save(item);
     }
 
     @Override
