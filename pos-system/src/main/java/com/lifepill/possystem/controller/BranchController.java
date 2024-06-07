@@ -8,6 +8,7 @@ import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,17 +44,43 @@ public class BranchController {
         return "saved";
     }
 
+    /**
+     * Endpoint for saving a new branch along with an image to an S3 bucket.
+     *
+     * @param branchS3DTO The DTO containing branch details
+     * @param file The image file of the branch
+     * @return A ResponseEntity containing a StandardResponse with the created branch
+     * @throws IOException If an error occurs while handling the file
+     */
     //save branch with s3 bucket
     @PostMapping("/save-branch")
-    public ResponseEntity<BranchS3DTO> createBranch(
-            @RequestPart("branch") BranchS3DTO branchS3DTO,
+    public ResponseEntity<StandardResponse> createBranch(
+            @ModelAttribute BranchS3DTO branchS3DTO,
             @RequestPart("file") MultipartFile file) throws IOException {
         BranchS3DTO createdBranch = branchService.createBranch(branchS3DTO, file);
-        return new ResponseEntity<>(createdBranch, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                new StandardResponse(201, "SUCCESS", createdBranch),
+                HttpStatus.CREATED
+        );
     }
 
     //view branch image from s3 bucket
    //TODO: Implement the viewImage method
+    @GetMapping(value = "/view-branch-profile-image/{branchId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> getBranchProfileImage(@PathVariable long branchId) {
+        BranchS3DTO branchS3DTO = branchService.getBranchS3ById(branchId);
+        InputStreamResource inputStreamResource = branchService.getBranchProfileImage(branchS3DTO.getBranchProfileImageUrl());
+
+        String branchImageUrl = branchS3DTO.getBranchProfileImageUrl();
+        String keyName = branchImageUrl.substring(branchImageUrl.lastIndexOf("/") + 1);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + keyName + "\"")
+                .body(inputStreamResource);
+    }
+
     //TODO: Implement the update image method
     //TODO: Delete the Image method
     /**

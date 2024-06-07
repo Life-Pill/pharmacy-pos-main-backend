@@ -32,7 +32,7 @@ public class EmployerController {
 
     private EmployerService employerService;
     private EmployerMapper employerMapper;
-
+//s3
     @PostMapping("/save-employer-with-image")
     public ResponseEntity<StandardResponse> createEmployer(
             @RequestParam("file") MultipartFile file,
@@ -47,6 +47,7 @@ public class EmployerController {
         );
     }
 
+    //s3
     @GetMapping(value = "/view-profile-image/{employerId}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> getEmployerImage(@PathVariable Long employerId) {
         EmployerS3DTO employerS3DTO = employerService.getEmployerS3ById(employerId);
@@ -69,7 +70,7 @@ public class EmployerController {
     ) throws IOException {
         employerService.updateEmployerImage(employerId, file);
         return new ResponseEntity<>(
-                new StandardResponse(200, "Image updated successfully", file),
+                new StandardResponse(200, "Image updated successfully", employerId),
                 HttpStatus.OK
         );
     }
