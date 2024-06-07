@@ -32,7 +32,16 @@ public class EmployerController {
 
     private EmployerService employerService;
     private EmployerMapper employerMapper;
-//s3
+
+    /**
+     * Endpoint for creating an employer with an image.
+     *
+     * @param file     The image file of the employer.
+     * @param branchId The ID of the branch associated with the employer.
+     * @param employer The employer object to be created.
+     * @return ResponseEntity containing a StandardResponse indicating the result of the operation.
+     * @throws IOException If an I/O error occurs while processing the image file.
+     */
     @PostMapping("/save-employer-with-image")
     public ResponseEntity<StandardResponse> createEmployer(
             @RequestParam("file") MultipartFile file,
@@ -47,7 +56,12 @@ public class EmployerController {
         );
     }
 
-    //s3
+    /**
+     * Retrieves the profile image of an employer by their ID.
+     *
+     * @param employerId The ID of the employer whose profile image is to be retrieved.
+     * @return ResponseEntity containing the profile image as an InputStreamResource.
+     */
     @GetMapping(value = "/view-profile-image/{employerId}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> getEmployerImage(@PathVariable Long employerId) {
         EmployerS3DTO employerS3DTO = employerService.getEmployerS3ById(employerId);
@@ -63,7 +77,15 @@ public class EmployerController {
                 .body(inputStreamResource);
     }
 
-    //s3
+
+    /**
+     * Updates the profile image of an employer.
+     *
+     * @param employerId The ID of the employer whose profile image is to be updated.
+     * @param file       The new profile image file.
+     * @return ResponseEntity containing a StandardResponse indicating the result of the operation.
+     * @throws IOException If an I/O error occurs while updating the profile image.
+     */
     @PutMapping("/update-employer-image/{employerId}")
     public ResponseEntity<StandardResponse> updateEmployerImage(
             @PathVariable Long employerId,

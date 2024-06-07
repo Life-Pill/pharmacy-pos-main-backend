@@ -70,7 +70,12 @@ public class BranchController {
         );
     }
 
-    //view branch image from s3 bucket
+    /**
+     * Retrieves the profile image of a branch by its ID.
+     *
+     * @param branchId The ID of the branch whose profile image is to be retrieved.
+     * @return ResponseEntity containing the profile image as an InputStreamResource.
+     */
     @GetMapping(
             value = "/view-branch-profile-image/{branchId}",
             produces = MediaType.IMAGE_JPEG_VALUE
@@ -92,6 +97,14 @@ public class BranchController {
                 .body(inputStreamResource);
     }
 
+    /**
+     * Updates the profile image of a branch.
+     *
+     * @param branchId The ID of the branch whose profile image is to be updated.
+     * @param file     The new profile image file.
+     * @return ResponseEntity containing a StandardResponse indicating the result of the operation.
+     * @throws IOException If an I/O error occurs while updating the profile image.
+     */
     @PutMapping("/update-branch-profile-image/{branchId}")
     public ResponseEntity<StandardResponse> updateBranchProfileImage(
             @PathVariable long branchId,
