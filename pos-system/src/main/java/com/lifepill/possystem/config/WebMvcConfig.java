@@ -2,7 +2,6 @@ package com.lifepill.possystem.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lifepill.possystem.util.mappers.EmployerAuthDetailsResponseDTOToStringConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -14,10 +13,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
 
+/*
     @Bean
     public EmployerAuthDetailsResponseDTOToStringConverter employerAuthDetailsResponseDTOToStringConverter(ObjectMapper objectMapper) {
         return new EmployerAuthDetailsResponseDTOToStringConverter(objectMapper);
     }
+*/
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -28,9 +29,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
-    @Override
+ /*   @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(employerAuthDetailsResponseDTOToStringConverter(null));
         // Pass null for ObjectMapper argument to let Spring inject it automatically
-    }
+    }*/
 }

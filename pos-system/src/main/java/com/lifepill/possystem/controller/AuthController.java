@@ -77,7 +77,7 @@ public class AuthController {
                     .getEmployerDetails(request.getEmployerEmail());
 
             // Cache the authentication data in Redis
-            redisService.cacheAuthenticationData(request.getEmployerEmail(), employerDetails);
+            //redisService.cacheAuthenticationData(request.getEmployerEmail(), employerDetails);
 
             int branchId = employerDetails.getBranchId();
             System.out.println("Branch ID: " + branchId);

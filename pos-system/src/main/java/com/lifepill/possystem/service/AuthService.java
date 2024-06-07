@@ -10,4 +10,6 @@ public interface AuthService {
     AuthenticationResponseDTO register(RegisterRequestDTO registerRequest);
     AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request);
     EmployerAuthDetailsResponseDTO getEmployerDetails(String username);
+
+    AuthenticationResponseDTO generateAuthenticationResponse(String employerEmail);
 }
