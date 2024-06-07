@@ -4,11 +4,17 @@ import com.lifepill.possystem.dto.requestDTO.AuthenticationRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.RegisterRequestDTO;
 import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.EmployerAuthDetailsResponseDTO;
+import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.exception.AuthenticationException;
 import com.lifepill.possystem.service.AuthService;
+import com.lifepill.possystem.service.EmployerService;
+import com.lifepill.possystem.service.RedisService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import javax.servlet.http.Cookie;
@@ -26,6 +32,8 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final RedisService redisService;
+
 
     /**
      * Handles user registration.
@@ -67,6 +75,9 @@ public class AuthController {
             AuthenticationResponseDTO authResponse = authService.authenticate(request);
             EmployerAuthDetailsResponseDTO employerDetails = authService
                     .getEmployerDetails(request.getEmployerEmail());
+
+            // Cache the authentication data in Redis
+            redisService.cacheAuthenticationData(request.getEmployerEmail(), employerDetails);
 
             int branchId = employerDetails.getBranchId();
             System.out.println("Branch ID: " + branchId);

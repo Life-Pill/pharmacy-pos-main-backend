@@ -64,4 +64,6 @@ public interface EmployerService {
     InputStreamResource getEmployerImage(String profileImageUrl);
 
     void updateEmployerImage(Long employerId, MultipartFile file)  throws IOException;
+
+    Employer findByUsername(String username);
 }

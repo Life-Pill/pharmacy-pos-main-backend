@@ -606,4 +606,10 @@ public class EmployerServiceIMPL implements EmployerService {
         employer.setProfileImageUrl(imageUrl);
         employerRepository.save(employer);
     }
+
+    @Override
+    public Employer findByUsername(String username) {
+        return employerRepository.findByEmployerEmail(username)
+                .orElseThrow(() -> new NotFoundException("Employer not found with email: " + username));
+    }
 }

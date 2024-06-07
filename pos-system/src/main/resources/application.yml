@@ -20,14 +20,14 @@ spring:
     user:
       name: lifepill
       password: 12345
+    redis:
+      host: localhost
+      port: 6379
+
+
 server:
   port: 8079
 logging:
   level:
     org.springframework.security: TRACE
 
-aws:
-  access.key: ${AWS_ACCESS_KEY}
-  secret.key: ${AWS_SECRET_KEY}
-  s3.bucket: ${AWS_S3_BUCKET}
-  region: ${AWS_REGION}

@@ -79,6 +79,8 @@ public class SecurityConfiguration {
                                 .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
                                 .antMatchers("/lifepill/v1/supplier/**")
                                 .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
+                                .antMatchers("/lifepill/v1/session/**")
+                                .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
