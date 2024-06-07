@@ -63,6 +63,7 @@ public class EmployerController {
                 .body(inputStreamResource);
     }
 
+    //s3
     @PutMapping("/update-employer-image/{employerId}")
     public ResponseEntity<StandardResponse> updateEmployerImage(
             @PathVariable Long employerId,

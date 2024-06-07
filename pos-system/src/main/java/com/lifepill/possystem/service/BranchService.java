@@ -32,4 +32,6 @@ public interface BranchService {
     BranchS3DTO getBranchS3ById(long branchId);
 
     InputStreamResource getBranchProfileImage(String branchProfileImageUrl);
+
+    void updateBranchProfileImage(long branchId, MultipartFile file) throws IOException;
 }

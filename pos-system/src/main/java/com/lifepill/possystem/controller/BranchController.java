@@ -65,7 +65,6 @@ public class BranchController {
     }
 
     //view branch image from s3 bucket
-   //TODO: Implement the viewImage method
     @GetMapping(value = "/view-branch-profile-image/{branchId}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> getBranchProfileImage(@PathVariable long branchId) {
         BranchS3DTO branchS3DTO = branchService.getBranchS3ById(branchId);
@@ -81,7 +80,17 @@ public class BranchController {
                 .body(inputStreamResource);
     }
 
-    //TODO: Implement the update image method
+    @PutMapping("/update-branch-profile-image/{branchId}")
+    public ResponseEntity<StandardResponse> updateBranchProfileImage(
+            @PathVariable long branchId,
+            @RequestPart("file") MultipartFile file
+    ) throws IOException {
+        branchService.updateBranchProfileImage(branchId, file);
+        return new ResponseEntity<>(
+                new StandardResponse(201, "SUCCESS", "Branch profile image updated"),
+                HttpStatus.OK
+        );
+    }
     //TODO: Delete the Image method
     /**
      * Endpoint for viewing the image of a branch.

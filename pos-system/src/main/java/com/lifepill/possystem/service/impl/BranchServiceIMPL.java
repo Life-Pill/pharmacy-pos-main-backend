@@ -314,4 +314,12 @@ public class BranchServiceIMPL implements BranchService {
         return new InputStreamResource(s3ObjectInputStream);
     }
 
+    @Override
+    public void updateBranchProfileImage(long branchId, MultipartFile file) throws IOException {
+        Branch branch = branchRepository.getReferenceById(branchId);
+        String imageUrl = s3Service.uploadFile(branch.getBranchEmail(), file);
+        branch.setBranchProfileImageUrl(imageUrl);
+        branchRepository.save(branch);
+    }
+
 }

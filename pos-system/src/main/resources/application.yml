@@ -27,4 +27,3 @@ logging:
     org.springframework.security: TRACE
 
 
-aws:
