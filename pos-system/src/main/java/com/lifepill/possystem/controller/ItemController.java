@@ -28,22 +28,45 @@ import java.util.List;
 public class ItemController {
 
     private ItemService itemService;
-
-    //s3
+    /**
+     * Saves an item along with its image file.
+     *
+     * @param file                      The image file to be saved.
+     * @param itemSaveRequestCategoryDTO The DTO containing details of the item to be saved.
+     * @return ResponseEntity containing a StandardResponse object with the saved item details.
+     * @throws IOException If an I/O error occurs.
+     */
     @PostMapping(path = "/save-item-with-image")
     public ResponseEntity<StandardResponse> saveItemWithImage(
             @RequestParam(value = "file") MultipartFile file,
             @ModelAttribute ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO
     ) throws IOException {
-        ItemSaveRequestCategoryDTO savedDTO = itemService.createItemWithImage(file, itemSaveRequestCategoryDTO);
-        return new ResponseEntity<>(new StandardResponse(201, "Successfully Saved Item", savedDTO), HttpStatus.CREATED);
+        ItemSaveRequestCategoryDTO savedDTO = itemService
+                .createItemWithImage(file, itemSaveRequestCategoryDTO);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        201,
+                        "Successfully Saved Item",
+                        savedDTO
+                ),
+                HttpStatus.CREATED
+        );
     }
 
-    //view item image from s3 bucket
+    /**
+     * Retrieves the image of an item from the S3 bucket.
+     *
+     * @param itemId The ID of the item whose image is to be retrieved.
+     * @return ResponseEntity containing the image stream and necessary headers.
+     */
     @GetMapping(value = "/view-item-image/{itemId}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> getBranchProfileImage(@PathVariable long itemId) {
-        ItemGetResponseWithoutSupplierDetailsDTO itemSaveRequestCategoryDTO = itemService.getItemById(itemId);
-        InputStreamResource inputStreamResource = itemService.getItemImage(itemSaveRequestCategoryDTO.getItemGetAllResponseDTO().getItemImage());
+        ItemGetResponseWithoutSupplierDetailsDTO itemSaveRequestCategoryDTO =
+                itemService.getItemById(itemId);
+        InputStreamResource inputStreamResource =
+                itemService.getItemImage(
+                        itemSaveRequestCategoryDTO.getItemGetAllResponseDTO().getItemImage()
+                );
 
         String itemImageUrl = itemSaveRequestCategoryDTO.getItemGetAllResponseDTO().getItemImage();
         String keyName = itemImageUrl.substring(itemImageUrl.lastIndexOf("/") + 1);
@@ -55,7 +78,14 @@ public class ItemController {
                 .body(inputStreamResource);
     }
 
-    //s3
+    /**
+     * Updates the image of an item in the S3 bucket.
+     *
+     * @param itemId The ID of the item whose image is to be updated.
+     * @param file   The new image file to be uploaded.
+     * @return ResponseEntity containing a StandardResponse object with the update status.
+     * @throws IOException If an I/O error occurs.
+     */
     @PutMapping("/update-item-image/{itemId}")
     public ResponseEntity<StandardResponse> updateBranchProfileImage(
             @PathVariable long itemId,
@@ -81,7 +111,11 @@ public class ItemController {
         String message = itemService.saveItemWithCategory(itemSaveRequestCategoryDTO);
 
         return new ResponseEntity<>(
-                new StandardResponse(201, "Successfully Saved Item", message),
+                new StandardResponse(
+                        201,
+                        "Successfully Saved Item",
+                        message
+                ),
                 HttpStatus.CREATED);
     }
 
@@ -93,7 +127,9 @@ public class ItemController {
      */
     //TODO: need to improvement don't use saveItems for this use save item
     @PostMapping(path = "/save")
-    public ResponseEntity<StandardResponse> saveItem(@RequestBody ItemSaveRequestDTO itemSaveRequestDTO) {
+    public ResponseEntity<StandardResponse> saveItem(
+            @RequestBody ItemSaveRequestDTO itemSaveRequestDTO
+    ) {
         String message = itemService.saveItems(itemSaveRequestDTO);
 
         return new ResponseEntity<>(
@@ -123,9 +159,10 @@ public class ItemController {
      * @return List of ItemGetResponseDTO containing items with the specified name and stock.
      */
     @GetMapping(path = "/get-by-name", params = "itemName")
-    public List<ItemGetResponseDTO> getItemByNameAndStock(@RequestParam(value = "itemName") String itemName) {
-        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByName(itemName);
-        return itemDTOS;
+    public List<ItemGetResponseDTO> getItemByNameAndStock(
+            @RequestParam(value = "itemName") String itemName
+    ) {
+        return itemService.getItemByName(itemName);
     }
 
     /**
@@ -135,9 +172,10 @@ public class ItemController {
      * @return List of ItemGetResponseDTO containing items with the specified barcode.
      */
     @GetMapping(path = "/get-by-barcode", params = "barcode")
-    public List<ItemGetResponseDTO> getItemByBarCode(@RequestParam(value = "barcode") String itemBarCode) {
-        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByBarCode(itemBarCode);
-        return itemDTOS;
+    public List<ItemGetResponseDTO> getItemByBarCode(
+            @RequestParam(value = "barcode") String itemBarCode
+    ) {
+        return itemService.getItemByBarCode(itemBarCode);
     }
 
     /**
@@ -148,9 +186,10 @@ public class ItemController {
      */
     //TODO: need to improvement
     @GetMapping(path = "/get-by-name-with-mapstruct", params = "name")
-    public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(@RequestParam(value = "name") String itemName) {
-        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByNameAndStatusBymapstruct(itemName);
-        return itemDTOS;
+    public List<ItemGetResponseDTO> getItemByNameAndStatusByMapStruct(
+            @RequestParam(value = "name") String itemName
+    ) {
+        return itemService.getItemByNameAndStatusBymapstruct(itemName);
     }
 
     /**
@@ -163,8 +202,7 @@ public class ItemController {
     public ResponseEntity<StandardResponse> getAllItemByActiveStatus(
             @RequestParam(value = "activeStatus") boolean activeStatus) {
         List<ItemGetResponseDTO> itemDTOS = itemService.getItemByStockStatus(activeStatus);
-
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(200,
                         "Success", itemDTOS),
                 HttpStatus.OK);
@@ -188,8 +226,7 @@ public class ItemController {
      */
     @PutMapping("/update")
     public String updateItem(@RequestBody ItemUpdateDTO itemUpdateDTO) {
-        String message = itemService.updateItem(itemUpdateDTO);
-        return message;
+        return itemService.updateItem(itemUpdateDTO);
     }
 
     /**
@@ -200,8 +237,7 @@ public class ItemController {
      */
     @DeleteMapping("/delete-item/{id}")
     public String deleteItem(@PathVariable(value = "id") int itemId) {
-        String delete = itemService.deleteItem(itemId);
-        return delete;
+        return itemService.deleteItem(itemId);
     }
 
     /**
@@ -213,7 +249,7 @@ public class ItemController {
      * @return ResponseEntity containing a StandardResponse object with paginated items based on their active status.
      */
     @GetMapping(
-            path = "/get-all-item-by-status-lazy-initailized",
+            path = "/get-all-item-by-status-lazy-initialized",
             params = {"activeStatus", "page", "size"}
     )
     public ResponseEntity<StandardResponse> getItemByStockStatusLazy(
@@ -222,11 +258,14 @@ public class ItemController {
             @RequestParam(value = "size") int size
             // @RequestParam(value = "size") @Max(50)int size
     ) {
-        // size = 10; // only load 10 data
-        //List<ItemGetResponseDTO> itemDTOS = itemService.getItemByActiveStatusLazy(activeStatus);
-        PaginatedResponseItemDTO paginatedResponseItemDTO = itemService.getItemByStockStatusWithPaginateed(activeStatus, page, size);
-        return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200, "Success", paginatedResponseItemDTO),
+        PaginatedResponseItemDTO paginatedResponseItemDTO =
+                itemService.getItemByStockStatusWithPaginateed(activeStatus, page, size);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "Success",
+                        paginatedResponseItemDTO
+                ),
                 HttpStatus.OK
         );
     }
@@ -237,10 +276,16 @@ public class ItemController {
      * @return A message indicating the result of the save operation.
      */
     @GetMapping(path = "/get-item-all-details-by-id/{id}")
-    public ResponseEntity<StandardResponse> getItemAllDetailsById(@PathVariable(value = "id") long itemId) {
+    public ResponseEntity<StandardResponse> getItemAllDetailsById(
+            @PathVariable(value = "id") long itemId
+    ) {
         ItemGetIdResponseDTO itemGetIdResponseDTO = itemService.getAllDetailsItemById(itemId);
-        return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200, "Success", itemGetIdResponseDTO),
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "Success",
+                        itemGetIdResponseDTO
+                ),
                 HttpStatus.OK
         );
     }
@@ -253,9 +298,14 @@ public class ItemController {
      */
     @GetMapping(path = "/get-item-details-by-id/{id}")
     public ResponseEntity<StandardResponse> getItemWithCategoryById(@PathVariable(value = "id") long itemId) {
-        ItemGetResponseWithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO = itemService.getItemById(itemId);
-        return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200, "Success", itemGetResponsewithoutSupplierDetailsDTO),
+        ItemGetResponseWithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO =
+                itemService.getItemById(itemId);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "Success",
+                        itemGetResponsewithoutSupplierDetailsDTO
+                ),
                 HttpStatus.OK
         );
     }

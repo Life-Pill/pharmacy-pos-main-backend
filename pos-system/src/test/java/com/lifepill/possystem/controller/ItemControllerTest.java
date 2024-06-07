@@ -128,7 +128,7 @@ class ItemControllerTest {
         List<ItemGetResponseDTO> itemGetResponseDTOS = Arrays.asList(new ItemGetResponseDTO(), new ItemGetResponseDTO());
         when(itemService.getItemByNameAndStatusBymapstruct(itemName)).thenReturn(itemGetResponseDTOS);
 
-        List<ItemGetResponseDTO> result = itemController.getItemByNameAndStatusBymapstruct(itemName);
+        List<ItemGetResponseDTO> result = itemController.getItemByNameAndStatusByMapStruct(itemName);
 
         assertEquals(itemGetResponseDTOS, result);
     }

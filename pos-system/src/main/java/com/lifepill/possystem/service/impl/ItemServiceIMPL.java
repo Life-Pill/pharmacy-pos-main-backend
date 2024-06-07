@@ -62,13 +62,13 @@ public class ItemServiceIMPL implements ItemService {
         Item item = modelMapper.map(itemSaveRequestDTO, Item.class);
 
         // Check if the item category exists
-        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestDTO.getCategoryId())
+         itemCategoryRepository.findById(itemSaveRequestDTO.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("Category not found with ID: "
                         + itemSaveRequestDTO.getCategoryId())
                 );
 
         // Check if the item branch exists
-        Branch branch = branchRepository.findById(itemSaveRequestDTO.getBranchId())
+         branchRepository.findById(itemSaveRequestDTO.getBranchId())
                 .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
                         + itemSaveRequestDTO.getBranchId())
                 );
@@ -148,12 +148,11 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetResponseDTO> getItemByName(String itemName) {
         List<Item> items = itemRepository.findAllByItemName(itemName);
         if (!items.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+            return modelMapper.map(
                     items,
                     new TypeToken<List<ItemGetResponseDTO>>() {
                     }.getType()
             );
-            return itemGetResponseDTOS;
         } else {
             throw new NotFoundException("Not found");
         }
@@ -170,17 +169,16 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus) {
         List<Item> item = itemRepository.findAllByStockEquals(activeStatus);
         if (!item.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
-                    item,
-                    new TypeToken<List<ItemGetResponseDTO>>() {
-                    }.getType()
-            );
             // System.out.println(itemGetResponseDTOS);
             //get responseDTOS getItemCategory.getItemName()
 
 
 
-            return itemGetResponseDTOS;
+            return modelMapper.map(
+                    item,
+                    new TypeToken<List<ItemGetResponseDTO>>() {
+                    }.getType()
+            );
         } else {
             throw new NotFoundException("out of Stock");
         }
@@ -197,12 +195,11 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
         List<Item> item = itemRepository.findAllByItemBarCodeEquals(itemBarCode);
         if (!item.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+            return modelMapper.map(
                     item,
                     new TypeToken<List<ItemGetResponseDTO>>() {
                     }.getType()
             );
-            return itemGetResponseDTOS;
         } else {
             throw new NotFoundException("No any item found for that barcode");
         }
@@ -285,11 +282,10 @@ public class ItemServiceIMPL implements ItemService {
         if (items.getSize() < 1) {
             throw new NotFoundException("No Data");
         } else {
-            PaginatedResponseItemDTO paginatedResponseItemDTO = new PaginatedResponseItemDTO(
+            return new PaginatedResponseItemDTO(
                     itemMapper.ListDTOToPage(items),
                     itemRepository.countAllByStockEquals(activeStatus)
             );
-            return paginatedResponseItemDTO;
         }
     }
 
@@ -305,9 +301,8 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
         List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
         if (!items.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = itemMapper.entityListToDTOList(items);
 
-            return itemGetResponseDTOS;
+            return itemMapper.entityListToDTOList(items);
         } else {
             throw new NotFoundException("Not found");
         }
@@ -356,7 +351,7 @@ public class ItemServiceIMPL implements ItemService {
                 );
 
         // Check if branch exists
-         Branch branch = branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
+         branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
                 .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
                         + itemSaveRequestCategoryDTO.getBranchId())
                 );
@@ -454,6 +449,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Retrieves all details of an item by its ID.
+     *
+     * @param itemId The ID of the item to retrieve.
+     * @return ItemGetIdResponseDTO containing all details of the item.
+     * @throws NotFoundException If the item with the specified ID is not found.
+     */
     @Override
     public ItemGetIdResponseDTO getAllDetailsItemById(long itemId) {
         Item item = itemRepository.findById(itemId)
@@ -484,6 +486,14 @@ public class ItemServiceIMPL implements ItemService {
         return itemGetIdResponseDTO;
     }
 
+    /**
+     * Creates an item with an associated image.
+     *
+     * @param file                        The image file to be associated with the item.
+     * @param itemSaveRequestCategoryDTO The DTO containing details of the item to be created.
+     * @return ItemSaveRequestCategoryDTO containing the details of the created item.
+     * @throws IOException If an I/O error occurs.
+     */
     @Override
     public ItemSaveRequestCategoryDTO createItemWithImage(
             MultipartFile file,
@@ -508,7 +518,7 @@ public class ItemServiceIMPL implements ItemService {
                 );
 
         // Check if branch exists
-        Branch branch = branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
+        branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
                 .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
                         + itemSaveRequestCategoryDTO.getBranchId())
                 );
@@ -532,6 +542,12 @@ public class ItemServiceIMPL implements ItemService {
         return itemSaveRequestCategoryDTO;
     }
 
+    /**
+     * Retrieves the image of an item from the S3 bucket.
+     *
+     * @param itemImage The URL of the item's image in the S3 bucket.
+     * @return InputStreamResource containing the image stream.
+     */
     @Override
     public InputStreamResource getItemImage(String itemImage) {
         //Extract the key name from the URL
@@ -541,6 +557,13 @@ public class ItemServiceIMPL implements ItemService {
         return new InputStreamResource(s3ObjectInputStream);
     }
 
+    /**
+     * Updates the image of an item in the S3 bucket.
+     *
+     * @param itemId The ID of the item whose image is to be updated.
+     * @param file   The new image file to be uploaded.
+     * @throws IOException If an I/O error occurs.
+     */
     @Override
     public void updateItemImage(long itemId, MultipartFile file) throws IOException{
         Item item = itemRepository.getReferenceById(itemId);
@@ -549,6 +572,13 @@ public class ItemServiceIMPL implements ItemService {
         itemRepository.save(item);
     }
 
+    /**
+     * Retrieves details of an item by its ID, excluding supplier information.
+     *
+     * @param itemId The ID of the item to retrieve.
+     * @return ItemGetResponseWithoutSupplierDetailsDTO containing details of the item without supplier information.
+     * @throws NotFoundException If the item with the specified ID is not found.
+     */
     @Override
     public ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId) {
         Item item = itemRepository.findById(itemId)

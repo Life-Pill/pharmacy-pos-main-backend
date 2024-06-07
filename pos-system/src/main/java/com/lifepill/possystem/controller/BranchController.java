@@ -38,8 +38,14 @@ public class BranchController {
      * @param branchDTO The DTO containing branch details
      * @return A success message indicating that the branch has been saved
      */
-    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveBranch(@RequestParam("image") MultipartFile image, @ModelAttribute BranchDTO branchDTO) {
+    @PostMapping(
+            value = "/save",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public String saveBranch(
+            @RequestParam("image") MultipartFile image,
+            @ModelAttribute BranchDTO branchDTO
+    ) {
         branchService.saveBranch(branchDTO, image);
         return "saved";
     }
@@ -65,10 +71,16 @@ public class BranchController {
     }
 
     //view branch image from s3 bucket
-    @GetMapping(value = "/view-branch-profile-image/{branchId}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> getBranchProfileImage(@PathVariable long branchId) {
+    @GetMapping(
+            value = "/view-branch-profile-image/{branchId}",
+            produces = MediaType.IMAGE_JPEG_VALUE
+    )
+    public ResponseEntity<InputStreamResource> getBranchProfileImage(
+            @PathVariable long branchId
+    ) {
         BranchS3DTO branchS3DTO = branchService.getBranchS3ById(branchId);
-        InputStreamResource inputStreamResource = branchService.getBranchProfileImage(branchS3DTO.getBranchProfileImageUrl());
+        InputStreamResource inputStreamResource =
+                branchService.getBranchProfileImage(branchS3DTO.getBranchProfileImageUrl());
 
         String branchImageUrl = branchS3DTO.getBranchProfileImageUrl();
         String keyName = branchImageUrl.substring(branchImageUrl.lastIndexOf("/") + 1);
@@ -87,11 +99,15 @@ public class BranchController {
     ) throws IOException {
         branchService.updateBranchProfileImage(branchId, file);
         return new ResponseEntity<>(
-                new StandardResponse(201, "SUCCESS", "Branch profile image updated"),
+                new StandardResponse(
+                        201,
+                        "SUCCESS",
+                        "Branch profile image updated"
+                ),
                 HttpStatus.OK
         );
     }
-    //TODO: Delete the Image method
+
     /**
      * Endpoint for viewing the image of a branch.
      *
@@ -173,7 +189,10 @@ public class BranchController {
      * @param image    The updated image file of the branch
      * @return A message indicating that the branch image has been updated
      */
-    @PutMapping(value = "/update-image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(
+            value = "/update-image/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     @Transactional
     public String updateBranchImage(
             @PathVariable(value = "id") int branchId,
