@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -44,11 +45,17 @@ public class BranchController {
 
     //save branch with s3 bucket
     @PostMapping("/save-branch")
-    public ResponseEntity<BranchS3DTO> createBranch(@RequestPart("branch") BranchS3DTO branchS3DTO, @RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity<BranchS3DTO> createBranch(
+            @RequestPart("branch") BranchS3DTO branchS3DTO,
+            @RequestPart("file") MultipartFile file) throws IOException {
         BranchS3DTO createdBranch = branchService.createBranch(branchS3DTO, file);
         return new ResponseEntity<>(createdBranch, HttpStatus.CREATED);
     }
 
+    //view branch image from s3 bucket
+   //TODO: Implement the viewImage method
+    //TODO: Implement the update image method
+    //TODO: Delete the Image method
     /**
      * Endpoint for viewing the image of a branch.
      *
