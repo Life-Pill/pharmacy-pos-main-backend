@@ -33,22 +33,23 @@ public class EmployerController {
     private EmployerService employerService;
     private EmployerMapper employerMapper;
 
-    @PostMapping("/save-s3")
+    @PostMapping("/save-employer-with-image")
     public ResponseEntity<StandardResponse> createEmployer(
             @RequestParam("file") MultipartFile file,
             @RequestParam("branchId") Long branchId,
             @ModelAttribute Employer employer
     ) throws IOException {
         EmployerS3DTO employerDTO = employerService.createEmployer(file, branchId, employer);
+        employerDTO.setBranchId(branchId);
         return new ResponseEntity<>(
                 new StandardResponse(201, "successfully saved", employerDTO),
                 HttpStatus.CREATED
         );
     }
 
-    @GetMapping(value = "/{id}/image", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> getEmployerImage(@PathVariable Long id) {
-        EmployerS3DTO employerS3DTO = employerService.getEmployerS3ById(id);
+    @GetMapping(value = "/view-profile-image/{employerId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> getEmployerImage(@PathVariable Long employerId) {
+        EmployerS3DTO employerS3DTO = employerService.getEmployerS3ById(employerId);
 
         InputStreamResource inputStreamResource = employerService.getEmployerImage(employerS3DTO.getProfileImageUrl());
 
@@ -59,6 +60,18 @@ public class EmployerController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + keyName + "\"")
                 .body(inputStreamResource);
+    }
+
+    @PutMapping("/update-employer-image/{employerId}")
+    public ResponseEntity<StandardResponse> updateEmployerImage(
+            @PathVariable Long employerId,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+        employerService.updateEmployerImage(employerId, file);
+        return new ResponseEntity<>(
+                new StandardResponse(200, "Image updated successfully", file),
+                HttpStatus.OK
+        );
     }
 
     /**

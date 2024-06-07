@@ -3,6 +3,7 @@ package com.lifepill.possystem.controller;
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
+import com.lifepill.possystem.dto.responseDTO.BranchS3DTO;
 import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
@@ -39,6 +40,13 @@ public class BranchController {
     public String saveBranch(@RequestParam("image") MultipartFile image, @ModelAttribute BranchDTO branchDTO) {
         branchService.saveBranch(branchDTO, image);
         return "saved";
+    }
+
+    //save branch with s3 bucket
+    @PostMapping("/save-branch")
+    public ResponseEntity<BranchS3DTO> createBranch(@RequestPart("branch") BranchS3DTO branchS3DTO, @RequestPart("file") MultipartFile file) throws IOException {
+        BranchS3DTO createdBranch = branchService.createBranch(branchS3DTO, file);
+        return new ResponseEntity<>(createdBranch, HttpStatus.CREATED);
     }
 
     /**

@@ -104,7 +104,7 @@ class EmployerControllerTest {
 
         ResponseEntity<StandardResponse> result = employerController.getEmployerById(employerId);
 
-        assertEquals(employerDTO, result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
     /**

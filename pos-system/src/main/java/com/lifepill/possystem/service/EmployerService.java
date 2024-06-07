@@ -62,4 +62,6 @@ public interface EmployerService {
     EmployerS3DTO createEmployer(MultipartFile file, Long branchId, Employer employer) throws IOException;
 
     InputStreamResource getEmployerImage(String profileImageUrl);
+
+    void updateEmployerImage(Long employerId, MultipartFile file)  throws IOException;
 }

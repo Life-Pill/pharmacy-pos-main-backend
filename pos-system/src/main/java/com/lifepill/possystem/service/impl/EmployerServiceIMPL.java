@@ -593,4 +593,17 @@ public class EmployerServiceIMPL implements EmployerService {
         S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
         return new InputStreamResource(objectInputStream);
     }
+
+    @Override
+    public void updateEmployerImage(Long employerId, MultipartFile file) throws IOException {
+        Employer employer = employerRepository.findById(employerId)
+                // If the employer is not found, send message
+                .orElseThrow(() -> new NotFoundException(
+                        "Employer not found with ID: " + employerId
+                ));
+
+        String imageUrl = s3Service.uploadFile(employer.getEmployerEmail(), file);
+        employer.setProfileImageUrl(imageUrl);
+        employerRepository.save(employer);
+    }
 }

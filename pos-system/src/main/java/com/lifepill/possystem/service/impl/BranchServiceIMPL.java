@@ -2,18 +2,21 @@ package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
+import com.lifepill.possystem.dto.responseDTO.BranchS3DTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.helper.SaveImageHelper;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.service.BranchService;
+import com.lifepill.possystem.service.S3Service;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,7 @@ public class BranchServiceIMPL implements BranchService {
 
     private BranchRepository branchRepository;
     private ModelMapper modelMapper;
+    private S3Service s3Service;
 
     /**
      * Saves a new branch.
@@ -145,11 +149,10 @@ public class BranchServiceIMPL implements BranchService {
      * @param branchId        The ID of the branch to update.
      * @param branchUpdateDTO The DTO containing updated branch details.
      * @param image           The new image file for the branch (optional).
-     * @return A message indicating the update operation.
      * @throws EntityNotFoundException If the branch with the given ID is not found.
      * @throws NotFoundException       If the branch with the given ID is not found.
      */
-    public String updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image) {
+    public void updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image) {
         if (!branchRepository.existsById(branchId)) {
             throw new EntityNotFoundException("Branch not found");
         }
@@ -181,7 +184,6 @@ public class BranchServiceIMPL implements BranchService {
             }
 
             branchRepository.save(branch);
-            return "updated";
         } else {
             throw new NotFoundException("No Branch found for that id");
         }
@@ -269,6 +271,17 @@ public class BranchServiceIMPL implements BranchService {
         } else {
             throw new NotFoundException("No Branch found for that id");
         }
+    }
+
+    @Override
+    public BranchS3DTO createBranch(BranchS3DTO branchS3DTO, MultipartFile file) throws IOException {
+        Branch branch = modelMapper.map(branchS3DTO, Branch.class);
+
+        String imageUrl = s3Service.uploadFile(branch.getBranchEmail(), file);
+        branch.setBranchProfileImageUrl(imageUrl);
+
+        branchRepository.save(branch);
+        return modelMapper.map(branch, BranchS3DTO.class);
     }
 
 }

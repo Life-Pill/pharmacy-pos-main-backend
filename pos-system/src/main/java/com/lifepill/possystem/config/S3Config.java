@@ -24,10 +24,10 @@ public class S3Config {
     @Bean
     public AmazonS3 s3client() {
 
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
 
         return AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .withRegion(Regions.fromName(awsRegion)) // This field if not exist throws an exception
                 .build();
     }

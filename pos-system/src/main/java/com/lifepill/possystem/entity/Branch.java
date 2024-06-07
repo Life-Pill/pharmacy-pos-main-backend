@@ -43,6 +43,8 @@ public class Branch {
     private String branchCreatedOn;
     @Column(name = "branch_created_by")
     private String branchCreatedBy;
+    @Column(name = "branch_profile_image_url")
+    private String branchProfileImageUrl;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch", fetch = FetchType.EAGER)
     private Set<Employer> employers;
