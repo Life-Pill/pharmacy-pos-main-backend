@@ -3,10 +3,12 @@ package com.lifepill.possystem.controller;
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
+import com.lifepill.possystem.dto.responseDTO.BranchS3DTO;
 import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -35,10 +38,87 @@ public class BranchController {
      * @param branchDTO The DTO containing branch details
      * @return A success message indicating that the branch has been saved
      */
-    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveBranch(@RequestParam("image") MultipartFile image, @ModelAttribute BranchDTO branchDTO) {
+    @PostMapping(
+            value = "/save",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public String saveBranch(
+            @RequestParam("image") MultipartFile image,
+            @ModelAttribute BranchDTO branchDTO
+    ) {
         branchService.saveBranch(branchDTO, image);
         return "saved";
+    }
+
+    /**
+     * Endpoint for saving a new branch along with an image to an S3 bucket.
+     *
+     * @param branchS3DTO The DTO containing branch details
+     * @param file The image file of the branch
+     * @return A ResponseEntity containing a StandardResponse with the created branch
+     * @throws IOException If an error occurs while handling the file
+     */
+    //save branch with s3 bucket
+    @PostMapping("/save-branch")
+    public ResponseEntity<StandardResponse> createBranch(
+            @ModelAttribute BranchS3DTO branchS3DTO,
+            @RequestPart("file") MultipartFile file) throws IOException {
+        BranchS3DTO createdBranch = branchService.createBranch(branchS3DTO, file);
+        return new ResponseEntity<>(
+                new StandardResponse(201, "SUCCESS", createdBranch),
+                HttpStatus.CREATED
+        );
+    }
+
+    /**
+     * Retrieves the profile image of a branch by its ID.
+     *
+     * @param branchId The ID of the branch whose profile image is to be retrieved.
+     * @return ResponseEntity containing the profile image as an InputStreamResource.
+     */
+    @GetMapping(
+            value = "/view-branch-profile-image/{branchId}",
+            produces = MediaType.IMAGE_JPEG_VALUE
+    )
+    public ResponseEntity<InputStreamResource> getBranchProfileImage(
+            @PathVariable long branchId
+    ) {
+        BranchS3DTO branchS3DTO = branchService.getBranchS3ById(branchId);
+        InputStreamResource inputStreamResource =
+                branchService.getBranchProfileImage(branchS3DTO.getBranchProfileImageUrl());
+
+        String branchImageUrl = branchS3DTO.getBranchProfileImageUrl();
+        String keyName = branchImageUrl.substring(branchImageUrl.lastIndexOf("/") + 1);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + keyName + "\"")
+                .body(inputStreamResource);
+    }
+
+    /**
+     * Updates the profile image of a branch.
+     *
+     * @param branchId The ID of the branch whose profile image is to be updated.
+     * @param file     The new profile image file.
+     * @return ResponseEntity containing a StandardResponse indicating the result of the operation.
+     * @throws IOException If an I/O error occurs while updating the profile image.
+     */
+    @PutMapping("/update-branch-profile-image/{branchId}")
+    public ResponseEntity<StandardResponse> updateBranchProfileImage(
+            @PathVariable long branchId,
+            @RequestPart("file") MultipartFile file
+    ) throws IOException {
+        branchService.updateBranchProfileImage(branchId, file);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        201,
+                        "SUCCESS",
+                        "Branch profile image updated"
+                ),
+                HttpStatus.OK
+        );
     }
 
     /**
@@ -122,7 +202,10 @@ public class BranchController {
      * @param image    The updated image file of the branch
      * @return A message indicating that the branch image has been updated
      */
-    @PutMapping(value = "/update-image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(
+            value = "/update-image/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     @Transactional
     public String updateBranchImage(
             @PathVariable(value = "id") int branchId,

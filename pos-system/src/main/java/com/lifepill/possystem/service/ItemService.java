@@ -9,7 +9,10 @@ import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.ItemGetResponseWithoutSupplierDetailsDTO;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ItemService {
@@ -40,4 +43,10 @@ public interface ItemService {
     ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId);
 
     ItemGetIdResponseDTO getAllDetailsItemById(long itemId);
+
+    ItemSaveRequestCategoryDTO createItemWithImage(MultipartFile file, ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) throws IOException;
+
+    InputStreamResource getItemImage(String itemImage);
+
+    void updateItemImage(long itemId, MultipartFile file)  throws IOException;;
 }

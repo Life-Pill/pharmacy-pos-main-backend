@@ -1,5 +1,7 @@
 package com.lifepill.possystem.service.impl;
 
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.lifepill.possystem.dto.ItemCategoryDTO;
 import com.lifepill.possystem.dto.SupplierCompanyDTO;
 import com.lifepill.possystem.dto.SupplierDTO;
@@ -19,14 +21,18 @@ import com.lifepill.possystem.repo.itemRepository.ItemCategoryRepository;
 import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.repo.supplierRepository.SupplierRepository;
 import com.lifepill.possystem.service.ItemService;
+import com.lifepill.possystem.service.S3Service;
 import com.lifepill.possystem.util.mappers.ItemMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +48,7 @@ public class ItemServiceIMPL implements ItemService {
     private ItemMapper itemMapper;
     private ItemCategoryRepository itemCategoryRepository;
     private SupplierRepository supplierRepository;
+    private final S3Service s3Service;
 
     /**
      * Saves a new item based on the provided item save request DTO.
@@ -55,19 +62,19 @@ public class ItemServiceIMPL implements ItemService {
         Item item = modelMapper.map(itemSaveRequestDTO, Item.class);
 
         // Check if the item category exists
-        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestDTO.getCategoryId())
+         itemCategoryRepository.findById(itemSaveRequestDTO.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("Category not found with ID: "
                         + itemSaveRequestDTO.getCategoryId())
                 );
 
         // Check if the item branch exists
-        Branch branch = branchRepository.findById(itemSaveRequestDTO.getBranchId())
+         branchRepository.findById(itemSaveRequestDTO.getBranchId())
                 .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
                         + itemSaveRequestDTO.getBranchId())
                 );
 
         // Check if the item supplier exists
-        Supplier supplier = supplierRepository.findById(itemSaveRequestDTO.getSupplierId())
+        supplierRepository.findById(itemSaveRequestDTO.getSupplierId())
                 .orElseThrow(() -> new NotFoundException("Supplier not found with ID: "
                         + itemSaveRequestDTO.getSupplierId())
                 );
@@ -141,12 +148,11 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetResponseDTO> getItemByName(String itemName) {
         List<Item> items = itemRepository.findAllByItemName(itemName);
         if (!items.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+            return modelMapper.map(
                     items,
                     new TypeToken<List<ItemGetResponseDTO>>() {
                     }.getType()
             );
-            return itemGetResponseDTOS;
         } else {
             throw new NotFoundException("Not found");
         }
@@ -163,17 +169,16 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus) {
         List<Item> item = itemRepository.findAllByStockEquals(activeStatus);
         if (!item.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
-                    item,
-                    new TypeToken<List<ItemGetResponseDTO>>() {
-                    }.getType()
-            );
             // System.out.println(itemGetResponseDTOS);
             //get responseDTOS getItemCategory.getItemName()
 
 
 
-            return itemGetResponseDTOS;
+            return modelMapper.map(
+                    item,
+                    new TypeToken<List<ItemGetResponseDTO>>() {
+                    }.getType()
+            );
         } else {
             throw new NotFoundException("out of Stock");
         }
@@ -190,12 +195,11 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
         List<Item> item = itemRepository.findAllByItemBarCodeEquals(itemBarCode);
         if (!item.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+            return modelMapper.map(
                     item,
                     new TypeToken<List<ItemGetResponseDTO>>() {
                     }.getType()
             );
-            return itemGetResponseDTOS;
         } else {
             throw new NotFoundException("No any item found for that barcode");
         }
@@ -278,11 +282,10 @@ public class ItemServiceIMPL implements ItemService {
         if (items.getSize() < 1) {
             throw new NotFoundException("No Data");
         } else {
-            PaginatedResponseItemDTO paginatedResponseItemDTO = new PaginatedResponseItemDTO(
+            return new PaginatedResponseItemDTO(
                     itemMapper.ListDTOToPage(items),
                     itemRepository.countAllByStockEquals(activeStatus)
             );
-            return paginatedResponseItemDTO;
         }
     }
 
@@ -298,9 +301,8 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
         List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
         if (!items.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = itemMapper.entityListToDTOList(items);
 
-            return itemGetResponseDTOS;
+            return itemMapper.entityListToDTOList(items);
         } else {
             throw new NotFoundException("Not found");
         }
@@ -349,7 +351,7 @@ public class ItemServiceIMPL implements ItemService {
                 );
 
         // Check if branch exists
-         Branch branch = branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
+         branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
                 .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
                         + itemSaveRequestCategoryDTO.getBranchId())
                 );
@@ -447,6 +449,13 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Retrieves all details of an item by its ID.
+     *
+     * @param itemId The ID of the item to retrieve.
+     * @return ItemGetIdResponseDTO containing all details of the item.
+     * @throws NotFoundException If the item with the specified ID is not found.
+     */
     @Override
     public ItemGetIdResponseDTO getAllDetailsItemById(long itemId) {
         Item item = itemRepository.findById(itemId)
@@ -477,6 +486,99 @@ public class ItemServiceIMPL implements ItemService {
         return itemGetIdResponseDTO;
     }
 
+    /**
+     * Creates an item with an associated image.
+     *
+     * @param file                        The image file to be associated with the item.
+     * @param itemSaveRequestCategoryDTO The DTO containing details of the item to be created.
+     * @return ItemSaveRequestCategoryDTO containing the details of the created item.
+     * @throws IOException If an I/O error occurs.
+     */
+    @Override
+    public ItemSaveRequestCategoryDTO createItemWithImage(
+            MultipartFile file,
+            ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO)
+    throws IOException {
+        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
+                .orElseGet(() -> {
+
+                    // If category doesn't exist, create a new one
+                    ItemCategory newCategory = new ItemCategory();
+                    // Set category properties if needed
+                    // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
+                    // newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
+                    // Save the new category
+                    return itemCategoryRepository.save(newCategory);
+                });
+
+        // Check if supplier exists
+        Supplier supplier = supplierRepository.findById(itemSaveRequestCategoryDTO.getSupplierId())
+                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: "
+                        + itemSaveRequestCategoryDTO.getSupplierId())
+                );
+
+        // Check if branch exists
+        branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
+                        + itemSaveRequestCategoryDTO.getBranchId())
+                );
+
+        itemRepository.findById(itemSaveRequestCategoryDTO.getItemId())
+                .ifPresent(item -> {
+                    throw new EntityDuplicationException("Item already exists with ID: "
+                            + itemSaveRequestCategoryDTO.getItemId());
+                });
+
+        // Now, associate the item with the category and supplier
+        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
+        item.setItemCategory(category);
+        item.setSupplier(supplier); // Ensure the supplier is set
+        item.setBranchId(itemSaveRequestCategoryDTO.getBranchId());
+        String imageUrl = s3Service.uploadFile(itemSaveRequestCategoryDTO.getItemName(), file);
+        itemSaveRequestCategoryDTO.setItemImage(imageUrl);
+        item.setItemImage(imageUrl);
+        itemRepository.save(item);
+        itemSaveRequestCategoryDTO.setItemId(item.getItemId());
+        return itemSaveRequestCategoryDTO;
+    }
+
+    /**
+     * Retrieves the image of an item from the S3 bucket.
+     *
+     * @param itemImage The URL of the item's image in the S3 bucket.
+     * @return InputStreamResource containing the image stream.
+     */
+    @Override
+    public InputStreamResource getItemImage(String itemImage) {
+        //Extract the key name from the URL
+        String keyName = itemImage.substring(itemImage.lastIndexOf("/") + 1);
+        S3Object s3Object = s3Service.getFile(keyName);
+        S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+        return new InputStreamResource(s3ObjectInputStream);
+    }
+
+    /**
+     * Updates the image of an item in the S3 bucket.
+     *
+     * @param itemId The ID of the item whose image is to be updated.
+     * @param file   The new image file to be uploaded.
+     * @throws IOException If an I/O error occurs.
+     */
+    @Override
+    public void updateItemImage(long itemId, MultipartFile file) throws IOException{
+        Item item = itemRepository.getReferenceById(itemId);
+        String imageUrl = s3Service.uploadFile(item.getItemName(), file);
+        item.setItemImage(imageUrl);
+        itemRepository.save(item);
+    }
+
+    /**
+     * Retrieves details of an item by its ID, excluding supplier information.
+     *
+     * @param itemId The ID of the item to retrieve.
+     * @return ItemGetResponseWithoutSupplierDetailsDTO containing details of the item without supplier information.
+     * @throws NotFoundException If the item with the specified ID is not found.
+     */
     @Override
     public ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId) {
         Item item = itemRepository.findById(itemId)

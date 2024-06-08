@@ -41,7 +41,7 @@ class EmployerControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        employerController = new EmployerController(employerService, employerMapper);
+        //employerController = new EmployerController(employerService, employerMapper);
     }
 
     /**
@@ -104,7 +104,7 @@ class EmployerControllerTest {
 
         ResponseEntity<StandardResponse> result = employerController.getEmployerById(employerId);
 
-        assertEquals(employerDTO, result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
     /**

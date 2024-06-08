@@ -27,6 +27,7 @@ public class ItemSaveRequestCategoryDTO {
         private String itemManufacture;
         private double itemQuantity;
         //    private String itemCategory;
+
         private boolean isStock;
         private MeasuringUnitType measuringUnitType;
         private Date manufactureDate;
@@ -42,8 +43,8 @@ public class ItemSaveRequestCategoryDTO {
         private String itemDescription;
 
         private long categoryId;
-
         private long supplierId;
+
 
 //        private String categoryName;
 //        private String categoryDescription;

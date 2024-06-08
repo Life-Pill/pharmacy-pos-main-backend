@@ -2,26 +2,36 @@ package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
+import com.lifepill.possystem.dto.responseDTO.BranchS3DTO;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface BranchService {
 
-    public void saveBranch(BranchDTO branchDTO, MultipartFile image);
+    void saveBranch(BranchDTO branchDTO, MultipartFile image);
 
     byte[] getImageData(long branchId);
 
     List<BranchDTO> getAllBranches();
 
-    public BranchDTO getBranchById(long branchId);
+    BranchDTO getBranchById(long branchId);
 
     String deleteBranch(long branchId);
 
-    String updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image);
+    void updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image);
 
     void updateBranchImage(long branchId, MultipartFile image);
 
     void updateBranchWithoutImage(long branchId, BranchUpdateDTO branchUpdateDTO);
 
+    BranchS3DTO createBranch(BranchS3DTO branchS3DTO, MultipartFile file) throws IOException;
+
+    BranchS3DTO getBranchS3ById(long branchId);
+
+    InputStreamResource getBranchProfileImage(String branchProfileImageUrl);
+
+    void updateBranchProfileImage(long branchId, MultipartFile file) throws IOException;
 }

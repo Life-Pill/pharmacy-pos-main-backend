@@ -1,19 +1,26 @@
 package com.lifepill.possystem.service.impl;
 
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.lifepill.possystem.dto.BranchDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
+import com.lifepill.possystem.dto.responseDTO.BranchS3DTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.helper.SaveImageHelper;
 import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.service.BranchService;
+import com.lifepill.possystem.service.S3Service;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +34,7 @@ public class BranchServiceIMPL implements BranchService {
 
     private BranchRepository branchRepository;
     private ModelMapper modelMapper;
+    private S3Service s3Service;
 
     /**
      * Saves a new branch.
@@ -145,11 +153,10 @@ public class BranchServiceIMPL implements BranchService {
      * @param branchId        The ID of the branch to update.
      * @param branchUpdateDTO The DTO containing updated branch details.
      * @param image           The new image file for the branch (optional).
-     * @return A message indicating the update operation.
      * @throws EntityNotFoundException If the branch with the given ID is not found.
      * @throws NotFoundException       If the branch with the given ID is not found.
      */
-    public String updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image) {
+    public void updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image) {
         if (!branchRepository.existsById(branchId)) {
             throw new EntityNotFoundException("Branch not found");
         }
@@ -181,7 +188,6 @@ public class BranchServiceIMPL implements BranchService {
             }
 
             branchRepository.save(branch);
-            return "updated";
         } else {
             throw new NotFoundException("No Branch found for that id");
         }
@@ -269,6 +275,51 @@ public class BranchServiceIMPL implements BranchService {
         } else {
             throw new NotFoundException("No Branch found for that id");
         }
+    }
+
+    @Override
+    public BranchS3DTO createBranch(BranchS3DTO branchS3DTO, MultipartFile file) throws IOException {
+        // Logic to handle file upload and save the branch details
+        String imageUrl = s3Service.uploadFile(branchS3DTO.getBranchEmail(), file);
+        branchS3DTO.setBranchProfileImageUrl(imageUrl);
+
+        // Save branch details to the repository
+        Branch branch = new Branch();
+        BeanUtils.copyProperties(branchS3DTO, branch);
+        branch = branchRepository.save(branch);
+
+        // Copy properties back to DTO from entity
+        BeanUtils.copyProperties(branch, branchS3DTO);
+        return branchS3DTO;
+    }
+
+    @Override
+    public BranchS3DTO getBranchS3ById(long branchId) {
+        if (branchRepository.existsById(branchId)) {
+            Branch branch = branchRepository.getReferenceById(branchId);
+            BranchS3DTO branchS3DTO = new BranchS3DTO();
+            BeanUtils.copyProperties(branch, branchS3DTO);
+            return branchS3DTO;
+        } else {
+            throw new NotFoundException("No Branch found for that id");
+        }
+    }
+
+    @Override
+    public InputStreamResource getBranchProfileImage(String branchProfileImageUrl) {
+        //Extract the key name from the URL
+        String keyName = branchProfileImageUrl.substring(branchProfileImageUrl.lastIndexOf("/") + 1);
+        S3Object s3Object = s3Service.getFile(keyName);
+        S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+        return new InputStreamResource(s3ObjectInputStream);
+    }
+
+    @Override
+    public void updateBranchProfileImage(long branchId, MultipartFile file) throws IOException {
+        Branch branch = branchRepository.getReferenceById(branchId);
+        String imageUrl = s3Service.uploadFile(branch.getBranchEmail(), file);
+        branch.setBranchProfileImageUrl(imageUrl);
+        branchRepository.save(branch);
     }
 
 }

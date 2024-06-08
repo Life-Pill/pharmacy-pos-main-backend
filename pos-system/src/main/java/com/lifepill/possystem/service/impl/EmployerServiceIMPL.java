@@ -1,9 +1,8 @@
 package com.lifepill.possystem.service.impl;
 
-import com.lifepill.possystem.dto.EmployerBankDetailsDTO;
-import com.lifepill.possystem.dto.EmployerWithBankDTO;
-import com.lifepill.possystem.dto.EmployerDTO;
-import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.lifepill.possystem.dto.*;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.EmployerBankDetails;
@@ -16,12 +15,18 @@ import com.lifepill.possystem.repo.branchRepository.BranchRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerBankDetailsRepository;
 import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.EmployerService;
+import com.lifepill.possystem.service.S3Service;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +37,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EmployerServiceIMPL implements EmployerService {
 
+    private final S3Service s3Service;
     private EmployerRepository employerRepository;
     private EmployerBankDetailsRepository cashierBankDetailsRepo;
     private BranchRepository branchRepository;
@@ -302,6 +308,21 @@ public class EmployerServiceIMPL implements EmployerService {
         }
     }
 
+    @Override
+    public EmployerS3DTO getEmployerS3ById(long employerId) {
+        if (employerRepository.existsById(employerId)){
+            Employer employer = employerRepository.getReferenceById(employerId);
+
+            long branchId = employer.getBranch().getBranchId();
+            EmployerS3DTO employerS3DTO = modelMapper.map(employer, EmployerS3DTO.class);
+
+            employerS3DTO.setBranchId(branchId);
+            return employerS3DTO;
+        }else {
+            throw  new NotFoundException("No employer found for that id");
+        }
+    }
+
     /**
      * Retrieves an employer by their ID along with their image.
      *
@@ -545,5 +566,44 @@ public class EmployerServiceIMPL implements EmployerService {
         employerWithBankDTO.setBranchId(branchId);
 
         return employerWithBankDTO;
+    }
+
+    @Override
+    public EmployerS3DTO createEmployer(MultipartFile file, Long branchId, Employer employer) throws IOException {
+        Optional<Branch> branchOptional = branchRepository.findById(branchId);
+        if (branchOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Branch not found");
+        }
+
+        Branch branch = branchOptional.get();
+        employer.setBranch(branch);
+
+        String imageUrl = s3Service.uploadFile(employer.getEmployerEmail(), file);
+        employer.setProfileImageUrl(imageUrl);
+        Employer savedEmployer = employerRepository.save(employer);
+
+        return modelMapper.map(savedEmployer, EmployerS3DTO.class);
+    }
+
+    @Override
+    public InputStreamResource getEmployerImage(String profileImageUrl) {
+        // Extract the key from the imageUrl
+        String keyName = profileImageUrl.substring(profileImageUrl.lastIndexOf("/") + 1);
+        S3Object s3Object = s3Service.getFile(keyName);
+        S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
+        return new InputStreamResource(objectInputStream);
+    }
+
+    @Override
+    public void updateEmployerImage(Long employerId, MultipartFile file) throws IOException {
+        Employer employer = employerRepository.findById(employerId)
+                // If the employer is not found, send message
+                .orElseThrow(() -> new NotFoundException(
+                        "Employer not found with ID: " + employerId
+                ));
+
+        String imageUrl = s3Service.uploadFile(employer.getEmployerEmail(), file);
+        employer.setProfileImageUrl(imageUrl);
+        employerRepository.save(employer);
     }
 }

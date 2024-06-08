@@ -1,15 +1,15 @@
 package com.lifepill.possystem.controller;
 
-import com.lifepill.possystem.dto.EmployerBankDetailsDTO;
-import com.lifepill.possystem.dto.EmployerDTO;
-import com.lifepill.possystem.dto.EmployerWithBankDTO;
-import com.lifepill.possystem.dto.EmployerWithoutImageDTO;
+import com.lifepill.possystem.dto.*;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
+import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.util.StandardResponse;
 import com.lifepill.possystem.util.mappers.EmployerMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,13 +27,76 @@ import java.util.List;
 @RestController
 @RequestMapping("lifepill/v1/employers")
 @AllArgsConstructor
+@Log4j2
 public class EmployerController {
 
     private EmployerService employerService;
     private EmployerMapper employerMapper;
 
- //   public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
+    /**
+     * Endpoint for creating an employer with an image.
+     *
+     * @param file     The image file of the employer.
+     * @param branchId The ID of the branch associated with the employer.
+     * @param employer The employer object to be created.
+     * @return ResponseEntity containing a StandardResponse indicating the result of the operation.
+     * @throws IOException If an I/O error occurs while processing the image file.
+     */
+    @PostMapping("/save-employer-with-image")
+    public ResponseEntity<StandardResponse> createEmployer(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("branchId") Long branchId,
+            @ModelAttribute Employer employer
+    ) throws IOException {
+        EmployerS3DTO employerDTO = employerService.createEmployer(file, branchId, employer);
+        employerDTO.setBranchId(branchId);
+        return new ResponseEntity<>(
+                new StandardResponse(201, "successfully saved", employerDTO),
+                HttpStatus.CREATED
+        );
+    }
 
+    /**
+     * Retrieves the profile image of an employer by their ID.
+     *
+     * @param employerId The ID of the employer whose profile image is to be retrieved.
+     * @return ResponseEntity containing the profile image as an InputStreamResource.
+     */
+    @GetMapping(value = "/view-profile-image/{employerId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> getEmployerImage(@PathVariable Long employerId) {
+        EmployerS3DTO employerS3DTO = employerService.getEmployerS3ById(employerId);
+
+        InputStreamResource inputStreamResource = employerService.getEmployerImage(employerS3DTO.getProfileImageUrl());
+
+        String imageUrl = employerS3DTO.getProfileImageUrl();
+        String keyName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + keyName + "\"")
+                .body(inputStreamResource);
+    }
+
+
+    /**
+     * Updates the profile image of an employer.
+     *
+     * @param employerId The ID of the employer whose profile image is to be updated.
+     * @param file       The new profile image file.
+     * @return ResponseEntity containing a StandardResponse indicating the result of the operation.
+     * @throws IOException If an I/O error occurs while updating the profile image.
+     */
+    @PutMapping("/update-employer-image/{employerId}")
+    public ResponseEntity<StandardResponse> updateEmployerImage(
+            @PathVariable Long employerId,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+        employerService.updateEmployerImage(employerId, file);
+        return new ResponseEntity<>(
+                new StandardResponse(200, "Image updated successfully", employerId),
+                HttpStatus.OK
+        );
+    }
 
     /**
      * Saves an employer without an image.
