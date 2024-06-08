@@ -13,6 +13,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
+    /**
+     * Configures the Jedis connection factory for Redis.
+     *
+     * @return JedisConnectionFactory configured with Redis standalone configuration.
+     */
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
@@ -21,6 +26,11 @@ public class RedisConfig {
         return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
 
+    /**
+     * Configures the Redis template for key-value serialization.
+     *
+     * @return RedisTemplate configured with String key serializer and Jackson JSON value serializer.
+     */
     @Bean
     public RedisTemplate<String, EmployerAuthDetailsResponseDTO> redisTemplate() {
         RedisTemplate<String, EmployerAuthDetailsResponseDTO> redisTemplate = new RedisTemplate<>();
