@@ -50,10 +50,10 @@ public class EmployerServiceIMPL implements EmployerService {
      * @param employerDTO The employer data transfer object.
      * @return A message indicating the success of the operation.
      * @throws EntityDuplicationException If the employer already exists.
-     * @throws NotFoundException         If the associated branch is not found.
+     * @throws NotFoundException          If the associated branch is not found.
      */
     @Override
-    public String saveEmployer(EmployerDTO employerDTO){
+    public String saveEmployer(EmployerDTO employerDTO) {
         // check if the cashier already exists email or id
         if (employerRepository.existsById(employerDTO.getEmployerId()) || employerRepository.existsAllByEmployerEmail(employerDTO.getEmployerEmail())) {
             throw new EntityDuplicationException("Employer already exists");
@@ -80,7 +80,7 @@ public class EmployerServiceIMPL implements EmployerService {
      * @param employerWithoutImageDTO The employer data transfer object without an image.
      * @return A message indicating the success of the operation.
      * @throws EntityDuplicationException If the employer already exists.
-     * @throws NotFoundException         If the associated branch is not found.
+     * @throws NotFoundException          If the associated branch is not found.
      */
     @Override
     public String saveEmployerWithoutImage(EmployerWithoutImageDTO employerWithoutImageDTO) {
@@ -112,10 +112,11 @@ public class EmployerServiceIMPL implements EmployerService {
             return "Employer Saved";
         }
     }
+
     /**
      * Updates details of an employer.
      *
-     * @param employerId                The ID of the employer to update.
+     * @param employerId                  The ID of the employer to update.
      * @param employerAllDetailsUpdateDTO The DTO containing updated employer details.
      * @return A message indicating the success of the operation.
      * @throws NotFoundException If the employer with the given ID is not found.
@@ -164,7 +165,7 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public String updateEmployerAccountDetails(EmployerUpdateAccountDetailsDTO employerUpdateAccountDetailsDTO) {
-        if (employerRepository.existsById(employerUpdateAccountDetailsDTO.getEmployerId())){
+        if (employerRepository.existsById(employerUpdateAccountDetailsDTO.getEmployerId())) {
             Employer employer = employerRepository.getReferenceById(employerUpdateAccountDetailsDTO.getEmployerId());
 
             employer.setEmployerFirstName(employerUpdateAccountDetailsDTO.getEmployerFirstName());
@@ -178,7 +179,7 @@ public class EmployerServiceIMPL implements EmployerService {
             System.out.println(employer);
 
             return "Successfully Update employer account details";
-        }else {
+        } else {
             throw new NotFoundException("No data found for that id");
         }
     }
@@ -192,16 +193,17 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public String updateEmployerPassword(EmployerPasswordResetDTO employerPasswordResetDTO) {
-        if (employerRepository.existsById(employerPasswordResetDTO.getEmployerId())){
+        if (employerRepository.existsById(employerPasswordResetDTO.getEmployerId())) {
             Employer employer = employerRepository.getReferenceById(employerPasswordResetDTO.getEmployerId());
 
             employer.setEmployerPassword(employerPasswordResetDTO.getEmployerPassword());
+            employer.setEmployerPassword(passwordEncoder.encode(employer.getEmployerPassword()));
             employerRepository.save(employer);
 
             System.out.println(employer);
 
             return "Successfully Reset employer password";
-        }else {
+        } else {
             throw new NotFoundException("No data found for that id");
         }
     }
@@ -215,7 +217,7 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public String updateRecentPin(EmployerRecentPinUpdateDTO employerRecentPinUpdateDTO) {
-        if (employerRepository.existsById(employerRecentPinUpdateDTO.getEmployerId())){
+        if (employerRepository.existsById(employerRecentPinUpdateDTO.getEmployerId())) {
             Employer employer = employerRepository.getReferenceById(employerRecentPinUpdateDTO.getEmployerId());
 
             employer.setPin(employerRecentPinUpdateDTO.getPin());
@@ -224,7 +226,7 @@ public class EmployerServiceIMPL implements EmployerService {
             System.out.println(employer);
 
             return "Successfully Reset employer PIN";
-        }else {
+        } else {
             throw new NotFoundException("No data found for that id");
         }
     }
@@ -285,7 +287,6 @@ public class EmployerServiceIMPL implements EmployerService {
     }
 
 
-
     /**
      * Retrieves an employer by their ID.
      *
@@ -295,7 +296,7 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public EmployerDTO getEmployerById(long employerId) {
-        if (employerRepository.existsById(employerId)){
+        if (employerRepository.existsById(employerId)) {
             Employer employer = employerRepository.getReferenceById(employerId);
 
             long branchId = employer.getBranch().getBranchId();
@@ -303,14 +304,14 @@ public class EmployerServiceIMPL implements EmployerService {
 
             employerDTO.setBranchId(branchId);
             return employerDTO;
-        }else {
-            throw  new NotFoundException("No employer found for that id");
+        } else {
+            throw new NotFoundException("No employer found for that id");
         }
     }
 
     @Override
     public EmployerS3DTO getEmployerS3ById(long employerId) {
-        if (employerRepository.existsById(employerId)){
+        if (employerRepository.existsById(employerId)) {
             Employer employer = employerRepository.getReferenceById(employerId);
 
             long branchId = employer.getBranch().getBranchId();
@@ -318,8 +319,8 @@ public class EmployerServiceIMPL implements EmployerService {
 
             employerS3DTO.setBranchId(branchId);
             return employerS3DTO;
-        }else {
-            throw  new NotFoundException("No employer found for that id");
+        } else {
+            throw new NotFoundException("No employer found for that id");
         }
     }
 
@@ -332,12 +333,12 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public EmployerDTO getEmployerByIdWithImage(long employerId) {
-        if (employerRepository.existsById(employerId)){
+        if (employerRepository.existsById(employerId)) {
             Employer employer = employerRepository.getReferenceById(employerId);
 
             return modelMapper.map(employer, EmployerDTO.class);
-        }else {
-            throw  new NotFoundException("No employer found for that id");
+        } else {
+            throw new NotFoundException("No employer found for that id");
         }
     }
 
@@ -367,11 +368,11 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public String deleteEmployer(long employerId) {
-        if (employerRepository.existsById(employerId)){
+        if (employerRepository.existsById(employerId)) {
             employerRepository.deleteById(employerId);
 
-            return "deleted succesfully : "+ employerId;
-        }else {
+            return "deleted succesfully : " + employerId;
+        } else {
             throw new NotFoundException("No employer found for that id");
         }
     }
@@ -386,9 +387,9 @@ public class EmployerServiceIMPL implements EmployerService {
     public List<EmployerUpdateBankAccountDTO> getAllEmployerBankDetails() {
         List<EmployerBankDetails> getAllCashiersBankDetails = cashierBankDetailsRepo.findAll();
 
-        if (!getAllCashiersBankDetails.isEmpty()){
+        if (!getAllCashiersBankDetails.isEmpty()) {
             List<EmployerUpdateBankAccountDTO> cashierUpdateBankAccountDTOList = new ArrayList<>();
-            for (EmployerBankDetails employerBankDetails : getAllCashiersBankDetails){
+            for (EmployerBankDetails employerBankDetails : getAllCashiersBankDetails) {
                 EmployerUpdateBankAccountDTO cashierUpdateBankAccountDTO = new EmployerUpdateBankAccountDTO(
                         employerBankDetails.getEmployerBankDetailsId(),
                         employerBankDetails.getBankName(),
@@ -402,7 +403,7 @@ public class EmployerServiceIMPL implements EmployerService {
                 cashierUpdateBankAccountDTOList.add(cashierUpdateBankAccountDTO);
             }
             return cashierUpdateBankAccountDTOList;
-        }else {
+        } else {
             throw new NotFoundException("No Employer Bank Details Found");
         }
     }
@@ -421,14 +422,14 @@ public class EmployerServiceIMPL implements EmployerService {
     }
 
     private List<EmployerDTO> getEmployerDTOS(List<Employer> getAllEmployers) {
-        if (!getAllEmployers.isEmpty()){
+        if (!getAllEmployers.isEmpty()) {
             List<EmployerDTO> employerDTOList = new ArrayList<>();
-            for (Employer employer : getAllEmployers){
+            for (Employer employer : getAllEmployers) {
                 EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
                 employerDTOList.add(employerDTO);
             }
             return employerDTOList;
-        }else {
+        } else {
             throw new NotFoundException("No Employer Found");
         }
     }
@@ -449,9 +450,9 @@ public class EmployerServiceIMPL implements EmployerService {
     /**
      * Retrieves a list of employers associated with the specified branch ID.
      *
-     * @param branchId  The ID of the branch.
-     * @return          A list of EmployerDTO objects representing the employers associated with the branch.
-     * @throws NotFoundException  If the branch with the specified ID is not found.
+     * @param branchId The ID of the branch.
+     * @return A list of EmployerDTO objects representing the employers associated with the branch.
+     * @throws NotFoundException If the branch with the specified ID is not found.
      */
     @Override
     public List<EmployerDTO> getAllEmployerByBranchId(long branchId) {
@@ -472,8 +473,8 @@ public class EmployerServiceIMPL implements EmployerService {
     /**
      * Retrieves a list of employers with the specified role.
      *
-     * @param role  The role of the employers to retrieve.
-     * @return      A list of EmployerDTO objects representing the employers with the specified role.
+     * @param role The role of the employers to retrieve.
+     * @return A list of EmployerDTO objects representing the employers with the specified role.
      */
     @Override
     public List<EmployerDTO> getAllEmployerByRole(Role role) {
@@ -487,9 +488,9 @@ public class EmployerServiceIMPL implements EmployerService {
     /**
      * Retrieves an employer by their username (email).
      *
-     * @param username  The username (email) of the employer to retrieve.
-     * @return          An EmployerDTO object representing the employer with the specified username,
-     *                  or null if no employer is found with the given username.
+     * @param username The username (email) of the employer to retrieve.
+     * @return An EmployerDTO object representing the employer with the specified username,
+     * or null if no employer is found with the given username.
      */
     @Override
     public EmployerDTO getEmployerByUsername(String username) {
@@ -578,6 +579,9 @@ public class EmployerServiceIMPL implements EmployerService {
         Branch branch = branchOptional.get();
         employer.setBranch(branch);
 
+        String encodedPassword = passwordEncoder.encode(employer.getEmployerPassword());
+        employer.setEmployerPassword(encodedPassword);
+
         String imageUrl = s3Service.uploadFile(employer.getEmployerEmail(), file);
         employer.setProfileImageUrl(imageUrl);
         Employer savedEmployer = employerRepository.save(employer);
@@ -605,5 +609,11 @@ public class EmployerServiceIMPL implements EmployerService {
         String imageUrl = s3Service.uploadFile(employer.getEmployerEmail(), file);
         employer.setProfileImageUrl(imageUrl);
         employerRepository.save(employer);
+    }
+
+    @Override
+    public Employer findByUsername(String username) {
+        return employerRepository.findByEmployerEmail(username)
+                .orElseThrow(() -> new NotFoundException("Employer not found with email: " + username));
     }
 }

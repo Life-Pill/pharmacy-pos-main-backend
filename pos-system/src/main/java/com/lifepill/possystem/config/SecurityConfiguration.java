@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.antMatchers("/lifepill/v1/auth/**",
+                                        "/lifepill/v1/session/authenticate/cached",
                                         "/swagger-ui/index.html#/",
                                         "/swagger-ui.html#/",
                                         "/lifepill/v1/test/**",
@@ -78,6 +79,8 @@ public class SecurityConfiguration {
                                 .antMatchers("/lifepill/v1/supplierCompanies/**")
                                 .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
                                 .antMatchers("/lifepill/v1/supplier/**")
+                                .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
+                                .antMatchers("/lifepill/v1/session/**")
                                 .hasAnyRole(OWNER.name(), MANAGER.name(), CASHIER.name())
                                 .anyRequest().authenticated()
                 )
