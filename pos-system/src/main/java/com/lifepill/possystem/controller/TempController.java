@@ -120,4 +120,22 @@ public class TempController {
 
         return cachedEmployerDetailsResponses;
     }
+
+    /**
+     * Retrieves cached employer details by employer email, including authentication response and employer details.
+     *
+     * @param employerEmail The email of the employer.
+     * @return The CachedEmployerDetailsResponse object representing the cached employer details and authentication response.
+     */
+    @GetMapping("/get-cached-employer/email/{employerEmail}")
+    public ResponseEntity<CachedEmployerDetailsResponseDTO> getCachedEmployerByEmail(@PathVariable String employerEmail) {
+        EmployerAuthDetailsResponseDTO employerDetails = redisService.getEmployerDetails(employerEmail);
+        if (employerDetails != null) {
+            AuthenticationResponseDTO authResponse = authService.generateAuthenticationResponse(employerEmail);
+            CachedEmployerDetailsResponseDTO cachedEmployerDetails = new CachedEmployerDetailsResponseDTO(authResponse, employerDetails);
+            return ResponseEntity.ok(cachedEmployerDetails);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
