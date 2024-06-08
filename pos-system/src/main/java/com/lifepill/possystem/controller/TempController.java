@@ -79,7 +79,7 @@ public class TempController {
                     .body(new StandardResponse(401, "Invalid pin", null));
         }
 
-        AuthenticationResponseDTO authResponse = authService.generateAuthenticationResponse(employerDetails.getEmployerEmail());
+        AuthenticationResponseDTO authResponse = authService.authenticateWithCachedPin(verifyPinRequest.getUsername(), verifyPinRequest.getPin());
 
         // Set the token as a cookie in the HTTP response
         Cookie cookie = new Cookie("Authorization", authResponse.getAccessToken());

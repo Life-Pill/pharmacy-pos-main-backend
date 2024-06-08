@@ -197,6 +197,7 @@ public class EmployerServiceIMPL implements EmployerService {
             Employer employer = employerRepository.getReferenceById(employerPasswordResetDTO.getEmployerId());
 
             employer.setEmployerPassword(employerPasswordResetDTO.getEmployerPassword());
+            employer.setEmployerPassword(passwordEncoder.encode(employer.getEmployerPassword()));
             employerRepository.save(employer);
 
             System.out.println(employer);

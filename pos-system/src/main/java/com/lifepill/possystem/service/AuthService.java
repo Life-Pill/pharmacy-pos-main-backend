@@ -12,4 +12,6 @@ public interface AuthService {
     EmployerAuthDetailsResponseDTO getEmployerDetails(String username);
 
     AuthenticationResponseDTO generateAuthenticationResponse(String employerEmail);
+
+    AuthenticationResponseDTO authenticateWithCachedPin(String username, int pin);
 }

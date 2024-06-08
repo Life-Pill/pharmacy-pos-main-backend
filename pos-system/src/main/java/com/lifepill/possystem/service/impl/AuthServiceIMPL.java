@@ -186,6 +186,7 @@ public AuthenticationResponseDTO generateAuthenticationResponse(String employerE
      * @return The authentication response containing the generated JWT token.
      * @throws AuthenticationException If authentication fails due to incorrect pin.
      */
+    @Override
     public AuthenticationResponseDTO authenticateWithCachedPin(String username, int pin) {
         EmployerAuthDetailsResponseDTO employerDetails = redisService.getEmployerDetails(username);
 
@@ -206,6 +207,7 @@ public AuthenticationResponseDTO generateAuthenticationResponse(String employerE
         String jwtToken = jwtService.generateToken(employerUserDetails);
         return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
     }
+
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
         try {
@@ -245,19 +247,14 @@ public AuthenticationResponseDTO generateAuthenticationResponse(String employerE
      */
     @Override
     public EmployerAuthDetailsResponseDTO getEmployerDetails(String username) {
-        // Retrieve employer details DTO using EmployerService
-        EmployerDTO employerDTO = employerService.getEmployerByUsername(username);
-
-        var user = employerRepository.findByEmployerEmail(username)
+        Employer employer = employerRepository.findByEmployerEmail(username)
                 .orElseThrow(() -> new AuthenticationException("User not found"));
 
-        // set branch id
-        employerDTO.setBranchId(user.getBranch().getBranchId());
-        // Convert EmployerDTO to EmployerAuthDetailsResponseDTO using ModelMapper
-        EmployerAuthDetailsResponseDTO employerDetailsResponseDTO = modelMapper
-                .map(employerDTO, EmployerAuthDetailsResponseDTO.class);
+        EmployerDTO employerDTO = employerService.getEmployerByUsername(username);
+        employerDTO.setBranchId(employer.getBranch().getBranchId());
 
-        System.out.println("Branch ID retrieved: " + employerDTO.getBranchId());
+        EmployerAuthDetailsResponseDTO employerDetailsResponseDTO = modelMapper.map(employerDTO, EmployerAuthDetailsResponseDTO.class);
+        employerDetailsResponseDTO.setPin(employer.getPin());
         employerDetailsResponseDTO.setActiveStatus(true);
 
         return employerDetailsResponseDTO;
