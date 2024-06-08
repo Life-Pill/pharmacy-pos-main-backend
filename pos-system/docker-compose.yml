@@ -1,38 +1,31 @@
-#services:
-#  lifePill-pos:
-#    image: "lifepill/pos:s4"
-#    container_name: pos:ms
-#    ports:
-#      - "8081:8081"
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 7000m
-#    networks:
-#      - lifepill
-#  loans:
-#    image: "pramithamj/loans:s4"
-#    container_name: loans-ms
-#    ports:
-#      - "8090:8090"
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 7000m
-#    networks:
-#      - pramithamj
-#
-#  cards:
-#    image: "pramithamj/cards:s4"
-#    container_name: cards-ms
-#    ports:
-#      - "9000:9000"
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 7000m
-#    networks:
-#      - pramithamj
-#networks:
-#  pramithamj:
-#    driver: "bridge"
+version: '3.8'
+
+services:
+  pos-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pos-monolithic
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Prami@3990
+      SPRING_REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Prami@3990
+      POSTGRES_DB: pos-monolithic
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"

@@ -1,28 +1,33 @@
-spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/pos-monolithic
-    username: postgres
-    password: Prami@3990
-
-    jpa:
-      hibernate:
-        ddl-auto: update
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
-          jdbc:
-            lob:
-              non_contextual_creation: true #  to enable non-contextual LOB creation
-      show-sql: true
-    security:
-      user:
-        name: lifepill
-        password: 12345
-
-        server:
-          port: 8081
-        logging:
-          level:
-            org.springframework.security: TRACE
-
+#spring:
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/pos-monolithic
+#    username: postgres
+#    password: Prami@3990
+#
+#    jpa:
+#      hibernate:
+#        ddl-auto: update
+#      properties:
+#        hibernate:
+#          dialect: org.hibernate.dialect.PostgreSQLDialect
+#          jdbc:
+#            lob:
+#              non_contextual_creation: true #  to enable non-contextual LOB creation
+#      show-sql: true
+#    security:
+#      user:
+#        name: lifepill
+#        password: 12345
+#
+#        server:
+#          port: 8081
+#        logging:
+#          level:
+#            org.springframework.security: TRACE
+#
+#aws:
+#  access.key: ${AWS_ACCESS_KEY:AKIAW3MECDNXMNG47VH4}
+#  secret.key: ${AWS_SECRET_KEY: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}
+#  s3.bucket: ${AWS_S3_BUCKET:lifepill-pos-system}
+#  region: ${AWS_REGION:us-east-1}

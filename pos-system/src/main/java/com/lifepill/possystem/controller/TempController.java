@@ -3,17 +3,21 @@ package com.lifepill.possystem.controller;
 import com.lifepill.possystem.dto.LogoutRequestDTO;
 import com.lifepill.possystem.dto.VerifyPinRequestDTO;
 import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.CachedEmployerDetailsResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.EmployerAuthDetailsResponseDTO;
 import com.lifepill.possystem.service.AuthService;
 import com.lifepill.possystem.service.RedisService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +29,7 @@ public class TempController {
 
     private final AuthService authService;
     private final RedisService redisService;
+
     /**
      * Handles temporary logout by caching the user's authentication details.
      *
@@ -96,5 +101,25 @@ public class TempController {
         responseData.put("employerDetails", employerDetails);
 
         return ResponseEntity.ok(responseData);
+    }
+
+    /**
+     * Retrieves all cached employer details from Redis, including authentication response and employer details.
+     *
+     * @return A collection of CachedEmployerDetailsResponse representing the cached employer details and authentication responses.
+     */
+    @GetMapping("/get-all-cached-employers")
+    public Collection<CachedEmployerDetailsResponseDTO> getAllCachedEmployers() {
+        Collection<EmployerAuthDetailsResponseDTO> cachedEmployers = redisService.getAllCachedEmployerDetails();
+        Collection<CachedEmployerDetailsResponseDTO> cachedEmployerDetailsResponses = new ArrayList<>();
+
+        for (EmployerAuthDetailsResponseDTO employerDetails : cachedEmployers) {
+            String username = employerDetails.getEmployerEmail();
+            AuthenticationResponseDTO authResponse = authService.generateAuthenticationResponse(username);
+            CachedEmployerDetailsResponseDTO response = new CachedEmployerDetailsResponseDTO(authResponse, employerDetails);
+            cachedEmployerDetailsResponses.add(response);
+        }
+
+        return cachedEmployerDetailsResponses;
     }
 }

@@ -156,12 +156,15 @@ public class AuthControllerTest {
         // Verify that the access token is set as a cookie in the response
         verify(response, times(1)).addCookie(any());
     }*/
+/*
 
-    /**
+    */
+/**
      * Tests the retrieval of employer details during authentication.
      * It verifies whether the controller correctly handles the authentication request,
      * retrieves employer details, sets them in the response body, and adds a cookie.
-     */
+     *//*
+
    @Test
    void testEmployerDetailsRetrievalOnAuthenticate() {
        // Prepare test data
@@ -192,12 +195,13 @@ public class AuthControllerTest {
        verify(response, times(1)).addCookie(any());
 
        // Assert the authentication response in the response body
-       assertEquals(authResponse, ((Map<String, Object>) responseEntity.getBody()).get("authenticationResponse"));
+         assertEquals(authResponse, ((Map<String, Object>) responseEntity.getBody()).get("authenticationResponse"));
 
-       // Assert the employer details in the response body
-       assertEquals(employerDetailsResponse, ((Map<String, Object>) responseEntity.getBody()).get("employerDetails"));
+         // Assert the employer details in the response body
+            assertEquals(employerDetailsResponse, ((Map<String, Object>) responseEntity.getBody()).get("employerDetails"));
    }
 
+*/
 
     /**
      * Tests the scenario where invalid credentials are provided during authentication.

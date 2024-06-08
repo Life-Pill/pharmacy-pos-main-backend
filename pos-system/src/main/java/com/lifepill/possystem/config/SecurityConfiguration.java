@@ -40,7 +40,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.antMatchers("/lifepill/v1/auth/**",
-                                        "/lifepill/v1/session/authenticate/cached",
+                                        "/lifepill/v1/session/**",
                                         "/swagger-ui/index.html#/",
                                         "/swagger-ui.html#/",
                                         "/lifepill/v1/test/**",
