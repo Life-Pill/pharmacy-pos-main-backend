@@ -9,7 +9,6 @@ import com.lifepill.possystem.service.AuthService;
 import com.lifepill.possystem.service.RedisService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,6 @@ public class TempController {
 
     private final AuthService authService;
     private final RedisService redisService;
-
     /**
      * Handles temporary logout by caching the user's authentication details.
      *

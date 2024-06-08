@@ -1,13 +1,17 @@
 package com.lifepill.possystem;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.lifepill.possystem.service.S3Service;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @OpenAPIDefinition(
 		info = @Info(
@@ -42,18 +46,5 @@ public class PosSystemApplication {
 		SpringApplication.run(PosSystemApplication.class, args);
 	}
 
-/*	@Bean
-	public ApplicationRunner applicationRunner(S3Service s3Service){
-		return args -> {
-			log.info("Spring Boot AWS S3 integration...");
-
-			try {
-				var s3Object = s3Service.getFile("jvm.png");
-				log.info(s3Object.getKey());
-			} catch (AmazonS3Exception e) {
-				log.error(e.getMessage());
-			}
-		};
-	}*/
 }
 
