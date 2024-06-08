@@ -1,7 +1,6 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.EmployerDTO;
-import com.lifepill.possystem.service.BranchService;
 import com.lifepill.possystem.service.EmployerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class BranchManagerController {
 
-    private BranchService branchService;
     private EmployerService employerService;
 
     /**

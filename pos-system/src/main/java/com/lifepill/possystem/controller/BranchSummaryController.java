@@ -34,7 +34,7 @@ public class BranchSummaryController {
     @GetMapping("/sales-summary")
     public ResponseEntity<StandardResponse> getAllBranchesWithSales() {
         List<PharmacyBranchResponseDTO> allBranchesWithSales = branchSummaryService.getAllBranchesWithSales();
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(
                         201,
                         "SUCCESS",
@@ -56,7 +56,7 @@ public class BranchSummaryController {
     ) {
         PharmacyBranchResponseDTO pharmacyBranchResponseDTO = branchSummaryService
                 .getBranchSalesById(branchId);
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(
                         201,
                         "SUCCESS",
@@ -77,7 +77,7 @@ public class BranchSummaryController {
             @RequestParam("date")
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
         List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService.getPharmacyDataByDate(date);
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(
                         201,
                         "SUCCESS",
@@ -104,7 +104,7 @@ public class BranchSummaryController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         List<PharmacyBranchResponseDTO> pharmacyData = branchSummaryService
                 .getPharmacyDataByTimePeriod(startDate, endDate);
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(
                         201,
                         "SUCCESS",
@@ -128,7 +128,7 @@ public class BranchSummaryController {
             @RequestParam("year") int year) {
         List<PharmacyBranchResponseDTO> monthlySummary = branchSummaryService
                 .getMonthlySummary(month, year);
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(
                         201,
                         "SUCCESS",
@@ -150,7 +150,7 @@ public class BranchSummaryController {
             @RequestParam("year") int year) {
         List<PharmacyBranchResponseDTO> yearlySummary = branchSummaryService
                 .getYearlySummary(year);
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(
                         201,
                         "SUCCESS",

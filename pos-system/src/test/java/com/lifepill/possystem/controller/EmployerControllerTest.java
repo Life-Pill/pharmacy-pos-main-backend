@@ -102,7 +102,7 @@ class EmployerControllerTest {
         EmployerDTO employerDTO = new EmployerDTO();
         when(employerService.getEmployerById(employerId)).thenReturn(employerDTO);
 
-        EmployerDTO result = employerController.getEmployerById(employerId);
+        ResponseEntity<StandardResponse> result = employerController.getEmployerById(employerId);
 
         assertEquals(employerDTO, result);
     }

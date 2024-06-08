@@ -31,7 +31,7 @@ public class OrderController{
     public ResponseEntity<StandardResponse> saveItem(@RequestBody RequestOrderSaveDTO requestOrderSaveDTO) {
        String id =  orderService.addOrder(requestOrderSaveDTO);
 
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(201, id +"Item Savd Successfully",id),
                 HttpStatus.CREATED);
     }
@@ -45,7 +45,7 @@ public class OrderController{
     public ResponseEntity<StandardResponse> getAllOrdersWithDetails() {
         List<OrderResponseDTO> orderResponseDTOList = orderService.getAllOrdersWithDetails();
 
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(200, "All Orders Retrieved Successfully", orderResponseDTOList),
                 HttpStatus.OK);
     }

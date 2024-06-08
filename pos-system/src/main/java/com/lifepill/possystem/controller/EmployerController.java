@@ -185,11 +185,14 @@ public class EmployerController {
      * @param employerId The ID of the employer to retrieve.
      * @return The EmployerDTO object representing the employer.
      */
-    @GetMapping(path = "/get-by-id", params = "id")
+    @GetMapping(path = "/get-by-id", params = "employerId")
     @Transactional
-    public EmployerDTO getEmployerById(@RequestParam(value = "id") int employerId) {
+    public ResponseEntity<StandardResponse> getEmployerById(@RequestParam(value = "employerId") int employerId) {
         EmployerDTO employerDTO = employerService.getEmployerById(employerId);
-        return employerDTO;
+        return new ResponseEntity<>(
+                new StandardResponse(201, "SUCCESS", employerDTO),
+                HttpStatus.OK
+        );
     }
 
     /**
@@ -235,7 +238,7 @@ public class EmployerController {
     @GetMapping(path = "/get-all-employers")
     public ResponseEntity<StandardResponse> getAllEmployers() {
         List<EmployerDTO> allEmployer = employerService.getAllEmployer();
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(201, "SUCCESS", allEmployer),
                 HttpStatus.OK
         );
@@ -250,8 +253,7 @@ public class EmployerController {
     @GetMapping(path = "/get-all-employers-by-active-state/{status}")
     @Transactional
     public List<EmployerDTO> getAllEmployerByActiveState(@PathVariable(value = "status") boolean activeState) {
-        List<EmployerDTO> allemployer = employerService.getAllEmployerByActiveState(activeState);
-        return allemployer;
+        return employerService.getAllEmployerByActiveState(activeState);
     }
 
     /**
@@ -263,7 +265,7 @@ public class EmployerController {
     @Transactional
     public ResponseEntity<StandardResponse> getAllEmployerBankDetails() {
         List<EmployerUpdateBankAccountDTO> allCashiersBankDetails = employerService.getAllEmployerBankDetails();
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(201, "SUCCESS", allCashiersBankDetails),
                 HttpStatus.OK
         );

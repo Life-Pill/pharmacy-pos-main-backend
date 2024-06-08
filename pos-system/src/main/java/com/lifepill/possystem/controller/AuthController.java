@@ -5,7 +5,6 @@ import com.lifepill.possystem.dto.requestDTO.RegisterRequestDTO;
 import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.EmployerAuthDetailsResponseDTO;
 import com.lifepill.possystem.exception.AuthenticationException;
-import com.lifepill.possystem.repo.employerRepository.EmployerRepository;
 import com.lifepill.possystem.service.AuthService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
-    private final EmployerRepository employerRepository;
 
     /**
      * Handles user registration.
