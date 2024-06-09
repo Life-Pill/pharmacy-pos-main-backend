@@ -3,6 +3,7 @@ package com.lifepill.possystem.controller;
 import com.lifepill.possystem.dto.LogoutRequestDTO;
 import com.lifepill.possystem.dto.VerifyPinRequestDTO;
 import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
+import com.lifepill.possystem.dto.responseDTO.CachedEmployerDetailsResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.EmployerAuthDetailsResponseDTO;
 import com.lifepill.possystem.service.AuthService;
 import com.lifepill.possystem.service.RedisService;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,5 +99,43 @@ public class TempController {
         responseData.put("employerDetails", employerDetails);
 
         return ResponseEntity.ok(responseData);
+    }
+
+    /**
+     * Retrieves all cached employer details from Redis, including authentication response and employer details.
+     *
+     * @return A collection of CachedEmployerDetailsResponse representing the cached employer details and authentication responses.
+     */
+    @GetMapping("/get-all-cached-employers")
+    public Collection<CachedEmployerDetailsResponseDTO> getAllCachedEmployers() {
+        Collection<EmployerAuthDetailsResponseDTO> cachedEmployers = redisService.getAllCachedEmployerDetails();
+        Collection<CachedEmployerDetailsResponseDTO> cachedEmployerDetailsResponses = new ArrayList<>();
+
+        for (EmployerAuthDetailsResponseDTO employerDetails : cachedEmployers) {
+            String username = employerDetails.getEmployerEmail();
+            AuthenticationResponseDTO authResponse = authService.generateAuthenticationResponse(username);
+            CachedEmployerDetailsResponseDTO response = new CachedEmployerDetailsResponseDTO(authResponse, employerDetails);
+            cachedEmployerDetailsResponses.add(response);
+        }
+
+        return cachedEmployerDetailsResponses;
+    }
+
+    /**
+     * Retrieves cached employer details by employer email, including authentication response and employer details.
+     *
+     * @param employerEmail The email of the employer.
+     * @return The CachedEmployerDetailsResponse object representing the cached employer details and authentication response.
+     */
+    @GetMapping("/get-cached-employer/email/{employerEmail}")
+    public ResponseEntity<CachedEmployerDetailsResponseDTO> getCachedEmployerByEmail(@PathVariable String employerEmail) {
+        EmployerAuthDetailsResponseDTO employerDetails = redisService.getEmployerDetails(employerEmail);
+        if (employerDetails != null) {
+            AuthenticationResponseDTO authResponse = authService.generateAuthenticationResponse(employerEmail);
+            CachedEmployerDetailsResponseDTO cachedEmployerDetails = new CachedEmployerDetailsResponseDTO(authResponse, employerDetails);
+            return ResponseEntity.ok(cachedEmployerDetails);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

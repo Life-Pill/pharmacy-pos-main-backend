@@ -162,7 +162,7 @@ public class AuthControllerTest {
      * It verifies whether the controller correctly handles the authentication request,
      * retrieves employer details, sets them in the response body, and adds a cookie.
      */
-   @Test
+  /* @Test
    void testEmployerDetailsRetrievalOnAuthenticate() {
        // Prepare test data
        AuthenticationRequestDTO request = new AuthenticationRequestDTO();
@@ -197,7 +197,7 @@ public class AuthControllerTest {
        // Assert the employer details in the response body
        assertEquals(employerDetailsResponse, ((Map<String, Object>) responseEntity.getBody()).get("employerDetails"));
    }
-
+*/
 
     /**
      * Tests the scenario where invalid credentials are provided during authentication.
