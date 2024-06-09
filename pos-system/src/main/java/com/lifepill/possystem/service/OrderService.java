@@ -11,4 +11,6 @@ public interface OrderService {
     List<OrderResponseDTO> getAllOrdersWithDetails();
 
     OrderResponseDTO getOrderWithDetailsById(long orderId);
+
+    List<OrderResponseDTO> getOrderWithDetailsByBranchId(long branchId);
 }

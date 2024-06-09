@@ -2,6 +2,7 @@ package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.SupplierCompanyDTO;
 import com.lifepill.possystem.service.SupplierCompanyService;
+import com.lifepill.possystem.util.StandardResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,9 +69,12 @@ public class SupplierCompanyController {
      * @return ResponseEntity with HTTP status indicating the success of the deletion.
      */
     @DeleteMapping(path = "/delete-supplier-company/{id}")
-    public ResponseEntity<Void> deleteSupplierCompanyById(@PathVariable("id") long id) {
+    public ResponseEntity<StandardResponse> deleteSupplierCompanyById(@PathVariable("id") long id) {
         supplierCompanyService.deleteSupplierCompanyById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(
+                new StandardResponse( HttpStatus.OK.value(),"Supplier company deleted successfully", null),
+                HttpStatus.OK
+        );
     }
 
     /**

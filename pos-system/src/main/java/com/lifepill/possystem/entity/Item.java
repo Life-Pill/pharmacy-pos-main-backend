@@ -112,7 +112,6 @@ public class Item {
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
 
-    // branch id
     @Column(name = "branch_id")
     private long branchId;
 

@@ -242,4 +242,69 @@ public class OrderServiceIMPL implements OrderService {
             throw new NotFoundException("Order not found with ID: " + orderId);
         }
     }
+
+    /**
+     * Retrieves orders with their details by the provided branch ID.
+     *
+     * @param branchId The ID of the branch to retrieve orders from.
+     * @return A list of OrderResponseDTO containing orders with details.
+     * @throws NotFoundException if no orders are found for the provided branch ID.
+     */
+    public List<OrderResponseDTO> getOrderWithDetailsByBranchId(long branchId) {
+        List<Order> orders = orderRepository.findByBranchId(branchId);
+        if (orders.isEmpty()) {
+            throw new NotFoundException("No orders found for branch ID: " + branchId);
+        }
+
+        Map<String, List<Order>> groupedOrders = orders.stream()
+                .collect(Collectors.groupingBy(
+                        order -> order.getOrderDate() + "-"
+                                + order.getBranchId() + "-"
+                                + order.getEmployer().getEmployerId()
+                ));
+
+        return groupedOrders.entrySet().stream()
+                .map(entry -> {
+                    List<Order> ordersInGroup = entry.getValue();
+                    Order firstOrder = ordersInGroup.get(0);
+
+                    OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+                    orderResponseDTO.setEmployerId(firstOrder.getEmployer().getEmployerId());
+                    orderResponseDTO.setBranchId(firstOrder.getBranchId());
+                    orderResponseDTO.setOrderDate(firstOrder.getOrderDate());
+                    orderResponseDTO.setTotal(ordersInGroup.stream().mapToDouble(Order::getTotal).sum());
+
+                    List<RequestOrderDetailsSaveDTO> orderDetails = ordersInGroup.stream()
+                            .flatMap(order -> order.getOrderDetails().stream())
+                            .map(orderDetail -> {
+                                RequestOrderDetailsSaveDTO dto = modelMapper.map(orderDetail, RequestOrderDetailsSaveDTO.class);
+                                dto.setId(orderDetail.getItems().getItemId()); // Ensure the ID is set correctly
+                                return dto;
+                            })
+                            .collect(Collectors.toList());
+
+                    RequestPaymentDetailsDTO paymentDetails = ordersInGroup.stream()
+                            .filter(order -> order.getPaymentDetails() != null && !order.getPaymentDetails().isEmpty())
+                            .map(order -> modelMapper.map(
+                                    order.getPaymentDetails().iterator().next(), // Get the first payment detail
+                                    RequestPaymentDetailsDTO.class)
+                            )
+                            .findFirst()
+                            .orElse(null);
+
+                    if (paymentDetails != null && !firstOrder.getPaymentDetails().isEmpty()) {
+                        paymentDetails.setPayedAmount(firstOrder.getPaymentDetails().iterator().next().getPaidAmount());
+                    }
+
+                    int orderCount = ordersInGroup.size();
+
+                    orderResponseDTO.setGroupedOrderDetails(
+                            new GroupedOrderDetails(orderDetails, paymentDetails, orderCount)
+                    );
+
+                    return orderResponseDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
 }

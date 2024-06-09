@@ -9,10 +9,7 @@ import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetResponseWithoutSupplierDetailsDTO;
+import com.lifepill.possystem.dto.responseDTO.*;
 import com.lifepill.possystem.entity.*;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.NotFoundException;
@@ -81,7 +78,7 @@ public class ItemServiceIMPL implements ItemService {
 
         if (!itemRepository.existsById(item.getItemId())) {
             itemRepository.save(item);
-            return item.getItemName() + " Saved Successfull";
+            return item.getItemName() + " Saved Successfully";
         } else {
             throw new EntityDuplicationException("Already added this Id item");
         }
@@ -91,7 +88,7 @@ public class ItemServiceIMPL implements ItemService {
      * Retrieves all items from the database.
      *
      * @return A list of DTOs representing all items.
-     * @throws NotFoundException If no items are found or they are out of stock.
+     * @throws NotFoundException If no items are found, or they are out of stock.
      */
     @Override
     public List<ItemGetAllResponseDTO> getAllItems() {
@@ -260,7 +257,7 @@ public class ItemServiceIMPL implements ItemService {
         if (itemRepository.existsById(itemId)) {
             itemRepository.deleteById(itemId);
 
-            return "deleted succesfully: " + itemId;
+            return "deleted successfully: " + itemId;
         } else {
             throw new NotFoundException("No item found for that id");
         }
@@ -591,11 +588,52 @@ public class ItemServiceIMPL implements ItemService {
         ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
         itemGetResponsewithoutSupplierDetailsDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
 
+        //set branch
+        itemGetAllResponseDTO.setBrandId(item.getBranchId());
+        itemGetAllResponseDTO.setItemCategoryId(item.getItemCategory().getCategoryId());
+        itemGetAllResponseDTO.setItemCategoryName(item.getItemCategory().getCategoryName());
         // Map ItemCategory
         ItemCategory itemCategory = item.getItemCategory();
         ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
         itemGetResponsewithoutSupplierDetailsDTO.setItemCategoryDTO(itemCategoryDTO);
 
         return itemGetResponsewithoutSupplierDetailsDTO;
+    }
+
+    @Override
+    public ItemGetIdOldResponseDTO getAllDetailsItemByIdOld(long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
+
+        //set
+        ItemGetIdOldResponseDTO itemGetIdOldResponseDTO = modelMapper.map(item, ItemGetIdOldResponseDTO.class);
+
+        //set branch id
+        itemGetIdOldResponseDTO.setBrandId(item.getBranchId());
+
+        //set category id
+        itemGetIdOldResponseDTO.setItemCategoryId(item.getItemCategory().getCategoryId());
+
+        // Map ItemCategory
+        ItemCategory itemCategory = item.getItemCategory();
+        ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
+        itemGetIdOldResponseDTO.setItemCategoryDTO(itemCategoryDTO);
+
+        // Map Supplier
+        Supplier supplier = item.getSupplier();
+        SupplierDTO supplierDTO = modelMapper.map(supplier, SupplierDTO.class);
+        itemGetIdOldResponseDTO.setSupplierDTO(supplierDTO);
+
+
+        // Map SupplierCompany
+        SupplierCompany supplierCompany = supplier.getSupplierCompany();
+        SupplierCompanyDTO supplierCompanyDTO = modelMapper.map(supplierCompany, SupplierCompanyDTO.class);
+        itemGetIdOldResponseDTO.setSupplierCompanyDTO(supplierCompanyDTO);
+
+        // set company id supplier dto
+        itemGetIdOldResponseDTO.getSupplierDTO().setCompanyId(supplierCompany.getCompanyId());
+
+
+        return itemGetIdOldResponseDTO;
     }
 }

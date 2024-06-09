@@ -5,10 +5,7 @@ import com.lifepill.possystem.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.ItemUpdateDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetAllResponseDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetResponseDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetResponseWithoutSupplierDetailsDTO;
+import com.lifepill.possystem.dto.responseDTO.*;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,4 +46,6 @@ public interface ItemService {
     InputStreamResource getItemImage(String itemImage);
 
     void updateItemImage(long itemId, MultipartFile file)  throws IOException;;
+
+    ItemGetIdOldResponseDTO getAllDetailsItemByIdOld(long itemId);
 }
