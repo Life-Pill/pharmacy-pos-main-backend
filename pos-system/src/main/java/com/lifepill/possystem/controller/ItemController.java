@@ -290,6 +290,21 @@ public class ItemController {
         );
     }
 
+    @GetMapping(path = "/get-item-all-details-by-id-old/{id}")
+    public ResponseEntity<StandardResponse> getItemAllDetailsByIdOld(
+            @PathVariable(value = "id") long itemId
+    ) {
+        ItemGetIdOldResponseDTO itemGetIdOldResponseDTO = itemService.getAllDetailsItemByIdOld(itemId);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "Success",
+                        itemGetIdOldResponseDTO
+                ),
+                HttpStatus.OK
+        );
+    }
+
     /**
      * Gets item with category by id.
      *
@@ -309,4 +324,6 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
+
+
 }
