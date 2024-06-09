@@ -4,19 +4,15 @@ import com.lifepill.possystem.dto.requestDTO.AuthenticationRequestDTO;
 import com.lifepill.possystem.dto.requestDTO.RegisterRequestDTO;
 import com.lifepill.possystem.dto.responseDTO.AuthenticationResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.EmployerAuthDetailsResponseDTO;
-import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.exception.AuthenticationException;
 import com.lifepill.possystem.service.AuthService;
-import com.lifepill.possystem.service.EmployerService;
 import com.lifepill.possystem.service.RedisService;
 import com.lifepill.possystem.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -46,7 +42,7 @@ public class AuthController {
             @RequestBody RegisterRequestDTO registerRequest
     ) {
         AuthenticationResponseDTO authResponse = authService.register(registerRequest);
-        return  ResponseEntity.ok(authResponse);
+        return ResponseEntity.ok(authResponse);
     }
 
     /**
@@ -55,7 +51,7 @@ public class AuthController {
      * @return A simple message indicating authentication success.
      */
     @GetMapping("/test")
-    public String test(){
+    public String test() {
         return "Authenticated";
     }
 
@@ -79,8 +75,6 @@ public class AuthController {
             // Cache the authentication data in Redis
             redisService.cacheEmployerDetails(employerDetails);
 
-            int branchId = employerDetails.getBranchId();
-
             // Set the token as a cookie in the HTTP response
             Cookie cookie = new Cookie("Authorization", authResponse.getAccessToken());
             cookie.setHttpOnly(true); // Ensure the cookie is only accessible via HTTP
@@ -100,13 +94,14 @@ public class AuthController {
             // Authentication failed due to incorrect username or password
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new StandardResponse(
-                            401,
-                            "Authentication failed: Incorrect username or password",
-                            null
+                                    401,
+                                    "Authentication failed: Incorrect username or password",
+                                    null
                             )
                     );
         }
     }
+
     /**
      * Handles preflight requests for CORS.
      */
