@@ -1,14 +1,10 @@
-# Use the official OpenJDK 17 image as the base image
-FROM openjdk:17
-
-# Set the working directory inside the container
+FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy the Maven executable JAR file and the POM file into the container
-COPY target/pos-system-0.0.1-SNAPSHOT.jar /app
-
-# Expose the port your application runs on
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8081
-
-# Command to run the application when the container starts
-CMD ["java", "-jar", "pos-system-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT [ "java","-jar","app.jar" ]

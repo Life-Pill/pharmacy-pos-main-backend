@@ -1,32 +1,47 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    environment:
-      POSTGRES_DB: pos_db
-      POSTGRES_USER: pos_user
-      POSTGRES_PASSWORD: pos_password
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-  redis:
-    image: redis:7.2.5
-    container_name: redis
-    ports:
-      - "6379:6379"
-
   app:
-    image: pramithamj/lifepill-pos-system:tagname
-    container_name: lifepill_pos
-    ports:
-      - "8081:8081"
+    image: 'pos-system'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lifepill
     depends_on:
-      - postgres
-      - redis
+      - db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Prami@3990
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pos-monolithic
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=Prami@3990
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+    ports:
+      - 8081:8081
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Prami@3990
+      - POSTGRES_DB=pos-monolithic
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - 5050:80
+    depends_on:
+      - db
 
 volumes:
-  postgres-data:
+  pgdata:
