@@ -624,7 +624,6 @@ public class ItemServiceIMPL implements ItemService {
         SupplierDTO supplierDTO = modelMapper.map(supplier, SupplierDTO.class);
         itemGetIdOldResponseDTO.setSupplierDTO(supplierDTO);
 
-
         // Map SupplierCompany
         SupplierCompany supplierCompany = supplier.getSupplierCompany();
         SupplierCompanyDTO supplierCompanyDTO = modelMapper.map(supplierCompany, SupplierCompanyDTO.class);
