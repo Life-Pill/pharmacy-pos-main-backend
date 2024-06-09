@@ -64,4 +64,21 @@ public class OrderController{
                 HttpStatus.OK);
     }
 
+    /**
+     * Gets orders with details by branch id.
+     *
+     * @param branchId the branch id
+     * @return the orders with details by branch id
+     */
+    @GetMapping("/getOrderWithDetailsByBranchId/{branchId}")
+    public ResponseEntity<StandardResponse> getOrderWithDetailsByBranchId(@PathVariable long branchId) {
+        List<OrderResponseDTO> orderResponseDTOs = orderService.getOrderWithDetailsByBranchId(branchId);
+        return new ResponseEntity<>(
+                new StandardResponse(200, "Orders Retrieved Successfully", orderResponseDTOs),
+                HttpStatus.OK);
+    }
+
+
+
+
 }
