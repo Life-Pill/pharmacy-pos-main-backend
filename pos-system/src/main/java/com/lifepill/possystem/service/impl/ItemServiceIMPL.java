@@ -591,6 +591,10 @@ public class ItemServiceIMPL implements ItemService {
         ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
         itemGetResponsewithoutSupplierDetailsDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
 
+        //set branch
+        itemGetAllResponseDTO.setBrandId(item.getBranchId());
+        itemGetAllResponseDTO.setItemCategoryId(item.getItemCategory().getCategoryId());
+
         // Map ItemCategory
         ItemCategory itemCategory = item.getItemCategory();
         ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);

@@ -30,3 +30,4 @@ server:
 logging:
   level:
     org.springframework.security: TRACE
+
