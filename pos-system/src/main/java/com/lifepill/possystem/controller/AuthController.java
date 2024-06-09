@@ -80,8 +80,6 @@ public class AuthController {
             redisService.cacheEmployerDetails(employerDetails);
 
             int branchId = employerDetails.getBranchId();
-            System.out.println("Branch ID: " + branchId);
-            System.out.println("Employer details: " + employerDetails.getEmployerEmail());
 
             // Set the token as a cookie in the HTTP response
             Cookie cookie = new Cookie("Authorization", authResponse.getAccessToken());

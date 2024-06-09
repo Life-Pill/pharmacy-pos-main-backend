@@ -208,6 +208,21 @@ public AuthenticationResponseDTO generateAuthenticationResponse(String employerE
         return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
     }
 
+    /**
+     * Sets the active status of an employer.
+     *
+     * @param username     The username of the employer.
+     * @param activeStatus The active status to set.
+     */
+    @Override
+    public void setActiveStatus(String username, boolean activeStatus) {
+        Employer employer = employerRepository.findByEmployerEmail(username)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        employer.setActiveStatus(activeStatus);
+        employerRepository.save(employer);
+    }
+
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
         try {
@@ -228,6 +243,9 @@ public AuthenticationResponseDTO generateAuthenticationResponse(String employerE
 
             // Generate JWT token using EmployerUserDetails
             String jwtToken = jwtService.generateToken(employerUserDetails);
+
+            //Change User Active Status to true
+            authenticatedEmployer.setActiveStatus(true);
 
             // Return the authentication response containing the token
             return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();

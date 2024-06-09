@@ -14,4 +14,6 @@ public interface AuthService {
     AuthenticationResponseDTO generateAuthenticationResponse(String employerEmail);
 
     AuthenticationResponseDTO authenticateWithCachedPin(String username, int pin);
+
+    void setActiveStatus(String username, boolean b);
 }
