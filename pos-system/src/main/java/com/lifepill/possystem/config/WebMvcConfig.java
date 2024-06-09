@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173", "http://localhost:3000")
                 .allowedMethods("*")
-                .allowedHeaders("Content-Type", "Authorization")
+                .allowedHeaders("*")
                 .allowCredentials(true);
     }
 
-}
+}*/

@@ -27,4 +27,3 @@ spring:
   logging:
     level:
       org.springframework.security: TRACE
-
