@@ -48,4 +48,6 @@ public interface ItemService {
     void updateItemImage(long itemId, MultipartFile file)  throws IOException;;
 
     ItemGetIdOldResponseDTO getAllDetailsItemByIdOld(long itemId);
+
+    List<ItemGetResponseDTO> getItemByBranchId(long branchId);
 }

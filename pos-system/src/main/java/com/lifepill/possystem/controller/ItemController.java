@@ -325,5 +325,19 @@ public class ItemController {
         );
     }
 
+    @GetMapping(path = "/branched/get-item/{branchId}")
+    public ResponseEntity<StandardResponse> getItemByBranchId(
+            @PathVariable(value = "branchId") long branchId
+    ) {
+        List<ItemGetResponseDTO> itemGetResponseDTO = itemService.getItemByBranchId(branchId);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "Success",
+                        itemGetResponseDTO
+                ),
+                HttpStatus.OK
+        );
+    }
 
 }

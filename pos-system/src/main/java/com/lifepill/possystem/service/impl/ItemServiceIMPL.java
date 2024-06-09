@@ -635,4 +635,18 @@ public class ItemServiceIMPL implements ItemService {
 
         return itemGetIdOldResponseDTO;
     }
+
+    @Override
+    public List<ItemGetResponseDTO> getItemByBranchId(long branchId) {
+        List<Item> items = itemRepository.findAllByBranchId(branchId);
+        if (!items.isEmpty()) {
+            return modelMapper.map(
+                    items,
+                    new TypeToken<List<ItemGetResponseDTO>>() {
+                    }.getType()
+            );
+        } else {
+            throw new NotFoundException("No items found for that branch: "+ branchId);
+        }
+    }
 }
