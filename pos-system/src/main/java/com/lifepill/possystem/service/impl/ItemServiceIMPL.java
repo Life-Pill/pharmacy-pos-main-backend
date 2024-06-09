@@ -81,7 +81,7 @@ public class ItemServiceIMPL implements ItemService {
 
         if (!itemRepository.existsById(item.getItemId())) {
             itemRepository.save(item);
-            return item.getItemName() + " Saved Successfull";
+            return item.getItemName() + " Saved Successfully";
         } else {
             throw new EntityDuplicationException("Already added this Id item");
         }
@@ -91,7 +91,7 @@ public class ItemServiceIMPL implements ItemService {
      * Retrieves all items from the database.
      *
      * @return A list of DTOs representing all items.
-     * @throws NotFoundException If no items are found or they are out of stock.
+     * @throws NotFoundException If no items are found, or they are out of stock.
      */
     @Override
     public List<ItemGetAllResponseDTO> getAllItems() {
@@ -260,7 +260,7 @@ public class ItemServiceIMPL implements ItemService {
         if (itemRepository.existsById(itemId)) {
             itemRepository.deleteById(itemId);
 
-            return "deleted succesfully: " + itemId;
+            return "deleted successfully: " + itemId;
         } else {
             throw new NotFoundException("No item found for that id");
         }
@@ -594,7 +594,7 @@ public class ItemServiceIMPL implements ItemService {
         //set branch
         itemGetAllResponseDTO.setBrandId(item.getBranchId());
         itemGetAllResponseDTO.setItemCategoryId(item.getItemCategory().getCategoryId());
-
+        itemGetAllResponseDTO.setItemCategoryName(item.getItemCategory().getCategoryName());
         // Map ItemCategory
         ItemCategory itemCategory = item.getItemCategory();
         ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
