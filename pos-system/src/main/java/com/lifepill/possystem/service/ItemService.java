@@ -14,19 +14,23 @@ import java.util.List;
 
 public interface ItemService {
     String saveItems(ItemSaveRequestDTO itemSaveRequestDTO);
+
     List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
+
     List<ItemGetResponseDTO> getItemByName(String itemName);
 
     List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
+
     String updateItem(ItemUpdateDTO itemUpdateDTO);
+
     String deleteItem(long itemId);
+
     List<ItemGetAllResponseDTO> getAllItems();
 
-    //List<ItemGetResponseDTO> getItemByActiveStatusLazy(boolean activeStatus);
     PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size);
 
     List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode);
-//    List<ItemGetResponseDTO> getAllItems();
+
     String saveCategory(ItemCategoryDTO categoryDTO);
 
     String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO);
@@ -48,4 +52,6 @@ public interface ItemService {
     void updateItemImage(long itemId, MultipartFile file)  throws IOException;;
 
     ItemGetIdOldResponseDTO getAllDetailsItemByIdOld(long itemId);
+
+    List<ItemGetResponseDTO> getItemByBranchId(long branchId);
 }

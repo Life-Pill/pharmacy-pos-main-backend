@@ -79,104 +79,26 @@ public class AuthServiceIMPL implements AuthService {
         }
     }
 
-//    /**
-//     * Authenticates an employer.
-//     *
-//     * @param request The authentication request containing employer credentials.
-//     * @return The authentication response containing the generated JWT token.
-//     * @throws AuthenticationException If authentication fails due to incorrect credentials.
-//     */
-//    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
-//        try {
-//            // Authenticate user using Spring Security's authenticationManager
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(
-//                            request.getEmployerEmail(),
-//                            request.getEmployerPassword()
-//                    )
-//            );
-//
-//            // If authentication is successful, generate JWT token
-//            var user = employerRepository.findByEmployerEmail(request.getEmployerEmail())
-//                    .orElseThrow(() -> new AuthenticationException("User not found"));
-//            String jwtToken = jwtService.generateToken(user);
-//
-//            System.out.println(user.getBranch().getBranchId());
-//
-//
-//            // Return the authentication response containing the token
-//            return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
-//        } catch (org.springframework.security.core.AuthenticationException e) {
-//            // Authentication failed due to incorrect username or password
-//            throw new AuthenticationException("Incorrect username or password", e);
-//        }
-//    }
-    /*
-        /**
-         * Retrieves the details of an employer for authentication purposes.
-         * This method retrieves the details of the employer with the given username and constructs
-         * an authentication response DTO containing the employer details.
-         *
-         * @param username The username of the employer.
-         * @return An EmployerAuthDetailsResponseDTO containing the details of the employer.
-         */
-    /*
+    /**
+     * Generates an authentication response for an employer.
+     *
+     * @param employerEmail The email of the employer.
+     * @return The authentication response containing the generated JWT token.
+     */
     @Override
-    public EmployerAuthDetailsResponseDTO getEmployerDetails(String username) {
-        // Retrieve employer details DTO using EmployerService
-        EmployerDTO employerDTO = employerService.getEmployerByUsername(username);
-
-        var user = employerRepository.findByEmployerEmail(username)
+    public AuthenticationResponseDTO generateAuthenticationResponse(String employerEmail) {
+        Employer employer = employerRepository.findByEmployerEmail(employerEmail)
                 .orElseThrow(() -> new AuthenticationException("User not found"));
 
+        // Create an instance of EmployerUserDetails
+        UserDetails employerUserDetails = new EmployerUserDetails(employer);
 
-        // set branch id
-        employerDTO.setBranchId(user.getBranch().getBranchId());
-        // Convert EmployerDTO to EmployerAuthDetailsResponseDTO using ModelMapper
-        EmployerAuthDetailsResponseDTO employerDetailsResponseDTO = modelMapper
-                .map(employerDTO, EmployerAuthDetailsResponseDTO.class);
+        // Generate JWT token using EmployerUserDetails
+        String jwtToken = jwtService.generateToken(employerUserDetails);
 
-        System.out.println("Branch ID retrieved: " + employerDTO.getBranchId());
-        employerDetailsResponseDTO.setActiveStatus(true);
-
-    *//*    // Set activeStatus based on whether the user is logged in or not
-        if (isLoggedIn(username)) {
-            employerDetailsResponseDTO.setActiveStatus(true);
-        } else {
-            employerDetailsResponseDTO.setActiveStatus(false);
-        }
-*//*
-        return employerDetailsResponseDTO;
-
+        return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
     }
-*/
-@Override
-public AuthenticationResponseDTO generateAuthenticationResponse(String employerEmail) {
-    Employer employer = employerRepository.findByEmployerEmail(employerEmail)
-            .orElseThrow(() -> new AuthenticationException("User not found"));
 
-    // Create an instance of EmployerUserDetails
-    UserDetails employerUserDetails = new EmployerUserDetails(employer);
-
-    // Generate JWT token using EmployerUserDetails
-    String jwtToken = jwtService.generateToken(employerUserDetails);
-
-    return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
-}
-
-
-/*    private boolean isLoggedIn(String username) {
-        // Retrieve the currently authenticated user from Spring Security context
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        // Check if the principal is an instance of UserDetails (indicating the user is authenticated)
-        if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) principal;
-            return userDetails.getUsername().equals(username);
-        } else {
-            return false; // User is not authenticated
-        }
-    }*/
 
     /**
      * Authenticates an employer using cached pin.
@@ -208,7 +130,28 @@ public AuthenticationResponseDTO generateAuthenticationResponse(String employerE
         return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
     }
 
+    /**
+     * Sets the active status of an employer.
+     *
+     * @param username     The username of the employer.
+     * @param activeStatus The active status to set.
+     */
+    @Override
+    public void setActiveStatus(String username, boolean activeStatus) {
+        Employer employer = employerRepository.findByEmployerEmail(username)
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
+        employer.setActiveStatus(activeStatus);
+        employerRepository.save(employer);
+    }
+
+    /**
+     * Authenticates an employer.
+     *
+     * @param request The authentication request containing employer credentials.
+     * @return The authentication response containing the generated JWT token.
+     * @throws AuthenticationException If authentication fails due to incorrect credentials.
+     */
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
         try {
             // Authenticate user using Spring Security's authenticationManager
@@ -228,6 +171,9 @@ public AuthenticationResponseDTO generateAuthenticationResponse(String employerE
 
             // Generate JWT token using EmployerUserDetails
             String jwtToken = jwtService.generateToken(employerUserDetails);
+
+            //Change User Active Status to true
+            authenticatedEmployer.setActiveStatus(true);
 
             // Return the authentication response containing the token
             return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();

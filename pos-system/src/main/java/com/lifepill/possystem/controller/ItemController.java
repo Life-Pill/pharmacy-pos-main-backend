@@ -290,6 +290,15 @@ public class ItemController {
         );
     }
 
+    /**
+     * Endpoint for retrieving all details of an item by its ID using the old method.
+     * This endpoint is mapped to the "/get-item-all-details-by-id-old/{id}" URL and
+     * responds to HTTP GET requests.
+     *
+     * @param itemId The ID of the item to be retrieved. This is a path variable.
+     * @return ResponseEntity containing a StandardResponse object with the item details.
+     * The HTTP status is 200 (OK) if the operation is successful.
+     */
     @GetMapping(path = "/get-item-all-details-by-id-old/{id}")
     public ResponseEntity<StandardResponse> getItemAllDetailsByIdOld(
             @PathVariable(value = "id") long itemId
@@ -325,5 +334,29 @@ public class ItemController {
         );
     }
 
-
+    /**
+     * Endpoint for retrieving items by their associated branch ID.
+     * This endpoint is mapped to the "/branched/get-item/{branchId}" URL and
+     * responds to HTTP GET requests.
+     *
+     * @param branchId The ID of the branch whose items are to be retrieved.
+     *                This is a path variable.
+     * @return ResponseEntity containing a StandardResponse object with a list of items
+     * associated with the branch.
+     * The HTTP status is 200 (OK) if the operation is successful.
+     */
+    @GetMapping(path = "/branched/get-item/{branchId}")
+    public ResponseEntity<StandardResponse> getItemByBranchId(
+            @PathVariable(value = "branchId") long branchId
+    ) {
+        List<ItemGetResponseDTO> itemGetResponseDTO = itemService.getItemByBranchId(branchId);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "Success",
+                        itemGetResponseDTO
+                ),
+                HttpStatus.OK
+        );
+    }
 }

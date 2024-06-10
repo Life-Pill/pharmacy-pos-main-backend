@@ -426,6 +426,8 @@ public class EmployerServiceIMPL implements EmployerService {
             List<EmployerDTO> employerDTOList = new ArrayList<>();
             for (Employer employer : getAllEmployers) {
                 EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
+                //set branch id
+                employerDTO.setBranchId(employer.getBranch().getBranchId());
                 employerDTOList.add(employerDTO);
             }
             return employerDTOList;

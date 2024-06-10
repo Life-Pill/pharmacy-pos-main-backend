@@ -600,6 +600,14 @@ public class ItemServiceIMPL implements ItemService {
         return itemGetResponsewithoutSupplierDetailsDTO;
     }
 
+    /**
+     * Retrieves all details of an item by its ID using the old method.
+     * This method maps the item, its category, supplier, and supplier's company to DTOs.
+     *
+     * @param itemId The ID of the item to be retrieved.
+     * @return ItemGetIdOldResponseDTO containing all details of the item.
+     * @throws NotFoundException If the item with the specified ID is not found.
+     */
     @Override
     public ItemGetIdOldResponseDTO getAllDetailsItemByIdOld(long itemId) {
         Item item = itemRepository.findById(itemId)
@@ -634,5 +642,26 @@ public class ItemServiceIMPL implements ItemService {
 
 
         return itemGetIdOldResponseDTO;
+    }
+
+    /**
+     * Retrieves items associated with a specific branch.
+     *
+     * @param branchId The ID of the branch whose items are to be retrieved.
+     * @return A list of ItemGetResponseDTOs representing the items associated with the branch.
+     * @throws NotFoundException If no items are found for the specified branch.
+     */
+    @Override
+    public List<ItemGetResponseDTO> getItemByBranchId(long branchId) {
+        List<Item> items = itemRepository.findAllByBranchId(branchId);
+        if (!items.isEmpty()) {
+            return modelMapper.map(
+                    items,
+                    new TypeToken<List<ItemGetResponseDTO>>() {
+                    }.getType()
+            );
+        } else {
+            throw new NotFoundException("No items found for that branch: "+ branchId);
+        }
     }
 }

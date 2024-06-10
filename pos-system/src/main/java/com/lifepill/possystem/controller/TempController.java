@@ -42,6 +42,9 @@ public class TempController {
         // Cache the employer details and pin in Redis
         redisService.cacheEmployerDetails(employerDetails);
 
+        //set user active status to false
+        authService.setActiveStatus(logoutRequest.getUsername(), false);
+
         return ResponseEntity.ok(new StandardResponse(200, "Temporary logout successful", null));
     }
 
@@ -56,7 +59,16 @@ public class TempController {
         // Remove the cached employer details from Redis
         redisService.removeEmployerDetails(logoutRequest.getUsername());
 
-        return ResponseEntity.ok(new StandardResponse(200, "Permanent logout successful", null));
+        //set user active status to false
+        authService.setActiveStatus(logoutRequest.getUsername(), false);
+
+        return ResponseEntity.ok(
+                new StandardResponse(
+                        200,
+                        "Permanent logout successful",
+                        null
+                )
+        );
     }
 
     /**

@@ -59,4 +59,6 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     List<Item> findAllByItemName(String itemName);
 
     List<Item> findAllByItemNameAndStock(String itemName, boolean stock);
+
+    List<Item> findAllByBranchId(long branchId);
 }
