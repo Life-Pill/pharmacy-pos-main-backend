@@ -2,7 +2,9 @@ package com.lifepill.possystem.service;
 
 
 import com.lifepill.possystem.dto.*;
+import com.lifepill.possystem.dto.requestDTO.ChangeManagerDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
+import com.lifepill.possystem.dto.responseDTO.ChangeManagerResponseDTO;
 import com.lifepill.possystem.entity.Employer;
 import com.lifepill.possystem.entity.enums.Role;
 import org.springframework.core.io.InputStreamResource;
@@ -73,4 +75,8 @@ public interface EmployerService {
     List<EmployerDTO> getAllManagersByBranchId(long branchId);
 
     EmployerDTO updateOrCreateBranchManager(long branchId, UpdateManagerDTO employerDTO);
+
+    ChangeManagerResponseDTO changeBranchManager(ChangeManagerDTO changeManagerDTO);
+
+    List<EmployerIdNameDTO> getEmployersByBranchId(long branchId);
 }

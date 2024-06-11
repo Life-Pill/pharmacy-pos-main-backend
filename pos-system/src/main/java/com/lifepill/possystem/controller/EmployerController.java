@@ -394,4 +394,26 @@ public class EmployerController {
     public EmployerWithBankDTO getEmployerWithBankDetailsById(@PathVariable long employerId) {
         return employerService.getEmployerWithBankDetailsById(employerId);
     }
+
+    /**
+     * Retrieves all employers associated with a specific branch.
+     *
+     * @param branchId The ID of the branch for which employers are to be retrieved.
+     * @return ResponseEntity containing a list of EmployerDTO objects representing the employers.
+     */
+    @GetMapping("/get-employers-by-branch/{branchId}")
+    public ResponseEntity<StandardResponse> getEmployersByBranchId(@PathVariable long branchId) {
+        try {
+            List<EmployerIdNameDTO> employers = employerService.getEmployersByBranchId(branchId);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "SUCCESS", employers),
+                    HttpStatus.OK
+            );
+        } catch (NotFoundException ex) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, ex.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 }

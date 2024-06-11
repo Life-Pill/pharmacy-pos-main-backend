@@ -3,7 +3,9 @@ package com.lifepill.possystem.service.impl;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.lifepill.possystem.dto.*;
+import com.lifepill.possystem.dto.requestDTO.ChangeManagerDTO;
 import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
+import com.lifepill.possystem.dto.responseDTO.ChangeManagerResponseDTO;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.entity.Employer;
@@ -709,4 +711,52 @@ public class EmployerServiceIMPL implements EmployerService {
             return modelMapper.map(employer, EmployerDTO.class);
         }
     }
+
+    @Override
+    public ChangeManagerResponseDTO changeBranchManager(ChangeManagerDTO changeManagerDTO) {
+        Branch branch = branchRepository.findById(changeManagerDTO.getBranchId())
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + changeManagerDTO.getBranchId()));
+
+        Employer newManager = employerRepository.findById(changeManagerDTO.getNewManagerId())
+                .orElseThrow(() -> new NotFoundException("New manager not found with ID: " + changeManagerDTO.getNewManagerId()));
+
+        Employer formerManager = employerRepository.findById(changeManagerDTO.getFormerManagerId())
+                .orElseThrow(() -> new NotFoundException("Former manager not found with ID: " + changeManagerDTO.getFormerManagerId()));
+
+        newManager.setRole(Role.MANAGER);
+        formerManager.setRole(changeManagerDTO.getCurrentManagerNewRole());
+
+        newManager.setBranch(branch);
+        formerManager.setBranch(branch);
+
+        employerRepository.save(newManager);
+        employerRepository.save(formerManager);
+
+        ChangeManagerResponseDTO changeManagerResponseDTO = new ChangeManagerResponseDTO();
+        changeManagerResponseDTO.setBranchId(branch.getBranchId());
+        changeManagerResponseDTO.setNewManager(modelMapper.map(newManager, UpdateManagerDTO.class));
+        changeManagerResponseDTO.setFormerManager(modelMapper.map(formerManager, UpdateManagerDTO.class));
+        changeManagerResponseDTO.getNewManager().setBranchId(changeManagerResponseDTO.getBranchId());
+        changeManagerResponseDTO.getFormerManager().setBranchId(changeManagerResponseDTO.getBranchId());
+
+        return changeManagerResponseDTO;
+    }
+
+    @Override
+    public List<EmployerIdNameDTO> getEmployersByBranchId(long branchId) {
+        List<Employer> employers = employerRepository.findByBranch_BranchId(branchId);
+        if (employers.isEmpty()) {
+            throw new NotFoundException("No employers found for branch ID: " + branchId);
+        }
+
+        return employers.stream()
+                .map(employer -> new EmployerIdNameDTO(
+                        employer.getEmployerId(),
+                        employer.getEmployerFirstName(),
+                        employer.getEmployerLastName()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 }

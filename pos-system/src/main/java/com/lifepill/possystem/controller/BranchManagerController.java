@@ -2,6 +2,8 @@ package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.UpdateManagerDTO;
+import com.lifepill.possystem.dto.requestDTO.ChangeManagerDTO;
+import com.lifepill.possystem.dto.responseDTO.ChangeManagerResponseDTO;
 import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.exception.NotFoundException;
 import com.lifepill.possystem.service.EmployerService;
@@ -88,11 +90,20 @@ public class BranchManagerController {
     public ResponseEntity<StandardResponse> updateOrCreateBranchManager(
             @PathVariable long branchId, @RequestBody UpdateManagerDTO updateManagerDTO) {
         EmployerDTO updatedOrCreatedManager = employerService.updateOrCreateBranchManager(branchId, updateManagerDTO);
-      //  updatedOrCreatedManager.setBranchId(branchId);
+        updatedOrCreatedManager.setBranchId(branchId);
 
         return new ResponseEntity<>(
                 new StandardResponse(200, "Update Branch Manager", updatedOrCreatedManager),
                 HttpStatus.OK);
+    }
+
+    @PostMapping("/change-manager")
+    public ResponseEntity<StandardResponse> changeBranchManager(@RequestBody ChangeManagerDTO changeManagerDTO) {
+         ChangeManagerResponseDTO changeManagerResponseDTO = employerService.changeBranchManager(changeManagerDTO);
+
+         return new ResponseEntity<>(
+                 new StandardResponse(200, "Branch Manager changed successfully", changeManagerResponseDTO),
+                 HttpStatus.OK);
     }
 
 }
