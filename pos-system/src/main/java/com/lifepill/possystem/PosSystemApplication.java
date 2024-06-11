@@ -2,6 +2,7 @@ package com.lifepill.possystem;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.lifepill.possystem.service.S3Service;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -43,6 +44,9 @@ public class PosSystemApplication {
 	 * @param args Command-line arguments.
 	 */
 	public static void main(String[] args) {
+
+		Dotenv dotenv = Dotenv.load();
+		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 		SpringApplication.run(PosSystemApplication.class, args);
 	}
 

@@ -466,9 +466,12 @@ public class EmployerServiceIMPL implements EmployerService {
         List<Employer> employers = employerRepository.findAllByBranch(branch);
 
         // Map cashier entities to DTOs
-
         return employers.stream()
-                .map(cashier -> modelMapper.map(cashier, EmployerDTO.class))
+                .map(employer -> {
+                    EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
+                    employerDTO.setBranchId(branchId); // Set the branchId
+                    return employerDTO;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -617,5 +620,44 @@ public class EmployerServiceIMPL implements EmployerService {
     public Employer findByUsername(String username) {
         return employerRepository.findByEmployerEmail(username)
                 .orElseThrow(() -> new NotFoundException("Employer not found with email: " + username));
+    }
+
+    @Override
+    public List<EmployerDTO> getEmployersByBranchIdAndRole(long branchId, Role role) {
+        // Retrieve the branch by its ID
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + branchId));
+
+        // Retrieve all employers associated with the branch and role
+        List<Employer> employers = employerRepository.findAllByBranchAndRole(branch, role);
+
+        // Map employer entities to DTOs
+        return employers.stream()
+                .map(employer -> {
+                    EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
+                    employerDTO.setBranchId(branchId); // Set the branchId
+                    return employerDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EmployerDTO> getAllManagersByBranchId(long branchId) {
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + branchId));
+
+        List<Employer> managers = employerRepository.findAllByBranchAndRole(branch, Role.MANAGER);
+
+        if (managers.isEmpty()) {
+            throw new NotFoundException("No managers found for that branch");
+        }
+
+        return managers.stream()
+                .map(manager -> {
+                    EmployerDTO employerDTO = modelMapper.map(manager, EmployerDTO.class);
+                    employerDTO.setBranchId(branchId);
+                    return employerDTO;
+                })
+                .collect(Collectors.toList());
     }
 }

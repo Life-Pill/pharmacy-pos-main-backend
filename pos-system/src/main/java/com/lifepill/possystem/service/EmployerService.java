@@ -66,4 +66,9 @@ public interface EmployerService {
     void updateEmployerImage(Long employerId, MultipartFile file)  throws IOException;
 
     Employer findByUsername(String username);
+
+
+    List<EmployerDTO> getEmployersByBranchIdAndRole(long branchId, Role role);
+
+    List<EmployerDTO> getAllManagersByBranchId(long branchId);
 }
