@@ -660,4 +660,35 @@ public class EmployerServiceIMPL implements EmployerService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public EmployerDTO updateOrCreateBranchManager(long branchId, EmployerDTO employerDTO) {
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + branchId));
+
+        List<Employer> currentManagers = employerRepository.findAllByBranchAndRole(branch, Role.MANAGER);
+
+        if (!currentManagers.isEmpty()) {
+            Employer currentManager = currentManagers.get(0); // Assuming only one manager per branch
+            //model mappers
+
+            employerRepository.save(currentManager);
+            return modelMapper.map(currentManager, EmployerDTO.class);
+        } else {
+            Optional<Employer> existingEmployerOpt = employerRepository.findByEmployerEmail(employerDTO.getEmployerEmail());
+            Employer employer;
+            if (existingEmployerOpt.isPresent()) {
+                employer = existingEmployerOpt.get();
+                employer.setRole(Role.MANAGER);
+                employer.setBranch(branch);
+            } else {
+                employer = new Employer();
+                //model mappers
+                employer.setRole(Role.MANAGER);
+                employer.setBranch(branch);
+            }
+            employerRepository.save(employer);
+            return modelMapper.map(employer, EmployerDTO.class);
+        }
+    }
 }

@@ -76,4 +76,20 @@ public class BranchManagerController {
         }
     }
 
+    /**
+     * Updates or creates a branch manager for a specific branch.
+     *
+     * @param branchId The ID of the branch for which the manager is to be updated or created.
+     * @param employerDTO The details of the employer to be updated or created as manager.
+     * @return A ResponseEntity containing the updated or created EmployerDTO.
+     */
+    @PutMapping("/managers/by-branch/{branchId}")
+    public ResponseEntity<StandardResponse> updateOrCreateBranchManager(
+            @PathVariable long branchId, @RequestBody EmployerDTO employerDTO) {
+        EmployerDTO updatedOrCreatedManager = employerService.updateOrCreateBranchManager(branchId, employerDTO);
+        return new ResponseEntity<>(
+                new StandardResponse(200, "Update Branch Manager", updatedOrCreatedManager),
+                HttpStatus.OK);
+    }
+
 }

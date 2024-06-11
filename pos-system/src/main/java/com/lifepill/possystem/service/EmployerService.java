@@ -71,4 +71,6 @@ public interface EmployerService {
     List<EmployerDTO> getEmployersByBranchIdAndRole(long branchId, Role role);
 
     List<EmployerDTO> getAllManagersByBranchId(long branchId);
+
+    EmployerDTO updateOrCreateBranchManager(long branchId, EmployerDTO employerDTO);
 }
