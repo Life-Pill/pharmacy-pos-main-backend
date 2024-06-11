@@ -7,6 +7,7 @@ import com.lifepill.possystem.dto.requestDTO.EmployerUpdate.*;
 import com.lifepill.possystem.entity.Branch;
 import com.lifepill.possystem.entity.EmployerBankDetails;
 import com.lifepill.possystem.entity.Employer;
+import com.lifepill.possystem.entity.enums.Gender;
 import com.lifepill.possystem.entity.enums.Role;
 import com.lifepill.possystem.exception.EntityDuplicationException;
 import com.lifepill.possystem.exception.EntityNotFoundException;
@@ -28,6 +29,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -662,31 +664,47 @@ public class EmployerServiceIMPL implements EmployerService {
     }
 
     @Override
-    public EmployerDTO updateOrCreateBranchManager(long branchId, EmployerDTO employerDTO) {
+    public EmployerDTO updateOrCreateBranchManager(long branchId, UpdateManagerDTO updateManagerDTO) {
         Branch branch = branchRepository.findById(branchId)
                 .orElseThrow(() -> new NotFoundException("Branch not found with ID: " + branchId));
 
         List<Employer> currentManagers = employerRepository.findAllByBranchAndRole(branch, Role.MANAGER);
 
         if (!currentManagers.isEmpty()) {
-            Employer currentManager = currentManagers.get(0); // Assuming only one manager per branch
-            //model mappers
-
+            Employer currentManager = currentManagers.get(0); // if only one manager per branch
+            currentManager.setEmployerFirstName(updateManagerDTO.getEmployerFirstName());
+            currentManager.setEmployerLastName(updateManagerDTO.getEmployerLastName());
+            currentManager.setEmployerEmail(updateManagerDTO.getEmployerEmail());
+            currentManager.setPin(updateManagerDTO.getPin());
+            currentManager.getBranch().setBranchId(branchId);
+            currentManager.setRole(Role.MANAGER);
+            updateManagerDTO.setBranchId(branchId);
+            currentManager.getBranch().setBranchId(branchId);
             employerRepository.save(currentManager);
+
             return modelMapper.map(currentManager, EmployerDTO.class);
         } else {
-            Optional<Employer> existingEmployerOpt = employerRepository.findByEmployerEmail(employerDTO.getEmployerEmail());
+            Optional<Employer> existingEmployerOpt = employerRepository.findByEmployerEmail(updateManagerDTO.getEmployerEmail());
             Employer employer;
             if (existingEmployerOpt.isPresent()) {
                 employer = existingEmployerOpt.get();
+                employer.getBranch().setBranchId(branchId);
                 employer.setRole(Role.MANAGER);
                 employer.setBranch(branch);
             } else {
                 employer = new Employer();
-                //model mappers
+                employer.getBranch().setBranchId(branchId);
+                employer.setEmployerFirstName(updateManagerDTO.getEmployerFirstName());
+                employer.setEmployerLastName(updateManagerDTO.getEmployerLastName());
+                employer.setEmployerEmail(updateManagerDTO.getEmployerEmail());
+                employer.setPin(updateManagerDTO.getPin());
                 employer.setRole(Role.MANAGER);
                 employer.setBranch(branch);
             }
+            updateManagerDTO.setBranchId(branchId);
+            employer.getBranch().setBranchId(branchId);
+            System.out.println(employer.getBranch().getBranchId());
+            System.out.println(updateManagerDTO.getBranchId());
             employerRepository.save(employer);
             return modelMapper.map(employer, EmployerDTO.class);
         }
