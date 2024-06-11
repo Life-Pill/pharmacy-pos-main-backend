@@ -3,9 +3,9 @@ spring:
     name: all-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/pos-monolithic
-    username: postgres
-    password: Prami@3990
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,20 +14,28 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           lob:
-            non_contextual_creation: true #  to enable non-contextual LOB creation
+            non_contextual_creation: true
     show-sql: true
   security:
     user:
-      name: lifepill
-      password: 12345
+      name: ${SPRING_SECURITY_USERNAME}
+      password: ${SPRING_SECURITY_PASSWORD}
   redis:
-    host: localhost
-    port: 6379
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
 
 server:
-  port: 8079
+  port: ${SERVER_PORT}
 
 logging:
   level:
     org.springframework.security: TRACE
 
+aws:
+  access:
+    key: ${AWS_ACCESS_KEY}
+  secret:
+    key: ${AWS_SECRET_KEY}
+  s3:
+    bucket: ${AWS_S3_BUCKET}
+  region: ${AWS_REGION}

@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: password
+    url: ${H2_DATABASE_URL}
+    username: ${H2_DATABASE_USERNAME}
+    password: ${H2_DATABASE_PASSWORD}
 
   jpa:
     hibernate:
@@ -18,13 +18,18 @@ spring:
 
   security:
     user:
-      name: testuser
-      password: testpassword
+      name: ${SPRING_SECURITY_USERNAME}
+      password: ${SPRING_SECURITY_PASSWORD}
 
   server:
-    port: 0 # Random port
+    port: ${TEST_SERVER_PORT} # Random port
 
   logging:
     level:
       org.springframework.security: TRACE
 
+aws:
+  access.key: ${AWS_ACCESS_KEY}
+  secret.key: ${AWS_SECRET_KEY}
+  s3.bucket: ${AWS_S3_BUCKET}
+  region: ${AWS_REGION}
