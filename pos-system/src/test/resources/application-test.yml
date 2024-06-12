@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: password
+    url: ${H2_DATABASE_URL}
+    username: ${H2_DATABASE_USERNAME}
+    password: ${H2_DATABASE_PASSWORD}
 
   jpa:
     hibernate:
@@ -18,11 +18,11 @@ spring:
 
   security:
     user:
-      name: testuser
-      password: testpassword
+      name: ${TEST_SPRING_SECURITY_USERNAME}
+      password: ${TEST_SPRING_SECURITY_PASSWORD}
 
   server:
-    port: 0 # Random port
+    port: ${TEST_SERVER_PORT} # Random port
 
   logging:
     level:

@@ -66,4 +66,7 @@ public interface EmployerRepository extends JpaRepository<Employer,Long> {
      */
     Employer findByBranch_BranchIdAndRole(Long branchId, Role role);
 
+    List<Employer> findAllByBranchAndRole(Branch branch, Role role);
+
+    List<Employer> findByBranch_BranchId(long branchId);
 }

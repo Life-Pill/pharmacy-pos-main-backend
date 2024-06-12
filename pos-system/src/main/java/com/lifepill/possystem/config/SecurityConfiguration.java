@@ -11,6 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 import static com.lifepill.possystem.entity.enums.Role.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -38,6 +43,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .authorizeHttpRequests(req ->
                         req.antMatchers("/lifepill/v1/auth/**",
                                         "/lifepill/v1/session/**",
@@ -57,11 +63,12 @@ public class SecurityConfiguration {
                                 .antMatchers("lifepill/v1/branch-summary/**")
                                 .hasRole(OWNER.name())
                                 //.antMatchers("/lifepill/v1/admin/**").hasAnyRole(OWNER_READ.name(), CASHIER.name())
-                                .antMatchers("/lifepill/v1/admin/**").hasRole(OWNER.name())
-                                //.antMatchers( "/lifepill/v1/admin/**").permitAll()
-                                .antMatchers("/lifepill/v1/cashierNew/**").hasRole(CASHIER.name())
-                                .antMatchers("lifepill/v1/branch/**", "/lifepill/v1/branch-summary/sales-summary")
-                                .hasAnyRole(OWNER.name())
+                                .antMatchers("/lifepill/v1/admin/**")
+                                .hasRole(OWNER.name())
+                                .antMatchers("/lifepill/v1/cashierNew/**")
+                                .hasAnyRole(CASHIER.name(), MANAGER.name(), OWNER.name())
+                                .antMatchers("lifepill/v1/branch/**")
+                                .hasRole(OWNER.name())
                                 .antMatchers("lifepill/v1/employers/**")
                                 .hasAnyRole(OWNER.name(), MANAGER.name())
                                 .antMatchers("lifepill/v1/cashier/**")
@@ -88,5 +95,23 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    /**
+     * CORS configuration source.
+     *
+     * @return CorsConfigurationSource object
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
