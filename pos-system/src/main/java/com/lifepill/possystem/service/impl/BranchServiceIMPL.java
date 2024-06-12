@@ -3,6 +3,7 @@ package com.lifepill.possystem.service.impl;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.lifepill.possystem.dto.BranchDTO;
+import com.lifepill.possystem.dto.BranchNewUpdateDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.BranchS3DTO;
 import com.lifepill.possystem.entity.Branch;
@@ -173,7 +174,7 @@ public class BranchServiceIMPL implements BranchService {
                 branch.setBranchFax(branchUpdateDTO.getBranchFax());
                 branch.setBranchEmail(branchUpdateDTO.getBranchEmail());
                 branch.setBranchDescription(branchUpdateDTO.getBranchDescription());
-                branch.setBranchImage(branchUpdateDTO.getBranchImage());
+//                branch.setBranchImage(branchUpdateDTO.getBranchImage());
                 branch.setBranchStatus(branchUpdateDTO.isBranchStatus());
                 branch.setBranchLocation(branchUpdateDTO.getBranchLocation());
                 branch.setBranchCreatedOn(branchUpdateDTO.getBranchCreatedOn());
@@ -214,62 +215,6 @@ public class BranchServiceIMPL implements BranchService {
                 byte[] imageBytes = SaveImageHelper.saveImage(image);
                 branch.setBranchImage(imageBytes);
             }
-
-            branchRepository.save(branch);
-        } else {
-            throw new NotFoundException("No Branch found for that id");
-        }
-    }
-
-    /**
-     * Updates a branch without changing its image.
-     *
-     * @param branchId        The ID of the branch to update.
-     * @param branchUpdateDTO The DTO containing updated branch details.
-     * @throws NotFoundException If the branch with the given ID is not found.
-     */
-    @Override
-    public void updateBranchWithoutImage(long branchId, BranchUpdateDTO branchUpdateDTO) {
-        if (!branchRepository.existsById(branchId)) {
-            throw new NotFoundException("Branch not found");
-        }
-
-        Optional<Branch> branchOptional = branchRepository.findById(branchId);
-        if (branchOptional.isPresent()) {
-            Branch branch = branchOptional.get();
-
-            if (branchUpdateDTO.getBranchName() != null) {
-                branch.setBranchName(branchUpdateDTO.getBranchName());
-            }
-            if (branchUpdateDTO.getBranchAddress() != null) {
-                branch.setBranchAddress(branchUpdateDTO.getBranchAddress());
-            }
-            if (branchUpdateDTO.getBranchContact() != null) {
-                branch.setBranchContact(branchUpdateDTO.getBranchContact());
-            }
-            if (branchUpdateDTO.getBranchFax() != null) {
-                branch.setBranchFax(branchUpdateDTO.getBranchFax());
-            }
-            if (branchUpdateDTO.getBranchEmail() != null) {
-                branch.setBranchEmail(branchUpdateDTO.getBranchEmail());
-            }
-            if (branchUpdateDTO.getBranchDescription() != null) {
-                branch.setBranchDescription(branchUpdateDTO.getBranchDescription());
-            }
-            if (branchUpdateDTO.getBranchImage() != null) {
-                branch.setBranchImage(branchUpdateDTO.getBranchImage());
-            }
-            if (branchUpdateDTO.getBranchLocation() != null) {
-                branch.setBranchLocation(branchUpdateDTO.getBranchLocation());
-            }
-            if (branchUpdateDTO.getBranchCreatedOn() != null) {
-                branch.setBranchCreatedOn(branchUpdateDTO.getBranchCreatedOn());
-            }
-            if (branchUpdateDTO.getBranchCreatedBy() != null) {
-                branch.setBranchCreatedBy(branchUpdateDTO.getBranchCreatedBy());
-            }
-            branch.setBranchStatus(branchUpdateDTO.isBranchStatus());
-
 
             branchRepository.save(branch);
         } else {
@@ -321,5 +266,53 @@ public class BranchServiceIMPL implements BranchService {
         branch.setBranchProfileImageUrl(imageUrl);
         branchRepository.save(branch);
     }
+
+    @Override
+    public BranchNewUpdateDTO updateBranchWithoutImage(long branchId, BranchNewUpdateDTO branchUpdateDTO) {
+        if (!branchRepository.existsById(branchId)) {
+            throw new NotFoundException("Branch not found");
+        }
+
+        Optional<Branch> branchOptional = branchRepository.findById(branchId);
+        if (branchOptional.isPresent()) {
+            Branch branch = branchOptional.get();
+
+            // Update only if values are provided in branchUpdateDTO
+            if (branchUpdateDTO.getBranchName() != null) {
+                branch.setBranchName(branchUpdateDTO.getBranchName());
+            }
+            if (branchUpdateDTO.getBranchAddress() != null) {
+                branch.setBranchAddress(branchUpdateDTO.getBranchAddress());
+            }
+            if (branchUpdateDTO.getBranchContact() != null) {
+                branch.setBranchContact(branchUpdateDTO.getBranchContact());
+            }
+            if (branchUpdateDTO.getBranchFax() != null) {
+                branch.setBranchFax(branchUpdateDTO.getBranchFax());
+            }
+            if (branchUpdateDTO.getBranchEmail() != null) {
+                branch.setBranchEmail(branchUpdateDTO.getBranchEmail());
+            }
+            if (branchUpdateDTO.getBranchDescription() != null) {
+                branch.setBranchDescription(branchUpdateDTO.getBranchDescription());
+            }
+            if (branchUpdateDTO.getBranchLocation() != null) {
+                branch.setBranchLocation(branchUpdateDTO.getBranchLocation());
+            }
+            if (branchUpdateDTO.getBranchCreatedOn() != null) {
+                branch.setBranchCreatedOn(branchUpdateDTO.getBranchCreatedOn());
+            }
+            if (branchUpdateDTO.getBranchCreatedBy() != null) {
+                branch.setBranchCreatedBy(branchUpdateDTO.getBranchCreatedBy());
+            }
+
+           Branch updatedBranch = branchRepository.save(branch);
+
+            return modelMapper.map(updatedBranch, BranchNewUpdateDTO.class);
+        } else {
+            throw new NotFoundException("No Branch found for that id");
+        }
+    }
+
 
 }

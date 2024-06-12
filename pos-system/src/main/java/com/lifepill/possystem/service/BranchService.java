@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.BranchDTO;
+import com.lifepill.possystem.dto.BranchNewUpdateDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.BranchS3DTO;
 import org.springframework.core.io.InputStreamResource;
@@ -25,7 +26,7 @@ public interface BranchService {
 
     void updateBranchImage(long branchId, MultipartFile image);
 
-    void updateBranchWithoutImage(long branchId, BranchUpdateDTO branchUpdateDTO);
+   // void updateBranchWithoutImage(long branchId, BranchNewUpdateDTO branchUpdateDTO);
 
     BranchS3DTO createBranch(BranchS3DTO branchS3DTO, MultipartFile file) throws IOException;
 
@@ -34,4 +35,6 @@ public interface BranchService {
     InputStreamResource getBranchProfileImage(String branchProfileImageUrl);
 
     void updateBranchProfileImage(long branchId, MultipartFile file) throws IOException;
+
+    BranchNewUpdateDTO updateBranchWithoutImage(long branchId, BranchNewUpdateDTO branchUpdateDTO);
 }
