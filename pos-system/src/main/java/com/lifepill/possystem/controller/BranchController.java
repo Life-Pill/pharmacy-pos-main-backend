@@ -1,6 +1,7 @@
 package com.lifepill.possystem.controller;
 
 import com.lifepill.possystem.dto.BranchDTO;
+import com.lifepill.possystem.dto.BranchNewUpdateDTO;
 import com.lifepill.possystem.dto.EmployerDTO;
 import com.lifepill.possystem.dto.requestDTO.BranchUpdateDTO;
 import com.lifepill.possystem.dto.responseDTO.BranchS3DTO;
@@ -223,11 +224,14 @@ public class BranchController {
      */
     @PutMapping(value = "/update/{id}")
     @Transactional
-    public String updateBranchWithoutImage(
-            @PathVariable(value = "id") int branchId,
-            @ModelAttribute BranchUpdateDTO branchUpdateDTO) {
-        branchService.updateBranchWithoutImage(branchId, branchUpdateDTO);
-        return "branch updated";
+    public ResponseEntity<StandardResponse> updateBranchWithoutImage(
+            @PathVariable(value = "id") long branchId,
+            @RequestBody BranchNewUpdateDTO branchUpdateDTO) {
+        BranchNewUpdateDTO branchNew = branchService.updateBranchWithoutImage(branchId, branchUpdateDTO);
+        return new ResponseEntity<>(
+                new StandardResponse(201, "SUCCESS", branchNew),
+                HttpStatus.OK
+        );
     }
 
     /**
