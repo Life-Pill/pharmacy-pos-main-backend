@@ -15,11 +15,9 @@ import java.util.List;
 
 public interface EmployerService {
 
-    public String saveEmployer(EmployerDTO employerDTO);
+    String saveEmployer(EmployerDTO employerDTO);
 
-    public String saveEmployerWithoutImage(EmployerWithoutImageDTO employerWithoutImageDTO);
-
-//    String updateEmployer(EmployerUpdateDTO employerUpdateDTO);
+    String saveEmployerWithoutImage(EmployerWithoutImageDTO employerWithoutImageDTO);
 
     String updateEmployer(Long cashierId, EmployerAllDetailsUpdateDTO employerAllDetailsUpdateDTO);
 
@@ -61,14 +59,13 @@ public interface EmployerService {
 
     EmployerWithBankDTO getEmployerWithBankDetailsById(long employerId);
 
-    EmployerS3DTO createEmployer(MultipartFile file, Long branchId, Employer employer) throws IOException;
+    EmployerS3DTO createEmployer(MultipartFile file, Long branchId, EmployerNewDTO employerNewDTO) throws IOException;
 
     InputStreamResource getEmployerImage(String profileImageUrl);
 
-    void updateEmployerImage(Long employerId, MultipartFile file)  throws IOException;
+    void updateEmployerImage(Long employerId, MultipartFile file) throws IOException;
 
     Employer findByUsername(String username);
-
 
     List<EmployerDTO> getEmployersByBranchIdAndRole(long branchId, Role role);
 
