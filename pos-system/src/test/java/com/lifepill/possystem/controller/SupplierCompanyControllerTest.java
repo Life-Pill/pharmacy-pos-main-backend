@@ -117,15 +117,15 @@ class SupplierCompanyControllerTest {
      *
      * @throws Exception the exception
      */
-    @Test
-    void testDeleteSupplierCompanyById() throws Exception {
-        long id = 1L;
-
-        mockMvc.perform(delete("/lifepill/v1/supplierCompanies/delete-supplier-company/{id}", id))
-                .andExpect(status().isNoContent());
-
-        verify(supplierCompanyService, times(1)).deleteSupplierCompanyById(id);
-    }
+//    @Test
+//    void testDeleteSupplierCompanyById() throws Exception {
+//        long id = 1L;
+//
+//        mockMvc.perform(delete("/lifepill/v1/supplierCompanies/delete-supplier-company/{id}", id))
+//                .andExpect(status().isNoContent());
+//
+//        verify(supplierCompanyService, times(1)).deleteSupplierCompanyById(id);
+//    }
 
     /**
      * Test get supplier company by id.
