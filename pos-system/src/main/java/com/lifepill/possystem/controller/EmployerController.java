@@ -38,7 +38,7 @@ public class EmployerController {
      *
      * @param file     The image file of the employer.
      * @param branchId The ID of the branch associated with the employer.
-     * @param employer The employer object to be created.
+     * @param employerNewDTO The employer object to be created.
      * @return ResponseEntity containing a StandardResponse indicating the result of the operation.
      * @throws IOException If an I/O error occurs while processing the image file.
      */
@@ -46,9 +46,9 @@ public class EmployerController {
     public ResponseEntity<StandardResponse> createEmployer(
             @RequestParam("file") MultipartFile file,
             @RequestParam("branchId") Long branchId,
-            @ModelAttribute Employer employer
+            @ModelAttribute EmployerNewDTO employerNewDTO
     ) throws IOException {
-        EmployerS3DTO employerDTO = employerService.createEmployer(file, branchId, employer);
+        EmployerS3DTO employerDTO = employerService.createEmployer(file, branchId, employerNewDTO);
         employerDTO.setBranchId(branchId);
         return new ResponseEntity<>(
                 new StandardResponse(201, "successfully saved", employerDTO),
@@ -93,7 +93,11 @@ public class EmployerController {
     ) throws IOException {
         employerService.updateEmployerImage(employerId, file);
         return new ResponseEntity<>(
-                new StandardResponse(200, "Image updated successfully", employerId),
+                new StandardResponse(
+                        200,
+                        "Image updated successfully",
+                        employerId
+                ),
                 HttpStatus.OK
         );
     }

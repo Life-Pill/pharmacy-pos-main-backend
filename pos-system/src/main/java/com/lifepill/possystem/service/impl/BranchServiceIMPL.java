@@ -290,6 +290,8 @@ public class BranchServiceIMPL implements BranchService {
             if (branchUpdateDTO.getBranchFax() != null) {
                 branch.setBranchFax(branchUpdateDTO.getBranchFax());
             }
+                branch.setBranchStatus(branchUpdateDTO.isBranchStatus());
+
             if (branchUpdateDTO.getBranchEmail() != null) {
                 branch.setBranchEmail(branchUpdateDTO.getBranchEmail());
             }

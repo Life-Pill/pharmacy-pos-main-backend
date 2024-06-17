@@ -529,11 +529,6 @@ public class EmployerServiceIMPL implements EmployerService {
         return modelMapper.map(bankDetails, EmployerBankDetailsDTO.class);
     }
 
-    /**
-     * Retrieves a list of employers along with their bank details.
-     *
-     * @return List of EmployerWithBankDTO objects containing details of all employers with their bank details.
-     */
     @Override
     public List<EmployerWithBankDTO> getAllEmployersWithBankDetails() {
         List<EmployerWithBankDTO> employersWithBankDetails = new ArrayList<>();
@@ -579,13 +574,16 @@ public class EmployerServiceIMPL implements EmployerService {
     }
 
     @Override
-    public EmployerS3DTO createEmployer(MultipartFile file, Long branchId, Employer employer) throws IOException {
+    public EmployerS3DTO createEmployer(MultipartFile file, Long branchId, EmployerNewDTO employerDTO) throws IOException {
         Optional<Branch> branchOptional = branchRepository.findById(branchId);
         if (branchOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Branch not found");
         }
 
         Branch branch = branchOptional.get();
+
+        // Convert EmployerDTO to Employer entity
+        Employer employer = modelMapper.map(employerDTO, Employer.class);
         employer.setBranch(branch);
 
         String encodedPassword = passwordEncoder.encode(employer.getEmployerPassword());

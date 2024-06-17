@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/pos-system-0.0.1-SNAPSHOT.jar /app
 
 # Expose the port your application runs on
-EXPOSE 8081
+EXPOSE 8079
 
 # Command to run the application when the container starts
 CMD ["java", "-jar", "pos-system-0.0.1-SNAPSHOT.jar"]
