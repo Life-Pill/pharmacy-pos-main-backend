@@ -18,6 +18,7 @@ import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.repo.paymentRepository.PaymentRepository;
+import com.lifepill.possystem.service.EmailService;
 import com.lifepill.possystem.service.OrderService;
 import com.lifepill.possystem.service.SMSService;
 import com.lifepill.possystem.util.mappers.OrderMapper;
@@ -53,6 +54,7 @@ public class OrderServiceIMPL implements OrderService {
     private PaymentRepository paymentRepository;
     private OrderMapper orderMapper;
     private SMSService smsService;
+    private EmailService emailService;
 
 
     /**
@@ -107,6 +109,8 @@ public class OrderServiceIMPL implements OrderService {
         // Update item quantities
         updateItemQuantitiesSMS(requestOrderSaveDTO);
 
+        String customerEmail = requestOrderSaveDTO.getCustomerEmail();
+
         Order order = new Order();
         order.setEmployer(employerRepository.getById(requestOrderSaveDTO.getEmployerId()));
         order.setOrderDate(requestOrderSaveDTO.getOrderDate());
@@ -137,12 +141,35 @@ public class OrderServiceIMPL implements OrderService {
             savePaymentDetails(requestOrderSaveDTO.getPaymentDetails(), order);
             log.info("requestOrderSaveDTO.getCustomerPhoneNumber(): " + requestOrderSaveDTO.getCustomerPhoneNumber());
             log.info("order: " + order);
-            sendOrderDetailsSms(requestOrderSaveDTO.getCustomerPhoneNumber(), order);
+//            sendOrderDetailsSms(requestOrderSaveDTO.getCustomerPhoneNumber(), order);
+
+            sendOrderConfirmationEmail(customerEmail, order);
             return "saved";
         }
 
         return "Order saved";
 
+    }
+
+    private void sendOrderConfirmationEmail(String customerEmail, Order order) {
+        StringBuilder message = new StringBuilder();
+        message.append("Thank you for your order!\n\n");
+        message.append("Order ID: ").append(order.getOrderId()).append("\n");
+        message.append("Date: ").append(order.getOrderDate()).append("\n");
+        message.append("Total: ").append(order.getTotal()).append("\n\n");
+        message.append("Items:\n");
+
+        // Check if order.getOrderDetails() is not null
+        if (order.getOrderDetails() != null) {
+            for (OrderDetails orderDetails : order.getOrderDetails()) {
+                message.append(orderDetails.getName()).append(" - ").append(orderDetails.getAmount()).append("\n");
+            }
+        } else {
+            // Handle the case when order.getOrderDetails() is null
+            message.append("No order details found.");
+        }
+
+        emailService.sendEmail(customerEmail, "Your Order Confirmation", message.toString());
     }
 
     private void sendOrderDetailsSms(String customerPhoneNumber, Order order) {
@@ -411,5 +438,6 @@ public class OrderServiceIMPL implements OrderService {
                 })
                 .collect(Collectors.toList());
     }
+
 
 }
