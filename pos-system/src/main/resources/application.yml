@@ -12,27 +12,43 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        jdbc:
-          lob:
-            non_contextual_creation: true #  to enable non-contextual LOB creation
+    jdbc:
+      lob:
+        non_contextual_creation: true
     show-sql: true
   security:
     user:
       name: ${SPRING_SECURITY_USERNAME}
       password: ${SPRING_SECURITY_PASSWORD}
   redis:
-    host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
+    host: redis
+    port: 6379
+  mail:
+    host: ${SPRING_MAIL_HOST}
+    port: ${SPRING_MAIL_PORT}
+    username: ${SPRING_USER_NAME}
+    password: ${SPRING_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
   port: ${SERVER_PORT}
 
 logging:
   level:
-    org.springframework.security: TRACE
+    org.springframework.security: DEBUG
 
 aws:
   access.key: ${AWS_ACCESS_KEY}
   secret.key: ${AWS_SECRET_KEY}
   s3.bucket: ${AWS_S3_BUCKET}
   region: ${AWS_REGION}
+
+twilio:
+  accountSid: ${TWILIO_ACCOUNT_SID}
+  authToken: ${TWILIO_AUTH_TOKEN}
+  fromPhoneNumber: ${TWILIO_FROM_PHONE_NUMBER}

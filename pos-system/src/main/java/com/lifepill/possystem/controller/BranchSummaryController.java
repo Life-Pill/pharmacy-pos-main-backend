@@ -1,5 +1,6 @@
 package com.lifepill.possystem.controller;
 
+import com.lifepill.possystem.dto.requestDTO.BranchDailySalesSummaryDTO;
 import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.DailySalesSummaryDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
@@ -198,4 +199,18 @@ public class BranchSummaryController {
                 HttpStatus.OK
         );
     }
+
+    @GetMapping("/sales-summary/all-daily-summary")
+    public ResponseEntity<StandardResponse> getAllDailySalesSummary() {
+        List<BranchDailySalesSummaryDTO> allDailySalesSummary = branchSummaryService.getAllDailySalesSummary();
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "SUCCESS",
+                        allDailySalesSummary
+                ),
+                HttpStatus.OK
+        );
+    }
+
 }

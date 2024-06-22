@@ -1,6 +1,7 @@
 package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.BranchDTO;
+import com.lifepill.possystem.dto.requestDTO.BranchDailySalesSummaryDTO;
 import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.DailySalesSummaryDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
@@ -378,6 +379,41 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
             Long ordersCount = dailyOrdersCountMap.getOrDefault(date, 0L);
             return new DailySalesSummaryDTO(date, ordersCount, sales);
         }).collect(Collectors.toList());
+
+        return result;
+    }
+
+    @Override
+    public List<BranchDailySalesSummaryDTO> getAllDailySalesSummary() {
+        // Retrieve all orders for all branches
+        List<Order> orders = orderRepository.findAll();
+
+        // Group orders by branch ID and then by order date
+        Map<Long, Map<LocalDate, List<Order>>> branchDateOrderMap = orders.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getBranchId,
+                        Collectors.groupingBy(order -> order.getOrderDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()))
+                );
+
+        // Create result list
+        List<BranchDailySalesSummaryDTO> result = new ArrayList<>();
+
+        for (Map.Entry<Long, Map<LocalDate, List<Order>>> branchEntry : branchDateOrderMap.entrySet()) {
+            long branchId = branchEntry.getKey();
+            Map<LocalDate, List<Order>> dateOrderMap = branchEntry.getValue();
+
+            List<DailySalesSummaryDTO> dailySalesSummaries = dateOrderMap.entrySet().stream().map(dateEntry -> {
+                LocalDate date = dateEntry.getKey();
+                List<Order> dailyOrders = dateEntry.getValue();
+
+                double totalSales = dailyOrders.stream().mapToDouble(Order::getTotal).sum();
+                long orderCount = dailyOrders.size();
+
+                return new DailySalesSummaryDTO(date, orderCount, totalSales);
+            }).collect(Collectors.toList());
+
+            result.add(new BranchDailySalesSummaryDTO(branchId, dailySalesSummaries));
+        }
 
         return result;
     }

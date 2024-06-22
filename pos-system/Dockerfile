@@ -4,7 +4,10 @@ FROM openjdk:17
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the Maven executable JAR file and the POM file into the container
+# Copy the .env file into the container
+COPY .env /app
+
+# Copy the Maven executable JAR file into the container
 COPY target/pos-system-0.0.1-SNAPSHOT.jar /app
 
 # Expose the port your application runs on

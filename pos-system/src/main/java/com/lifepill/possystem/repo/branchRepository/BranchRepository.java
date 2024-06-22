@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * The interface Branch repository.
  */
@@ -18,4 +20,5 @@ public interface BranchRepository extends JpaRepository<Branch,Long> {
      * @return the boolean
      */
     boolean existsByBranchEmail(String branchEmail);
+
 }
