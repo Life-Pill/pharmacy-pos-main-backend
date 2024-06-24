@@ -1,5 +1,6 @@
 package com.lifepill.possystem.controller;
 
+import com.lifepill.possystem.dto.requestDTO.RequestOrderSMSDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderSaveDTO;
 import com.lifepill.possystem.dto.responseDTO.OrderResponseDTO;
 import com.lifepill.possystem.service.OrderService;
@@ -34,6 +35,16 @@ public class OrderController{
         return new ResponseEntity<>(
                 new StandardResponse(201, id +"Item Savd Successfully",id),
                 HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/saveAndSendSms")
+    public ResponseEntity<StandardResponse> saveOrderAndSendSms(@RequestBody RequestOrderSMSDTO requestOrderSaveDTO) {
+        String response = orderService.addOrderWithSMS(requestOrderSaveDTO);
+
+        return new ResponseEntity<>(
+                new StandardResponse(201, "Order Saved and SMS Sent Successfully", response),
+                HttpStatus.CREATED
+        );
     }
 
     /**
@@ -77,4 +88,6 @@ public class OrderController{
                 new StandardResponse(200, "Orders Retrieved Successfully", orderResponseDTOs),
                 HttpStatus.OK);
     }
+
+
 }

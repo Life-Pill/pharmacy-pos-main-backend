@@ -58,7 +58,9 @@ public class SecurityConfiguration {
                                         "/v2/api-docs",
                                         "/webjars/**",
                                         "/v3/api-docs",
-                                        "/lifepill/v1/medicine-finding/find-medicine"
+                                        "/lifepill/v1/medicine-finding/find-medicine",
+                                "/lifepill/v1/supplierCompanies/getAll-Supplier-Companies",
+                                "/lifepill/v1/order/getAllOrdersWithDetails"
                                 ).permitAll()
                                 .antMatchers("lifepill/v1/branch-summary/**")
                                 .hasRole(OWNER.name())

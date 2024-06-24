@@ -1,5 +1,6 @@
 package com.lifepill.possystem.service;
 
+import com.lifepill.possystem.dto.requestDTO.BranchDailySalesSummaryDTO;
 import com.lifepill.possystem.dto.responseDTO.AllPharmacySummaryResponseDTO;
 import com.lifepill.possystem.dto.responseDTO.DailySalesSummaryDTO;
 import com.lifepill.possystem.dto.responseDTO.PharmacyBranchResponseDTO;
@@ -74,4 +75,7 @@ public interface BranchSummaryService {
      * @return A list of DailySalesSummaryDTO objects, each representing the sales summary for a specific day.
      */
     List<DailySalesSummaryDTO> getDailySalesSummary(long branchId);
+
+
+    List<BranchDailySalesSummaryDTO> getAllDailySalesSummary();
 }

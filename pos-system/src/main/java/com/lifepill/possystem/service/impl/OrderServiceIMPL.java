@@ -2,6 +2,7 @@ package com.lifepill.possystem.service.impl;
 
 import com.lifepill.possystem.dto.GroupedOrderDetails;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderDetailsSaveDTO;
+import com.lifepill.possystem.dto.requestDTO.RequestOrderSMSDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestOrderSaveDTO;
 import com.lifepill.possystem.dto.requestDTO.RequestPaymentDetailsDTO;
 import com.lifepill.possystem.dto.responseDTO.OrderResponseDTO;
@@ -17,11 +18,15 @@ import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.repo.paymentRepository.PaymentRepository;
+import com.lifepill.possystem.service.EmailService;
 import com.lifepill.possystem.service.OrderService;
+import com.lifepill.possystem.service.SMSService;
 import com.lifepill.possystem.util.mappers.OrderMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -38,6 +43,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrderServiceIMPL implements OrderService {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceIMPL.class);
     private OrderRepository orderRepository;
     private ModelMapper modelMapper;
     private EmployerRepository employerRepository;
@@ -47,6 +53,8 @@ public class OrderServiceIMPL implements OrderService {
     private OrderDetailsRepository orderDetailsRepository;
     private PaymentRepository paymentRepository;
     private OrderMapper orderMapper;
+    private SMSService smsService;
+    private EmailService emailService;
 
 
     /**
@@ -90,7 +98,99 @@ public class OrderServiceIMPL implements OrderService {
             savePaymentDetails(requestOrderSaveDTO.getPaymentDetails(), order);
             return "saved";
         }
-        return "Order saved successfully";
+
+        return "Order saved";
+    }
+
+    @Override
+    public String addOrderWithSMS(RequestOrderSMSDTO requestOrderSaveDTO) {
+        // Check if items in the order have sufficient quantity
+        checkItemStockSMS(requestOrderSaveDTO);
+        // Update item quantities
+        updateItemQuantitiesSMS(requestOrderSaveDTO);
+
+        String customerEmail = requestOrderSaveDTO.getCustomerEmail();
+
+        Order order = new Order();
+        order.setEmployer(employerRepository.getById(requestOrderSaveDTO.getEmployerId()));
+        order.setOrderDate(requestOrderSaveDTO.getOrderDate());
+        order.setTotal(requestOrderSaveDTO.getTotal());
+        order.setBranchId(requestOrderSaveDTO.getBranchId());
+
+        orderRepository.save(order);
+
+        if (orderRepository.existsById(order.getOrderId())) {
+            List<OrderDetails> orderDetails = modelMapper
+                    .map(requestOrderSaveDTO.getOrderDetails(), new TypeToken<List<OrderDetails>>() {
+                            }
+                                    .getType()
+                    );
+            for (int i = 0; i < orderDetails.size(); i++) {
+                orderDetails.get(i).setOrders(order);
+                orderDetails.get(i).setItems(itemRepository
+                        .getById(requestOrderSaveDTO
+                                .getOrderDetails().get(i).getId()
+                        )
+                );
+            }
+            if (!orderDetails.isEmpty()) {
+                orderDetailsRepo.saveAll(orderDetails);
+            }
+            System.out.println("Payment Details: " + requestOrderSaveDTO.getPaymentDetails());
+            log.info("Payment Details: " + requestOrderSaveDTO.getPaymentDetails());
+            savePaymentDetails(requestOrderSaveDTO.getPaymentDetails(), order);
+            log.info("requestOrderSaveDTO.getCustomerPhoneNumber(): " + requestOrderSaveDTO.getCustomerPhoneNumber());
+            log.info("order: " + order);
+//            sendOrderDetailsSms(requestOrderSaveDTO.getCustomerPhoneNumber(), order);
+
+            sendOrderConfirmationEmail(customerEmail, order);
+            return "saved";
+        }
+
+        return "Order saved";
+
+    }
+
+    private void sendOrderConfirmationEmail(String customerEmail, Order order) {
+        StringBuilder message = new StringBuilder();
+        message.append("Thank you for your order!\n\n");
+        message.append("Order ID: ").append(order.getOrderId()).append("\n");
+        message.append("Date: ").append(order.getOrderDate()).append("\n");
+        message.append("Total: ").append(order.getTotal()).append("\n\n");
+        message.append("Items:\n");
+
+        // Check if order.getOrderDetails() is not null
+        if (order.getOrderDetails() != null) {
+            for (OrderDetails orderDetails : order.getOrderDetails()) {
+                message.append(orderDetails.getName()).append(" - ").append(orderDetails.getAmount()).append("\n");
+            }
+        } else {
+            // Handle the case when order.getOrderDetails() is null
+            message.append("No order details found.");
+        }
+
+        emailService.sendEmail(customerEmail, "Your Order Confirmation", message.toString());
+    }
+
+    private void sendOrderDetailsSms(String customerPhoneNumber, Order order) {
+        StringBuilder message = new StringBuilder();
+        message.append("Thank you for your order!\n\n");
+        message.append("Order ID: ").append(order.getOrderId()).append("\n");
+        message.append("Date: ").append(order.getOrderDate()).append("\n");
+        message.append("Total: ").append(order.getTotal()).append("\n\n");
+        message.append("Items:\n");
+
+        // Check if order.getOrderDetails() is not null
+        if (order.getOrderDetails() != null) {
+            for (OrderDetails orderDetails : order.getOrderDetails()) {
+                message.append(orderDetails.getName()).append(" - ").append(orderDetails.getAmount()).append("\n");
+            }
+        } else {
+            // Handle the case when order.getOrderDetails() is null
+            message.append("No order details found.");
+        }
+
+        smsService.sendSms(customerPhoneNumber, message.toString());
     }
 
     /**
@@ -135,6 +235,24 @@ public class OrderServiceIMPL implements OrderService {
         }
     }
 
+    private void checkItemStockSMS(RequestOrderSMSDTO requestOrderSaveDTO) {
+        for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
+            if (optionalItem.isPresent()) {
+                Item item = optionalItem.get();
+                if (item.getItemQuantity() < orderDetail.getAmount()) {
+                    throw new InsufficientItemQuantityException(
+                            "Item " + item.getItemId()
+                                    + " does not have enough quantity"
+                    );
+                }
+            } else {
+                throw new NotFoundException("Item not found with ID: " + orderDetail.getId());
+            }
+        }
+    }
+
+
     /**
      * Updates the quantities of items in the database after an order is placed.
      *
@@ -142,6 +260,20 @@ public class OrderServiceIMPL implements OrderService {
      * @throws NotFoundException if an item in the order is not found in the database.
      */
     private void updateItemQuantities(RequestOrderSaveDTO requestOrderSaveDTO) {
+        for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
+            Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
+            if (optionalItem.isPresent()) {
+                Item item = optionalItem.get();
+                int remainingQuantity = (int) (item.getItemQuantity() - orderDetail.getAmount());
+                item.setItemQuantity(remainingQuantity);
+                itemRepository.save(item);
+            } else {
+                throw new NotFoundException("Item not found with ID: " + orderDetail.getId());
+            }
+        }
+    }
+
+    private void updateItemQuantitiesSMS(RequestOrderSMSDTO requestOrderSaveDTO) {
         for (RequestOrderDetailsSaveDTO orderDetail : requestOrderSaveDTO.getOrderDetails()) {
             Optional<Item> optionalItem = itemRepository.findById(orderDetail.getId());
             if (optionalItem.isPresent()) {
@@ -306,5 +438,6 @@ public class OrderServiceIMPL implements OrderService {
                 })
                 .collect(Collectors.toList());
     }
+
 
 }
