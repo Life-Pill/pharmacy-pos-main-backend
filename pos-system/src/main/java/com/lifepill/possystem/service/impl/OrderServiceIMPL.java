@@ -18,9 +18,9 @@ import com.lifepill.possystem.repo.itemRepository.ItemRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderDetailsRepository;
 import com.lifepill.possystem.repo.orderRepository.OrderRepository;
 import com.lifepill.possystem.repo.paymentRepository.PaymentRepository;
-import com.lifepill.possystem.service.EmailService;
+//import com.lifepill.possystem.service.EmailService;
 import com.lifepill.possystem.service.OrderService;
-import com.lifepill.possystem.service.SMSService;
+//import com.lifepill.possystem.service.SMSService;
 import com.lifepill.possystem.util.mappers.OrderMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -53,8 +53,8 @@ public class OrderServiceIMPL implements OrderService {
     private OrderDetailsRepository orderDetailsRepository;
     private PaymentRepository paymentRepository;
     private OrderMapper orderMapper;
-    private SMSService smsService;
-    private EmailService emailService;
+//    private SMSService smsService;
+    //  private EmailService emailService;
 
 
     /**
@@ -169,7 +169,7 @@ public class OrderServiceIMPL implements OrderService {
             message.append("No order details found.");
         }
 
-        emailService.sendEmail(customerEmail, "Your Order Confirmation", message.toString());
+      //  emailService.sendEmail(customerEmail, "Your Order Confirmation", message.toString());
     }
 
     private void sendOrderDetailsSms(String customerPhoneNumber, Order order) {
@@ -190,7 +190,7 @@ public class OrderServiceIMPL implements OrderService {
             message.append("No order details found.");
         }
 
-        smsService.sendSms(customerPhoneNumber, message.toString());
+//        smsService.sendSms(customerPhoneNumber, message.toString());
     }
 
     /**

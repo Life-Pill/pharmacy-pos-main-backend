@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.service;
 
 import com.twilio.Twilio;
@@ -29,3 +30,4 @@ public class SMSService {
         Message.creator(new PhoneNumber(toPhoneNumber), new PhoneNumber(fromPhoneNumber), message).create();
     }
 }
+*/

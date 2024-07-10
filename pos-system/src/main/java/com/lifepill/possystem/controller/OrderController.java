@@ -33,11 +33,11 @@ public class OrderController{
        String id =  orderService.addOrder(requestOrderSaveDTO);
 
         return new ResponseEntity<>(
-                new StandardResponse(201, id +"Item Savd Successfully",id),
+                new StandardResponse(201, id +"Item Save Successfully",id),
                 HttpStatus.CREATED);
     }
 
-    @PostMapping(path = "/saveAndSendSms")
+  /*  @PostMapping(path = "/saveAndSendSms")
     public ResponseEntity<StandardResponse> saveOrderAndSendSms(@RequestBody RequestOrderSMSDTO requestOrderSaveDTO) {
         String response = orderService.addOrderWithSMS(requestOrderSaveDTO);
 
@@ -45,7 +45,7 @@ public class OrderController{
                 new StandardResponse(201, "Order Saved and SMS Sent Successfully", response),
                 HttpStatus.CREATED
         );
-    }
+    }*/
 
     /**
      * Retrieves all orders in the system.

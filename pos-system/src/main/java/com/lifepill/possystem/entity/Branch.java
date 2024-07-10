@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 public class Branch {
     @Id
-    @Column(name = "brach_id")
+    @Column(name = "branch_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long branchId;
     @Column(name = "branch_name", length = 20, nullable = false)
@@ -37,7 +37,7 @@ public class Branch {
     private byte[] branchImage;
     @Column(name = "branch_status", columnDefinition = "BOOLEAN default false")
     private boolean branchStatus;
-    @Column(name = "branch_location", length = 20)
+    @Column(name = "branch_location", length = 100)
     private String branchLocation;
     @Column(name = "branch_created_on")
     private String branchCreatedOn;

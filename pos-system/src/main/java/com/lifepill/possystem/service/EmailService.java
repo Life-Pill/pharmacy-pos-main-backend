@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.service;
 
 import org.springframework.mail.SimpleMailMessage;
@@ -21,3 +22,4 @@ public class EmailService {
         javaMailSender.send(message);
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.repo;
 
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -5,7 +6,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 class ItemRepositoryTest {
 
-  /*      @Autowired
+  */
+/*      @Autowired
         private TestEntityManager entityManager;
 
         @Autowired
@@ -21,5 +23,6 @@ class ItemRepositoryTest {
 
             // Assert result
 
-        }*/
-}
+        }*//*
+
+}*/

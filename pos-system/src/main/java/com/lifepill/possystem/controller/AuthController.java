@@ -30,7 +30,6 @@ public class AuthController {
     private final AuthService authService;
     private final RedisService redisService;
 
-
     /**
      * Handles user registration.
      *
@@ -57,6 +56,8 @@ public class AuthController {
 
     /**
      * Authenticates user and returns an access token.
+     *
+     *
      *
      * @param request  The request body containing authentication details
      * @param response HttpServletResponse to set the access token as a cookie

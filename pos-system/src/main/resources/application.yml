@@ -48,7 +48,7 @@ aws:
   s3.bucket: ${AWS_S3_BUCKET}
   region: ${AWS_REGION}
 
-twilio:
-  accountSid: ${TWILIO_ACCOUNT_SID}
-  authToken: ${TWILIO_AUTH_TOKEN}
-  fromPhoneNumber: ${TWILIO_FROM_PHONE_NUMBER}
+#twilio:
+#  accountSid: ${TWILIO_ACCOUNT_SID}
+#  authToken: ${TWILIO_AUTH_TOKEN}
+#  fromPhoneNumber: ${TWILIO_FROM_PHONE_NUMBER}

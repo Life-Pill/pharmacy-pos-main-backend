@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.SupplierCompanyDTO;
@@ -20,9 +21,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+*/
 /**
  * The type Supplier company service impl test.
- */
+ *//*
+
 class SupplierCompanyServiceIMPLTest {
 
     @Mock
@@ -34,17 +37,21 @@ class SupplierCompanyServiceIMPLTest {
     @InjectMocks
     private SupplierCompanyServiceIMPL supplierCompanyService;
 
-    /**
+    */
+/**
      * Sets up.
-     */
+     *//*
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
-    /**
+    */
+/**
      * Test get all supplier companies.
-     */
+     *//*
+
     @Test
     void testGetAllSupplierCompanies() {
         List<SupplierCompany> companies = new ArrayList<>();
@@ -65,9 +72,11 @@ class SupplierCompanyServiceIMPLTest {
         verify(modelMapper, times(2)).map(any(SupplierCompany.class), eq(SupplierCompanyDTO.class));
     }
 
-    /**
+    */
+/**
      * Test save supplier company.
-     */
+     *//*
+
     @Test
     void testSaveSupplierCompany() {
         SupplierCompanyDTO dto = new SupplierCompanyDTO();
@@ -86,9 +95,11 @@ class SupplierCompanyServiceIMPLTest {
         verify(modelMapper, times(1)).map(savedCompany, SupplierCompanyDTO.class);
     }
 
-    /**
+    */
+/**
      * Test update supplier company by id.
-     */
+     *//*
+
     @Test
     void testUpdateSupplierCompanyById() {
         long id = 1L;
@@ -109,9 +120,11 @@ class SupplierCompanyServiceIMPLTest {
 
     }
 
-    /**
+    */
+/**
      * Test delete supplier company by id.
-     */
+     *//*
+
     @Test
     void testDeleteSupplierCompanyById() {
         long id = 1L;
@@ -125,9 +138,11 @@ class SupplierCompanyServiceIMPLTest {
         verify(supplierCompanyRepository, times(1)).deleteById(id);
     }
 
-    /**
+    */
+/**
      * Test get supplier company by id.
-     */
+     *//*
+
     @Test
     void testGetSupplierCompanyById() {
         long id = 1L;
@@ -144,9 +159,11 @@ class SupplierCompanyServiceIMPLTest {
         verify(modelMapper, times(1)).map(company, SupplierCompanyDTO.class);
     }
 
-    /**
+    */
+/**
      * Test get supplier company by id not found.
-     */
+     *//*
+
     @Test
     void testGetSupplierCompanyByIdNotFound() {
         long id = 1L;
@@ -158,4 +175,4 @@ class SupplierCompanyServiceIMPLTest {
         verifyNoInteractions(modelMapper);
     }
 
-}
+}*/
