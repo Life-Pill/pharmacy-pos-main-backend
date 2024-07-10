@@ -27,9 +27,9 @@ public class PaymentDetails {
     private double paymentAmount;
     @Column(name = "payment_date")
     private Date paymentDate;
-    @Column(name = "payment_notes")
+    @Column(name = "payment_notes",nullable = true)
     private String paymentNotes;
-    @Column(name = "payment_discount")
+    @Column(name = "payment_discount",nullable = true)
     private double paymentDiscount;
     @Column(name = "paid_amount")
     private double paidAmount;

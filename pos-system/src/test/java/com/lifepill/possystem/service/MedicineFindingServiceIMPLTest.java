@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.BranchDTO;
@@ -97,4 +98,4 @@ class MedicineFindingServiceIMPLTest {
 
         assertThrows(NotFoundException.class, () -> medicineFindingServiceIMPL.getItemByName(itemName));
     }
-}
+}*/

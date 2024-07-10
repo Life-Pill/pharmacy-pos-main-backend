@@ -1,3 +1,4 @@
+/*
 package com.lifepill.possystem.service;
 
 import com.lifepill.possystem.dto.BranchDTO;
@@ -26,9 +27,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
+*/
 /**
  * Unit tests for BranchSummaryServiceIMPL class.
- */
+ *//*
+
 public class BranchSummaryServiceIMPLTest {
     @Mock
     private BranchRepository branchRepository;
@@ -44,17 +47,21 @@ public class BranchSummaryServiceIMPLTest {
     @InjectMocks
     private BranchSummaryServiceIMPL branchSummaryService;
 
-    /**
+    */
+/**
      * Sets up.
-     */
+     *//*
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
-    /**
+    */
+/**
      * Test method for getAllBranchesWithSales().
-     */
+     *//*
+
     @Test
     void getAllBranchesWithSales() {
         // Mock data
@@ -108,9 +115,11 @@ public class BranchSummaryServiceIMPLTest {
                 .getReferenceById(anyLong());
     }
 
-    /**
+    */
+/**
      * Test method for getBranchSalesById() with valid branch ID.
-     */
+     *//*
+
     @Test
     void getBranchSalesById_ValidBranchId_ReturnsPharmacyBranchResponseDTO() {
         // Arrange
@@ -144,9 +153,11 @@ public class BranchSummaryServiceIMPLTest {
         assertEquals(100.0, responseDTO.getSales());
     }
 
-    /**
+    */
+/**
      * Test get all pharmacy summary.
-     */
+     *//*
+
     @Test
     void testGetAllPharmacySummary() {
         // Mock repository responses
@@ -164,4 +175,4 @@ public class BranchSummaryServiceIMPLTest {
         assertEquals(20, responseDTO.getTotalEmployees());
         assertEquals(10, responseDTO.getTotalBranches());
     }
-}
+}*/

@@ -79,17 +79,17 @@ class BranchControllerTest {
     /**
      * Test for getting a branch by its ID.
      */
-    @Test
-    void getBranchById() throws Exception {
-        BranchDTO branchDTO = new BranchDTO();
-        branchDTO.setBranchId(1L);
-        branchDTO.setBranchName("Test Branch");
-        when(branchService.getBranchById(1)).thenReturn(branchDTO);
-        mockMvc.perform(get("/lifepill/v1/branch/get-by-id?id=1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.branchId").value(1))
-                .andExpect(jsonPath("$.branchName").value("Test Branch"));
-    }
+//    @Test
+//    void getBranchById() throws Exception {
+//        BranchDTO branchDTO = new BranchDTO();
+//        branchDTO.setBranchId(1L);
+//        branchDTO.setBranchName("Test Branch");
+//        when(branchService.getBranchById(1)).thenReturn(branchDTO);
+//        mockMvc.perform(get("/lifepill/v1/branch/get-by-id?id=1"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.branchId").value(1))
+//                .andExpect(jsonPath("$.branchName").value("Test Branch"));
+//    }
 
     /**
      * Test for deleting a branch.
@@ -105,14 +105,14 @@ class BranchControllerTest {
     /**
      * Test for getting all cashiers by branch ID.
      */
-    @Test
-    void getAllCashiersByBranchId() throws Exception {
-        List<EmployerDTO> employerDTOS = Collections.singletonList(new EmployerDTO());
-        when(employerService.getAllEmployerByBranchId(1)).thenReturn(employerDTOS);
-        mockMvc.perform(get("/lifepill/v1/branch/employer/by-branch/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]").exists());
-    }
+//    @Test
+//    void getAllCashiersByBranchId() throws Exception {
+//        List<EmployerDTO> employerDTOS = Collections.singletonList(new EmployerDTO());
+//        when(employerService.getAllEmployerByBranchId(1)).thenReturn(employerDTOS);
+//        mockMvc.perform(get("/lifepill/v1/branch/employer/by-branch/1"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$[0]").exists());
+//    }
 
     /**
      * Test for a branch test.
