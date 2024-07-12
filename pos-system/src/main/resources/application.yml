@@ -48,6 +48,16 @@ aws:
   s3.bucket: ${AWS_S3_BUCKET}
   region: ${AWS_REGION}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
 #twilio:
 #  accountSid: ${TWILIO_ACCOUNT_SID}
 #  authToken: ${TWILIO_AUTH_TOKEN}
