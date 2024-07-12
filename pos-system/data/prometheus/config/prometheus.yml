@@ -2,12 +2,12 @@ scrape_configs:
   - job_name: 'prometheus'
     scrape_interval: 5s
     static_configs:
-      - targets: ['localhost:9090','http://54.158.221.104:9090']
+      - targets: ['localhost:9090']
 
   - job_name: 'LifePill Pos System Input'
     metrics_path: "/actuator/prometheus"
     scrape_interval: 2s
     static_configs:
-      - targets: ['localhost:8079',"http://54.158.221.104"]
+      - targets: ['localhost:8079']
         labels:
           application: "LifePill Pos System"
