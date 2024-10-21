@@ -755,6 +755,4 @@ public class EmployerServiceIMPL implements EmployerService {
                 ))
                 .collect(Collectors.toList());
     }
-
-
 }

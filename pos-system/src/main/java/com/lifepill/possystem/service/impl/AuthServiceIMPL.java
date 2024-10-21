@@ -99,7 +99,6 @@ public class AuthServiceIMPL implements AuthService {
         return AuthenticationResponseDTO.builder().accessToken(jwtToken).build();
     }
 
-
     /**
      * Authenticates an employer using cached pin.
      *
