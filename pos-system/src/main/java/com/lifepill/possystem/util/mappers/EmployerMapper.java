@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EmployerMapper {
-
-
     public EmployerBankDetails mapBankDetailsDTOToEntity(EmployerBankDetailsDTO bankDetailsDTO) {
         if (bankDetailsDTO == null) {
             return null;
@@ -24,5 +22,4 @@ public class EmployerMapper {
       //  employerBankDetails.setEmployers(bankDetailsDTO.getEmployers());
         return employerBankDetails;
     }
-
 }
