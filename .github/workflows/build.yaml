@@ -62,7 +62,7 @@ jobs:
         uses: actions/create-release@v1
         with:
           tag_name: v${{ env.VERSION }}  # Use version from pom.xml as the tag name
-          release_name: "Release ${{ env.VERSION }}"  # Use version from pom.xml as the release name
+          release_name: "Release v${{ env.VERSION }}"  # Use version from pom.xml as the release name
           draft: false
           prerelease: false
           body: "Automated release created by GitHub Actions"
