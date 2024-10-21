@@ -26,9 +26,9 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: 'zulu'  # You can change this to any distribution you prefer
+          distribution: 'zulu'  # Change this to any distribution you prefer
 
-      # Step 3: Cache SonarCloud packages (optional, if using SonarCloud)
+      # Step 3: Cache SonarCloud packages (optional)
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
@@ -49,15 +49,22 @@ jobs:
         working-directory: pos-system  # Adjust if your backend is in a subdirectory
         run: mvn -B clean verify -DskipTests
 
+      # Step 6: Get the version from pom.xml (requires jq)
+      - name: Get Version from pom.xml
+        id: get_version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
       # Step 7: Create a new GitHub release
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: v${{ github.sha }}  # Use commit SHA as the tag name
-          release_name: "Release ${{ github.sha }}"  # Use commit SHA as the release name
+          tag_name: v${{ env.VERSION }}  # Use version from pom.xml as the tag name
+          release_name: "Release ${{ env.VERSION }}"  # Use version from pom.xml as the release name
           draft: false
           prerelease: false
           body: "Automated release created by GitHub Actions"
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_2 }}  # Using the renamed token 'TOKEN_2'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the default GITHUB_TOKEN
