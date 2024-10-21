@@ -26,9 +26,9 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: 'zulu'  # You can change this to any distribution you prefer
+          distribution: 'zulu'  # Change this to any distribution you prefer
 
-      # Step 3: Cache SonarCloud packages (optional, if using SonarCloud)
+      # Step 3: Cache SonarCloud packages (optional)
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
@@ -67,4 +67,4 @@ jobs:
           prerelease: false
           body: "Automated release created by GitHub Actions"
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_2 }}  # Using the renamed token 'TOKEN_2'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the default GITHUB_TOKEN
