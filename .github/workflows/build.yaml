@@ -56,13 +56,20 @@ jobs:
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
-      # Step 7: Create a new GitHub release
+      # Step 7: Generate a unique tag name with timestamp
+      - name: Generate unique tag name
+        id: generate_tag
+        run: |
+          UNIQUE_TAG="${{ env.VERSION }}-$(date +'%Y%m%d%H%M%S')"
+          echo "UNIQUE_TAG=${UNIQUE_TAG}" >> $GITHUB_ENV
+
+      # Step 8: Create a new GitHub release
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: v${{ env.VERSION }}  # Use version from pom.xml as the tag name
-          release_name: "Release v${{ env.VERSION }}"  # Use version from pom.xml as the release name
+          tag_name: v${{ env.UNIQUE_TAG }}  # Use unique tag with version and timestamp
+          release_name: "Release v${{ env.UNIQUE_TAG }}"  # Use unique release name
           draft: false
           prerelease: false
           body: "Automated release created by GitHub Actions"
