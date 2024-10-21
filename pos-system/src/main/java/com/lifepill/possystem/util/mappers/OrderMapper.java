@@ -48,9 +48,7 @@ public class OrderMapper {
             paymentDetailsDTO.setPayedAmount(paymentDetails.getPaidAmount());
             groupedOrderDetails.setPaymentDetails(paymentDetailsDTO);
         }
-
         groupedOrderDetails.setOrderCount(1); // Since we're retrieving a single order
-
         orderResponseDTO.setGroupedOrderDetails(groupedOrderDetails);
         return orderResponseDTO;
     }
