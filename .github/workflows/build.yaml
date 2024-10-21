@@ -49,12 +49,6 @@ jobs:
         working-directory: pos-system  # Adjust if your backend is in a subdirectory
         run: mvn -B clean verify -DskipTests
 
-      # Step 6: Deploy to AWS EC2 instance (replace with your deployment logic)
-      - name: Deploy to AWS EC2
-        run: |
-          scp -i /path/to/your/key.pem target/*.jar ec2-user@${{ secrets.AWS_EC2_HOST }}:/path/to/deploy
-          ssh -i /path/to/your/key.pem ec2-user@${{ secrets.AWS_EC2_HOST }} "sudo systemctl restart your-springboot-service"
-
       # Step 7: Create a new GitHub release
       - name: Create GitHub Release
         id: create_release
