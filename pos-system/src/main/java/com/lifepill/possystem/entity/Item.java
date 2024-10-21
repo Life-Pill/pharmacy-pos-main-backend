@@ -20,7 +20,6 @@ import java.util.Set;
 @Builder
 @Table(name = "item")
 public class Item {
-
     @Id
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.AUTO)

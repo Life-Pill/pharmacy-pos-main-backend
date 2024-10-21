@@ -9,6 +9,6 @@ scrape_configs:
     metrics_path: "/actuator/prometheus"
     scrape_interval: 2s
     static_configs:
-      - targets: ['localhost:8079']
+      - targets: ['localhost:8079','localhost:8080','localhost:8075','localhost:8076']
         labels:
           application: "LifePill Pos System"
