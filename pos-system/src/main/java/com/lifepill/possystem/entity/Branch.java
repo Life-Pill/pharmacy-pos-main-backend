@@ -56,6 +56,4 @@ public class Branch {
             inverseJoinColumns = @JoinColumn(name = "item_id")
     )
     private Set<Item> items;
-
-
 }

@@ -15,8 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "employer_bankdetails")
-public class EmployerBankDetails
-{
+public class EmployerBankDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employer_bank_details_id")
@@ -35,8 +34,6 @@ public class EmployerBankDetails
     private Boolean monthlyPaymentStatus;
     @Column(name = "employeer_id")
     private long employerId;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employerBankDetails")
     private Set<Employer> employers;
-
 }

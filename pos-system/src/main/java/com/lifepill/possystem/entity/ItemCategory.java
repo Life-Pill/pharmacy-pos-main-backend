@@ -15,7 +15,6 @@ import java.util.Set;
 @Entity
 @Table(name = "item_category")
 public class ItemCategory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
@@ -32,5 +31,4 @@ public class ItemCategory {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "itemCategory")
     private Set<Item> items;
-
 }
