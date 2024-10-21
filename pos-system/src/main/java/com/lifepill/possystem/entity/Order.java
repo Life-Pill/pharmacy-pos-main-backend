@@ -7,7 +7,6 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.Set;
 
-
 /**
  * The type Order.
  */
@@ -54,5 +53,4 @@ public class Order {
         this.orderDate = orderDate;
         this.total = total;
     }
-
 }

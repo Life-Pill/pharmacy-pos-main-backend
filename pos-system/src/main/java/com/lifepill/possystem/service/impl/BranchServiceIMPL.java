@@ -315,6 +315,4 @@ public class BranchServiceIMPL implements BranchService {
             throw new NotFoundException("No Branch found for that id");
         }
     }
-
-
 }
