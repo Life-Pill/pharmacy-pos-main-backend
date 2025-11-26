@@ -48,6 +48,12 @@ aws:
   s3.bucket: ${AWS_S3_BUCKET}
   region: ${AWS_REGION}
 
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+  allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
+  allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Cache-Control,Content-Type}
+  allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
+
 management:
   endpoints:
     web:
