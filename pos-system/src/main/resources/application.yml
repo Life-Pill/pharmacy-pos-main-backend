@@ -54,6 +54,10 @@ cors:
   allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Cache-Control,Content-Type}
   allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
 
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:86400000}
+
 management:
   endpoints:
     web:
