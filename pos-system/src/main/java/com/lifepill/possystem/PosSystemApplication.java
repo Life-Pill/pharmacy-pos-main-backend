@@ -1,7 +1,5 @@
 package com.lifepill.possystem;
 
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.lifepill.possystem.service.S3Service;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -9,12 +7,11 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
 @OpenAPIDefinition(
 		info = @Info(
 				title = "LifePill POS -System API Documentation",

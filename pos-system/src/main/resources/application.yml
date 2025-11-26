@@ -1,6 +1,6 @@
 spring:
   application:
-    name: all-service
+    name: MAIN-POS-BACKEND
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DATABASE_URL}
@@ -8,21 +8,21 @@ spring:
     password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     jdbc:
       lob:
         non_contextual_creation: true
-    show-sql: true
+    show-sql: ${JDBC_SHOW_SQL}
   security:
     user:
       name: ${SPRING_SECURITY_USERNAME}
       password: ${SPRING_SECURITY_PASSWORD}
   redis:
-    host: redis
-    port: 6379
+    host: ${${REDIS_HOST}}
+    port: ${REDIS_PORT}
   mail:
     host: ${SPRING_MAIL_HOST}
     port: ${SPRING_MAIL_PORT}
@@ -40,7 +40,7 @@ server:
 
 logging:
   level:
-    org.springframework.security: DEBUG
+    org.springframework.security: ${SECURITY_DEBUG:DEBUG}
 
 aws:
   access.key: ${AWS_ACCESS_KEY}
@@ -53,10 +53,15 @@ management:
     web:
       exposure:
         include: "*"
+  health:
+    mail:
+      enabled: ${MAIL_HEALTH}
+    redis:
+      enabled: ${REDIS_HEALTH}
   metrics:
     export:
       prometheus:
-        enabled: true
+        enabled: ${PROMETHEUS_METRICS_EXPORT}
 
 #twilio:
 #  accountSid: ${TWILIO_ACCOUNT_SID}
