@@ -16,6 +16,7 @@ spring:
       lob:
         non_contextual_creation: true
     show-sql: ${JDBC_SHOW_SQL}
+    open-in-view: ${HIBERNATE_OPEN_IN_VIEW:false}
   security:
     user:
       name: ${SPRING_SECURITY_USERNAME}
