@@ -48,6 +48,54 @@ services:
       timeout: 5s
       retries: 5
 
+  opensearch:
+    image: opensearchproject/opensearch:2.11.1
+    container_name: lifepill-opensearch
+    restart: unless-stopped
+    environment:
+      - cluster.name=lifepill-cluster
+      - node.name=opensearch-node1
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_PASSWORD:-LifePill@123}
+      - plugins.security.disabled=true  # Disable security for development
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    networks:
+      - lifepill-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q 'green\\|yellow'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.11.1
+    container_name: lifepill-opensearch-dashboards
+    restart: unless-stopped
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
+    ports:
+      - "5601:5601"
+    networks:
+      - lifepill-network
+    depends_on:
+      opensearch:
+        condition: service_healthy
+
   app:
     build:
       context: .
@@ -77,7 +125,7 @@ services:
       SPRING_SECURITY_PASSWORD: ${SPRING_SECURITY_PASSWORD:-admin123}
       
       # JWT Configuration
-      JWT_SECRET: ${JWT_SECRET:-9a2f8c4e6b0d71f3e8b925a45747f894a3d6bc70fa8d5e21a15a6d8c3b9a0e7c}
+      JWT_SECRET: ${JWT_SECRET:-}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
       
       # Mail Configuration
@@ -106,6 +154,14 @@ services:
       
       # Logging
       SECURITY_DEBUG: INFO
+      
+      # OpenSearch Configuration
+      OPENSEARCH_ENABLED: "true"
+      OPENSEARCH_HOST: opensearch
+      OPENSEARCH_PORT: 9200
+      OPENSEARCH_SCHEME: http
+      OPENSEARCH_USERNAME: admin
+      OPENSEARCH_PASSWORD: ${OPENSEARCH_PASSWORD:-admin}
     ports:
       - "8080:8080"
     volumes:
@@ -117,6 +173,8 @@ services:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      opensearch:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
@@ -174,6 +232,8 @@ volumes:
     name: lifepill-postgres-data
   redis_data:
     name: lifepill-redis-data
+  opensearch_data:
+    name: lifepill-opensearch-data
   prometheus_data:
     name: lifepill-prometheus-data
   grafana_data:
