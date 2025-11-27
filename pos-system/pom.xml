@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.lifepill</groupId>
 	<artifactId>pos-system</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>v1..0.1</version>
 	<name>pos-system</name>
 	<description>POS system project with Spring Boot</description>
 	<properties>
