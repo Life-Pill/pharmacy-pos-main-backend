@@ -201,6 +201,32 @@
 			<artifactId>micrometer-registry-prometheus</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- OpenSearch Dependencies -->
+		<dependency>
+			<groupId>org.opensearch.client</groupId>
+			<artifactId>opensearch-java</artifactId>
+			<version>2.8.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.opensearch.client</groupId>
+			<artifactId>opensearch-rest-client</artifactId>
+			<version>2.11.1</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.json</groupId>
+			<artifactId>jakarta.json-api</artifactId>
+			<version>2.1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.parsson</groupId>
+			<artifactId>parsson</artifactId>
+			<version>1.1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -75,7 +75,8 @@ public class SecurityConfiguration {
                                         "/v3/api-docs",
                                         "/lifepill/v1/medicine-finding/find-medicine",
                                 "/lifepill/v1/supplierCompanies/getAll-Supplier-Companies",
-                                "/lifepill/v1/order/getAllOrdersWithDetails"
+                                "/lifepill/v1/order/getAllOrdersWithDetails",
+                                "/lifepill/v1/search/**"
                                 ).permitAll()
                                 .antMatchers("lifepill/v1/branch-summary/**")
                                 .hasRole(OWNER.name())
