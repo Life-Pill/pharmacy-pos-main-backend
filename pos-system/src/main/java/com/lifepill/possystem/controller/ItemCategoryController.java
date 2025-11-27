@@ -15,7 +15,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/lifepill/v1/item-Category")
-@CrossOrigin(origins =  "http://localhost:3000")
 @AllArgsConstructor
 public class ItemCategoryController {
 
