@@ -1,4 +1,5 @@
 [![Build and Release Pharmacy POS System Backend](https://github.com/Life-Pill/pharmacy-pos-frontend/actions/workflows/build.yml/badge.svg)](https://github.com/Life-Pill/pharmacy-pos-frontend/actions/workflows/build.yml)
+[![Spring Boot Build and Release](https://github.com/Life-Pill/pharmacy-pos-main-backend/actions/workflows/build.yaml/badge.svg)](https://github.com/Life-Pill/pharmacy-pos-main-backend/actions/workflows/build.yaml)
 
 # Pharmacy POS System Backend
 
