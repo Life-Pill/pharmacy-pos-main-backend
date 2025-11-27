@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class BranchSummaryServiceIMPL implements BranchSummaryService {
 
     private final BranchRepository branchRepository;
@@ -334,15 +336,9 @@ public class BranchSummaryServiceIMPL implements BranchSummaryService {
      * @throws NotFoundException if no branch is found for the given ID.
      */
     private BranchDTO getBranchDetails(Long branchId) {
-
-        if (branchRepository.existsById(branchId)) {
-            Branch branch = branchRepository.getReferenceById(branchId);
-
-            return modelMapper.map(branch, BranchDTO.class);
-
-        } else {
-            throw new NotFoundException("No Branch found for that id");
-        }
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new NotFoundException("No Branch found for that id"));
+        return modelMapper.map(branch, BranchDTO.class);
     }
 
     /**

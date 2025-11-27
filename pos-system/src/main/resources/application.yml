@@ -36,6 +36,15 @@ spring:
           starttls:
             enable: true
 
+# OpenSearch Configuration
+opensearch:
+  enabled: ${OPENSEARCH_ENABLED:false}
+  host: ${OPENSEARCH_HOST:localhost}
+  port: ${OPENSEARCH_PORT:9200}
+  scheme: ${OPENSEARCH_SCHEME:http}
+  username: ${OPENSEARCH_USERNAME:admin}
+  password: ${OPENSEARCH_PASSWORD:admin}
+
 server:
   port: ${SERVER_PORT}
 
