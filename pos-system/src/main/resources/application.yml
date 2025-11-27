@@ -49,11 +49,14 @@ aws:
   s3.bucket: ${AWS_S3_BUCKET}
   region: ${AWS_REGION}
 
+# CORS Configuration - All settings loaded from environment variables
+# See CorsFilter.java in filter package for implementation
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
   allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
   allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Cache-Control,Content-Type}
   allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
+  max-age: ${CORS_MAX_AGE:3600}
 
 jwt:
   secret: ${JWT_SECRET}

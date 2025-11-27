@@ -5,19 +5,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 import static com.lifepill.possystem.entity.enums.Role.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 /**
- * Configuration class for Security.
+ * Configuration class for Spring Security.
+ *
+ * <p>CORS is enabled using Spring Security's built-in support with
+ * {@code Customizer.withDefaults()}, which automatically picks up the
+ * {@link org.springframework.web.cors.CorsConfigurationSource} bean
+ * from {@link CorsConfig}.</p>
+ *
+ * @author LifePill Development Team
+ * @version 1.0
+ * @see CorsConfig
  */
 @Configuration
 @EnableWebSecurity
@@ -27,10 +36,17 @@ public class SecurityConfiguration {
 
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthFilter jwtAuthFilter;
-    private final CorsConfigurationSource corsConfigurationSource;
 
     /**
-     * Configures security filter chain.
+     * Configures the security filter chain.
+     *
+     * <p>Security features:</p>
+     * <ul>
+     *   <li>CSRF disabled (stateless REST API)</li>
+     *   <li>CORS enabled with configuration from {@link CorsConfig}</li>
+     *   <li>JWT-based stateless authentication</li>
+     *   <li>Role-based access control</li>
+     * </ul>
      *
      * @param http HttpSecurity object
      * @return SecurityFilterChain object
@@ -40,7 +56,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .cors(Customizer.withDefaults()) // Uses CorsConfigurationSource from CorsConfig
                 .authorizeHttpRequests(req ->
                         req.antMatchers("/lifepill/v1/auth/**",
                                         "/lifepill/v1/session/**",
