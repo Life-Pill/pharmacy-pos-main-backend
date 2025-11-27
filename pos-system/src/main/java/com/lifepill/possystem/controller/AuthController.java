@@ -24,7 +24,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/lifepill/v1/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"}, allowCredentials = "true")
 public class AuthController {
 
     private final AuthService authService;
@@ -102,13 +101,4 @@ public class AuthController {
                     );
         }
     }
-
-    /**
-     * Handles preflight requests for CORS.
-     */
-    @RequestMapping(method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> handleOptionsRequest() {
-        return ResponseEntity.ok().build();
-    }
-
 }
