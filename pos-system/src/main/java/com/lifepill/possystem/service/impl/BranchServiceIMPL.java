@@ -18,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
@@ -31,6 +32,7 @@ import java.util.Optional;
  */
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class BranchServiceIMPL implements BranchService {
 
     private BranchRepository branchRepository;
@@ -45,6 +47,7 @@ public class BranchServiceIMPL implements BranchService {
      * @throws EntityDuplicationException If a branch with the same ID or email already exists.
      */
     @Override
+    @Transactional
     public void saveBranch(BranchDTO branchDTO, MultipartFile image) {
         if (branchRepository.existsById(branchDTO.getBranchId()) || branchRepository.existsByBranchEmail(branchDTO.getBranchEmail())) {
             throw new EntityDuplicationException("Branch already exists");
@@ -106,29 +109,25 @@ public class BranchServiceIMPL implements BranchService {
 
     @Override
     public BranchDTO getBranchById(long branchId) {
-        if (branchRepository.existsById(branchId)){
-            Branch branch = branchRepository.getReferenceById(branchId);
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new NotFoundException("No Branch found for that id"));
 
-            // can use mappers to easily below that task
-            BranchDTO branchDTO  = new BranchDTO(
-                   branch.getBranchId(),
-                    branch.getBranchName(),
-                    branch.getBranchAddress(),
-                    branch.getBranchContact(),
-                    branch.getBranchFax(),
-                    branch.getBranchEmail(),
-                    branch.getBranchDescription(),
-                    branch.getBranchImage(),
-                    branch.isBranchStatus(),
-                    branch.getBranchLocation(),
-                    branch.getBranchCreatedOn(),
-                    branch.getBranchCreatedBy()
-            );
-            return branchDTO;
-        }else {
-            throw  new NotFoundException("No Branch found for that id");
-        }
-
+        // can use mappers to easily below that task
+        BranchDTO branchDTO  = new BranchDTO(
+               branch.getBranchId(),
+                branch.getBranchName(),
+                branch.getBranchAddress(),
+                branch.getBranchContact(),
+                branch.getBranchFax(),
+                branch.getBranchEmail(),
+                branch.getBranchDescription(),
+                branch.getBranchImage(),
+                branch.isBranchStatus(),
+                branch.getBranchLocation(),
+                branch.getBranchCreatedOn(),
+                branch.getBranchCreatedBy()
+        );
+        return branchDTO;
     }
 
     /**
@@ -138,6 +137,7 @@ public class BranchServiceIMPL implements BranchService {
      * @throws NotFoundException If no branches are found.
      */
     @Override
+    @Transactional
     public String deleteBranch(long branchId) {
         if (branchRepository.existsById(branchId)){
             branchRepository.deleteById(branchId);
@@ -157,6 +157,7 @@ public class BranchServiceIMPL implements BranchService {
      * @throws EntityNotFoundException If the branch with the given ID is not found.
      * @throws NotFoundException       If the branch with the given ID is not found.
      */
+    @Transactional
     public void updateBranch(long branchId, BranchUpdateDTO branchUpdateDTO, MultipartFile image) {
         if (!branchRepository.existsById(branchId)) {
             throw new EntityNotFoundException("Branch not found");
@@ -202,6 +203,7 @@ public class BranchServiceIMPL implements BranchService {
      * @throws NotFoundException If the branch with the given ID is not found.
      */
     @Override
+    @Transactional
     public void updateBranchImage(long branchId, MultipartFile image) {
         if (!branchRepository.existsById(branchId)) {
             throw new NotFoundException("Branch not found");
@@ -223,6 +225,7 @@ public class BranchServiceIMPL implements BranchService {
     }
 
     @Override
+    @Transactional
     public BranchS3DTO createBranch(BranchS3DTO branchS3DTO, MultipartFile file) throws IOException {
         // Logic to handle file upload and save the branch details
         String imageUrl = s3Service.uploadFile(branchS3DTO.getBranchEmail(), file);
@@ -240,14 +243,11 @@ public class BranchServiceIMPL implements BranchService {
 
     @Override
     public BranchS3DTO getBranchS3ById(long branchId) {
-        if (branchRepository.existsById(branchId)) {
-            Branch branch = branchRepository.getReferenceById(branchId);
-            BranchS3DTO branchS3DTO = new BranchS3DTO();
-            BeanUtils.copyProperties(branch, branchS3DTO);
-            return branchS3DTO;
-        } else {
-            throw new NotFoundException("No Branch found for that id");
-        }
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new NotFoundException("No Branch found for that id"));
+        BranchS3DTO branchS3DTO = new BranchS3DTO();
+        BeanUtils.copyProperties(branch, branchS3DTO);
+        return branchS3DTO;
     }
 
     @Override
@@ -260,14 +260,17 @@ public class BranchServiceIMPL implements BranchService {
     }
 
     @Override
+    @Transactional
     public void updateBranchProfileImage(long branchId, MultipartFile file) throws IOException {
-        Branch branch = branchRepository.getReferenceById(branchId);
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new NotFoundException("No Branch found for that id"));
         String imageUrl = s3Service.uploadFile(branch.getBranchEmail(), file);
         branch.setBranchProfileImageUrl(imageUrl);
         branchRepository.save(branch);
     }
 
     @Override
+    @Transactional
     public BranchNewUpdateDTO updateBranchWithoutImage(long branchId, BranchNewUpdateDTO branchUpdateDTO) {
         if (!branchRepository.existsById(branchId)) {
             throw new NotFoundException("Branch not found");
