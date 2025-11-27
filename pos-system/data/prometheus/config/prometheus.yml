@@ -1,14 +1,19 @@
 global:
   scrape_interval: 15s
+  evaluation_interval: 15s
 
 scrape_configs:
+  # Prometheus self-monitoring
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
-  - job_name: 'LifePill Pos System Input'
+
+  # LifePill POS System Application
+  - job_name: 'lifepill-pos-system'
     metrics_path: "/actuator/prometheus"
-    scrape_interval: 2s
+    scrape_interval: 5s
     static_configs:
-      - targets: ['localhost:8079','localhost:8080','localhost:8075','localhost:8076']
+      - targets: ['app:8080']
         labels:
-          application: "LifePill Pos System"
+          application: "LifePill POS System"
+          environment: "docker"

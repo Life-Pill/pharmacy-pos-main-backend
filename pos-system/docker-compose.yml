@@ -1,42 +1,184 @@
 version: '3.8'
+
+# LifePill POS System - Docker Compose
+# Usage:
+#   Build and start all services: docker-compose up --build -d
+#   Stop all services: docker-compose down
+#   View logs: docker-compose logs -f
+#   Rebuild single service: docker-compose up --build -d app
+
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: lifepill-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-lifepill}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres123}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - lifepill-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-lifepill}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
   redis:
-    image: redis
+    image: redis:7-alpine
+    container_name: lifepill-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
     ports:
       - "6379:6379"
+    networks:
+      - lifepill-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app:
-    image: pos-system:v4.1.2
-    ports:
-      - "8079:8079"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lifepill-pos-system
+    restart: unless-stopped
     environment:
+      # Server Configuration
+      SERVER_PORT: 8080
+      
+      # Database Configuration
+      DATABASE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-lifepill}
+      DATABASE_USERNAME: ${POSTGRES_USER:-postgres}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-postgres123}
+      
+      # Hibernate Configuration
+      HIBERNATE_DDL_AUTO: update
+      JDBC_SHOW_SQL: "false"
+      HIBERNATE_OPEN_IN_VIEW: "false"
+      
+      # Redis Configuration
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      
+      # Spring Security
+      SPRING_SECURITY_USERNAME: ${SPRING_SECURITY_USERNAME:-admin}
+      SPRING_SECURITY_PASSWORD: ${SPRING_SECURITY_PASSWORD:-admin123}
+      
+      # JWT Configuration
+      JWT_SECRET: ${JWT_SECRET:-9a2f8c4e6b0d71f3e8b925a45747f894a3d6bc70fa8d5e21a15a6d8c3b9a0e7c}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+      
+      # Mail Configuration
+      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST:-smtp.gmail.com}
+      SPRING_MAIL_PORT: ${SPRING_MAIL_PORT:-587}
+      SPRING_USER_NAME: ${SPRING_USER_NAME:-}
+      SPRING_PASSWORD: ${SPRING_PASSWORD:-}
+      
+      # AWS S3 Configuration
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      
+      # CORS Configuration
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
+      CORS_ALLOWED_METHODS: ${CORS_ALLOWED_METHODS:-GET,POST,PUT,DELETE,OPTIONS}
+      CORS_ALLOWED_HEADERS: ${CORS_ALLOWED_HEADERS:-Authorization,Cache-Control,Content-Type}
+      CORS_ALLOW_CREDENTIALS: ${CORS_ALLOW_CREDENTIALS:-true}
+      CORS_MAX_AGE: ${CORS_MAX_AGE:-3600}
+      
+      # Health & Metrics
+      MAIL_HEALTH: "false"
+      REDIS_HEALTH: "true"
+      PROMETHEUS_METRICS_EXPORT: "true"
+      
+      # Logging
+      SECURITY_DEBUG: INFO
+    ports:
+      - "8080:8080"
+    volumes:
+      - app_uploads:/app/uploads
+      - app_logs:/app/logs
+    networks:
+      - lifepill-network
     depends_on:
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
+    container_name: lifepill-prometheus
     restart: unless-stopped
-    volumes:
-      - ./data/prometheus/config:/etc/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./data/prometheus/config:/etc/prometheus:ro
+      - prometheus_data:/prometheus
     ports:
       - "9090:9090"
+    networks:
+      - lifepill-network
+    depends_on:
+      - app
+
   grafana:
     image: grafana/grafana:latest
-    pull_policy: always
-    container_name: grafana
+    container_name: lifepill-grafana
     restart: unless-stopped
-    links:
-      - prometheus:prometheus
-    volumes:
-      - ./data/grafana:/var/lib/grafana
-    ports:
-      - "3000:3000"
     environment:
-        - GF_SECURITY_ADMIN_PASSWORD=admin
-        - GF_USERS_ALLOW_SIGN_UP=false
-        - GF_SERVER_DOMAIN=localhost
-        - GF_LOG_MODE=console file
-        - GF_LOG_FILTERS=alerting.notifier.slack:debug alertmanager:debug ngalert:debug
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SERVER_DOMAIN: localhost
+      GF_LOG_MODE: console file
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafanaDashboard.json:/etc/grafana/provisioning/dashboards/dashboard.json:ro
+    ports:
+      - "3001:3000"
+    networks:
+      - lifepill-network
+    depends_on:
+      - prometheus
+
+networks:
+  lifepill-network:
+    driver: bridge
+    name: lifepill-network
+
+volumes:
+  postgres_data:
+    name: lifepill-postgres-data
+  redis_data:
+    name: lifepill-redis-data
+  prometheus_data:
+    name: lifepill-prometheus-data
+  grafana_data:
+    name: lifepill-grafana-data
+  app_uploads:
+    name: lifepill-app-uploads
+  app_logs:
+    name: lifepill-app-logs
