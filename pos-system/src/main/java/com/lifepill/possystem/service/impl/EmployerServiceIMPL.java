@@ -169,23 +169,18 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public String updateEmployerAccountDetails(EmployerUpdateAccountDetailsDTO employerUpdateAccountDetailsDTO) {
-        if (employerRepository.existsById(employerUpdateAccountDetailsDTO.getEmployerId())) {
-            Employer employer = employerRepository.getReferenceById(employerUpdateAccountDetailsDTO.getEmployerId());
+        Employer employer = employerRepository.findById(employerUpdateAccountDetailsDTO.getEmployerId())
+                .orElseThrow(() -> new NotFoundException("No data found for that id"));
 
-            employer.setEmployerFirstName(employerUpdateAccountDetailsDTO.getEmployerFirstName());
-            employer.setEmployerLastName(employerUpdateAccountDetailsDTO.getEmployerLastName());
-            employer.setGender(employerUpdateAccountDetailsDTO.getGender());
-            employer.setEmployerAddress(employerUpdateAccountDetailsDTO.getEmployerAddress());
-            employer.setDateOfBirth(employerUpdateAccountDetailsDTO.getDateOfBirth());
+        employer.setEmployerFirstName(employerUpdateAccountDetailsDTO.getEmployerFirstName());
+        employer.setEmployerLastName(employerUpdateAccountDetailsDTO.getEmployerLastName());
+        employer.setGender(employerUpdateAccountDetailsDTO.getGender());
+        employer.setEmployerAddress(employerUpdateAccountDetailsDTO.getEmployerAddress());
+        employer.setDateOfBirth(employerUpdateAccountDetailsDTO.getDateOfBirth());
 
-            employerRepository.save(employer);
+        employerRepository.save(employer);
 
-            System.out.println(employer);
-
-            return "Successfully Update employer account details";
-        } else {
-            throw new NotFoundException("No data found for that id");
-        }
+        return "Successfully Update employer account details";
     }
 
     /**
@@ -197,19 +192,14 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public String updateEmployerPassword(EmployerPasswordResetDTO employerPasswordResetDTO) {
-        if (employerRepository.existsById(employerPasswordResetDTO.getEmployerId())) {
-            Employer employer = employerRepository.getReferenceById(employerPasswordResetDTO.getEmployerId());
+        Employer employer = employerRepository.findById(employerPasswordResetDTO.getEmployerId())
+                .orElseThrow(() -> new NotFoundException("No data found for that id"));
 
-            employer.setEmployerPassword(employerPasswordResetDTO.getEmployerPassword());
-            employer.setEmployerPassword(passwordEncoder.encode(employer.getEmployerPassword()));
-            employerRepository.save(employer);
+        employer.setEmployerPassword(employerPasswordResetDTO.getEmployerPassword());
+        employer.setEmployerPassword(passwordEncoder.encode(employer.getEmployerPassword()));
+        employerRepository.save(employer);
 
-            System.out.println(employer);
-
-            return "Successfully Reset employer password";
-        } else {
-            throw new NotFoundException("No data found for that id");
-        }
+        return "Successfully Reset employer password";
     }
 
     /**
@@ -221,18 +211,13 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public String updateRecentPin(EmployerRecentPinUpdateDTO employerRecentPinUpdateDTO) {
-        if (employerRepository.existsById(employerRecentPinUpdateDTO.getEmployerId())) {
-            Employer employer = employerRepository.getReferenceById(employerRecentPinUpdateDTO.getEmployerId());
+        Employer employer = employerRepository.findById(employerRecentPinUpdateDTO.getEmployerId())
+                .orElseThrow(() -> new NotFoundException("No data found for that id"));
 
-            employer.setPin(employerRecentPinUpdateDTO.getPin());
-            employerRepository.save(employer);
+        employer.setPin(employerRecentPinUpdateDTO.getPin());
+        employerRepository.save(employer);
 
-            System.out.println(employer);
-
-            return "Successfully Reset employer PIN";
-        } else {
-            throw new NotFoundException("No data found for that id");
-        }
+        return "Successfully Reset employer PIN";
     }
 
     /**
@@ -247,9 +232,9 @@ public class EmployerServiceIMPL implements EmployerService {
         long employerId = employerUpdateBankAccountDTO.getEmployerId();
 
         // Check if the employer exists
-        if (employerRepository.existsById(employerId)) {
-            Employer employer = employerRepository.getReferenceById(employerId);
-            // Check if the employer already has bank details
+        Employer employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new NotFoundException("No data found for that employer ID"));
+        // Check if the employer already has bank details
 
             Optional<EmployerBankDetails> existingBankDetailsOpt = cashierBankDetailsRepo.findById(employerUpdateBankAccountDTO.getEmployerBankDetailsId());
 
@@ -285,9 +270,6 @@ public class EmployerServiceIMPL implements EmployerService {
             employerWithBankDTO.setBranchId(employer.getBranch().getBranchId());
 
             return employerWithBankDTO;
-        } else {
-            throw new NotFoundException("No data found for that employer ID");
-        }
     }
 
 
@@ -300,32 +282,26 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public EmployerDTO getEmployerById(long employerId) {
-        if (employerRepository.existsById(employerId)) {
-            Employer employer = employerRepository.getReferenceById(employerId);
+        Employer employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new NotFoundException("No employer found for that id"));
 
-            long branchId = employer.getBranch().getBranchId();
-            EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
+        long branchId = employer.getBranch().getBranchId();
+        EmployerDTO employerDTO = modelMapper.map(employer, EmployerDTO.class);
 
-            employerDTO.setBranchId(branchId);
-            return employerDTO;
-        } else {
-            throw new NotFoundException("No employer found for that id");
-        }
+        employerDTO.setBranchId(branchId);
+        return employerDTO;
     }
 
     @Override
     public EmployerS3DTO getEmployerS3ById(long employerId) {
-        if (employerRepository.existsById(employerId)) {
-            Employer employer = employerRepository.getReferenceById(employerId);
+        Employer employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new NotFoundException("No employer found for that id"));
 
-            long branchId = employer.getBranch().getBranchId();
-            EmployerS3DTO employerS3DTO = modelMapper.map(employer, EmployerS3DTO.class);
+        long branchId = employer.getBranch().getBranchId();
+        EmployerS3DTO employerS3DTO = modelMapper.map(employer, EmployerS3DTO.class);
 
-            employerS3DTO.setBranchId(branchId);
-            return employerS3DTO;
-        } else {
-            throw new NotFoundException("No employer found for that id");
-        }
+        employerS3DTO.setBranchId(branchId);
+        return employerS3DTO;
     }
 
     /**
@@ -337,13 +313,10 @@ public class EmployerServiceIMPL implements EmployerService {
      */
     @Override
     public EmployerDTO getEmployerByIdWithImage(long employerId) {
-        if (employerRepository.existsById(employerId)) {
-            Employer employer = employerRepository.getReferenceById(employerId);
+        Employer employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new NotFoundException("No employer found for that id"));
 
-            return modelMapper.map(employer, EmployerDTO.class);
-        } else {
-            throw new NotFoundException("No employer found for that id");
-        }
+        return modelMapper.map(employer, EmployerDTO.class);
     }
 
     /**
