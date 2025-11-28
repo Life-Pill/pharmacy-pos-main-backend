@@ -27,6 +27,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServiceIMPL implements ItemService {
 
     private ItemRepository itemRepository;
@@ -55,6 +57,7 @@ public class ItemServiceIMPL implements ItemService {
      * @throws EntityDuplicationException If an item with the same ID already exists.
      */
     @Override
+    @Transactional
     public String saveItems(ItemSaveRequestDTO itemSaveRequestDTO) {
         Item item = modelMapper.map(itemSaveRequestDTO, Item.class);
 
@@ -210,39 +213,36 @@ public class ItemServiceIMPL implements ItemService {
      * @throws NotFoundException If the item to be updated is not found.
      */
     @Override
+    @Transactional
     public String updateItem(ItemUpdateDTO itemUpdateDTO) {
-        if (itemRepository.existsById(itemUpdateDTO.getItemId())) {
-            Item item = itemRepository.getReferenceById(itemUpdateDTO.getItemId());
-            item.setItemName(itemUpdateDTO.getItemName());
-            item.setItemBarCode(itemUpdateDTO.getItemBarCode());
-            item.setSupplyDate(itemUpdateDTO.getSupplyDate());
-            item.setFreeIssued(itemUpdateDTO.isFreeIssued());
-            item.setDiscounted(itemUpdateDTO.isDiscounted());
-            item.setItemManufacture(itemUpdateDTO.getItemManufacture());
-            item.setItemQuantity(itemUpdateDTO.getItemQuantity());
+        Item item = itemRepository.findById(itemUpdateDTO.getItemId())
+                .orElseThrow(() -> new NotFoundException("No Item found with ID: " + itemUpdateDTO.getItemId()));
+        
+        item.setItemName(itemUpdateDTO.getItemName());
+        item.setItemBarCode(itemUpdateDTO.getItemBarCode());
+        item.setSupplyDate(itemUpdateDTO.getSupplyDate());
+        item.setFreeIssued(itemUpdateDTO.isFreeIssued());
+        item.setDiscounted(itemUpdateDTO.isDiscounted());
+        item.setItemManufacture(itemUpdateDTO.getItemManufacture());
+        item.setItemQuantity(itemUpdateDTO.getItemQuantity());
 //            item.setItemCategory(itemUpdateDTO.getItemCategory());
-            item.setStock(itemUpdateDTO.isStock());
-            item.setMeasuringUnitType(itemUpdateDTO.getMeasuringUnitType());
-            item.setManufactureDate(itemUpdateDTO.getManufactureDate());
-            item.setExpireDate(itemUpdateDTO.getExpireDate());
-            item.setPurchaseDate(itemUpdateDTO.getPurchaseDate());
-            item.setWarrantyPeriod(itemUpdateDTO.getWarrantyPeriod());
-            item.setRackNumber(itemUpdateDTO.getRackNumber());
-            item.setDiscountedPrice(itemUpdateDTO.getDiscountedPrice());
-            item.setDiscountedPercentage(itemUpdateDTO.getDiscountedPercentage());
-            item.setWarehouseName(itemUpdateDTO.getWarehouseName());
-            item.setSpecialCondition(itemUpdateDTO.isSpecialCondition());
-            item.setItemImage(itemUpdateDTO.getItemImage());
-            item.setItemDescription(itemUpdateDTO.getItemDescription());
+        item.setStock(itemUpdateDTO.isStock());
+        item.setMeasuringUnitType(itemUpdateDTO.getMeasuringUnitType());
+        item.setManufactureDate(itemUpdateDTO.getManufactureDate());
+        item.setExpireDate(itemUpdateDTO.getExpireDate());
+        item.setPurchaseDate(itemUpdateDTO.getPurchaseDate());
+        item.setWarrantyPeriod(itemUpdateDTO.getWarrantyPeriod());
+        item.setRackNumber(itemUpdateDTO.getRackNumber());
+        item.setDiscountedPrice(itemUpdateDTO.getDiscountedPrice());
+        item.setDiscountedPercentage(itemUpdateDTO.getDiscountedPercentage());
+        item.setWarehouseName(itemUpdateDTO.getWarehouseName());
+        item.setSpecialCondition(itemUpdateDTO.isSpecialCondition());
+        item.setItemImage(itemUpdateDTO.getItemImage());
+        item.setItemDescription(itemUpdateDTO.getItemDescription());
 
-            itemRepository.save(item);
+        itemRepository.save(item);
 
-            System.out.println(item);
-
-            return "UPDATED ITEMS";
-        } else {
-            throw new NotFoundException("no Item found in that date");
-        }
+        return "UPDATED ITEMS";
     }
 
     /**
@@ -253,6 +253,7 @@ public class ItemServiceIMPL implements ItemService {
      * @throws NotFoundException If the item to be deleted is not found.
      */
     @Override
+    @Transactional
     public String deleteItem(long itemId) {
         if (itemRepository.existsById(itemId)) {
             itemRepository.deleteById(itemId);
@@ -312,6 +313,7 @@ public class ItemServiceIMPL implements ItemService {
      * @return A message indicating the success of the save operation.
      */
     @Override
+    @Transactional
     public String saveCategory(ItemCategoryDTO categoryDTO) {
         // Convert DTO to entity and save the category
         ItemCategory category = modelMapper.map(categoryDTO, ItemCategory.class);
@@ -327,6 +329,7 @@ public class ItemServiceIMPL implements ItemService {
      * @throws NotFoundException If the associated category or supplier is not found.
      */
     @Override
+    @Transactional
     public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
         // Check if category exists
         ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
@@ -398,6 +401,7 @@ public class ItemServiceIMPL implements ItemService {
      * @throws NotFoundException If the category to be updated is not found.
      */
     @Override
+    @Transactional
     public String updateCategoryDetails(long categoryId, ItemCategoryDTO categoryDTO) {
         // Check if the category exists
         Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
@@ -426,6 +430,7 @@ public class ItemServiceIMPL implements ItemService {
      * @throws NotFoundException If the category to be deleted is not found.
      */
     @Override
+    @Transactional
     public String deleteCategory(long categoryId) {
         // Check if the category exists
         Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
@@ -492,6 +497,7 @@ public class ItemServiceIMPL implements ItemService {
      * @throws IOException If an I/O error occurs.
      */
     @Override
+    @Transactional
     public ItemSaveRequestCategoryDTO createItemWithImage(
             MultipartFile file,
             ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO)
@@ -562,8 +568,10 @@ public class ItemServiceIMPL implements ItemService {
      * @throws IOException If an I/O error occurs.
      */
     @Override
+    @Transactional
     public void updateItemImage(long itemId, MultipartFile file) throws IOException{
-        Item item = itemRepository.getReferenceById(itemId);
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
         String imageUrl = s3Service.uploadFile(item.getItemName(), file);
         item.setItemImage(imageUrl);
         itemRepository.save(item);
